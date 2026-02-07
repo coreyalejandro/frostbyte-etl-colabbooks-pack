@@ -1,0 +1,8 @@
+flowchart TD
+  H[Air-gapped Host] --> DC[Docker Compose]
+  DC --> P[Parsing Services\nDocling + Unstructured]
+  DC --> E[Local Embeddings\nNomic]
+  DC --> V[Local Vector Store]
+  DC --> R[Local Relational DB]
+  DC --> UI[Local Validation UI\nreceipts + diffs + export]
+  UI --> X[Export Bundle\nstructured JSON + index snapshot + audit log]

@@ -1,0 +1,12 @@
+flowchart TD
+  A[Vendor Sources\nSFTP / HTTPS / API / Batch Drop] --> B[Intake Gateway\nAuthZ, manifest, checksums, scanning]
+  B --> C[Normalization Layer\nDocling + Unstructured]
+  C --> D[Canonical Structured Doc JSON\nsections/tables/offsets/lineage]
+  D --> E[Policy Gates + Enrichment\nPII, classification, injection defense]
+  E --> F[Object Store\nraw + normalized]
+  E --> G[Relational DB\nmetadata/lineage/jobs]
+  E --> H[Vector Store\nembeddings + metadata]
+  F --> I[Serving\nRAG / Agents / Dashboards]
+  G --> I
+  H --> I
+  I --> J[Audit + Observability\nimmutable logs + metrics]
