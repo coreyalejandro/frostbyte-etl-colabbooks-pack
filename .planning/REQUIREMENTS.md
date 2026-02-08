@@ -124,49 +124,49 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| PRD-01 | — | Pending |
-| PRD-02 | — | Pending |
-| PRD-03 | — | Pending |
-| PRD-04 | — | Pending |
-| PRD-05 | — | Pending |
-| TECH-01 | — | Pending |
-| TECH-02 | — | Pending |
-| TECH-03 | — | Pending |
-| IMPL-01 | — | Pending |
-| IMPL-02 | — | Pending |
-| IMPL-03 | — | Pending |
-| IMPL-04 | — | Pending |
-| IMPL-05 | — | Pending |
-| IMPL-06 | — | Pending |
-| IMPL-07 | — | Pending |
-| ISOL-01 | — | Pending |
-| ISOL-02 | — | Pending |
-| ISOL-03 | — | Pending |
-| ISOL-04 | — | Pending |
-| DEPLOY-01 | — | Pending |
-| DEPLOY-02 | — | Pending |
-| DEPLOY-03 | — | Pending |
-| DEPLOY-04 | — | Pending |
-| ONBOARD-01 | — | Pending |
-| ONBOARD-02 | — | Pending |
-| ONBOARD-03 | — | Pending |
-| USERDOC-01 | — | Pending |
-| USERDOC-02 | — | Pending |
-| USERDOC-03 | — | Pending |
-| SCENARIO-01 | — | Pending |
-| SCENARIO-02 | — | Pending |
-| AUDIT-01 | — | Pending |
-| AUDIT-02 | — | Pending |
-| AUDIT-03 | — | Pending |
-| SAFETY-01 | — | Pending |
-| SAFETY-02 | — | Pending |
-| SAFETY-03 | — | Pending |
+| PRD-01 | Phase 1 | Pending |
+| PRD-02 | Phase 1 | Pending |
+| PRD-03 | Phase 1 | Pending |
+| PRD-04 | Phase 1 | Pending |
+| PRD-05 | Phase 1 | Pending |
+| TECH-01 | Phase 1 | Pending |
+| TECH-02 | Phase 1 | Pending |
+| TECH-03 | Phase 1 | Pending |
+| IMPL-01 | Phase 4 | Pending |
+| IMPL-02 | Phase 4 | Pending |
+| IMPL-03 | Phase 5 | Pending |
+| IMPL-04 | Phase 5 | Pending |
+| IMPL-05 | Phase 6 | Pending |
+| IMPL-06 | Phase 6 | Pending |
+| IMPL-07 | Phase 6 | Pending |
+| ISOL-01 | Phase 2 | Pending |
+| ISOL-02 | Phase 2 | Pending |
+| ISOL-03 | Phase 2 | Pending |
+| ISOL-04 | Phase 2 | Pending |
+| DEPLOY-01 | Phase 7 | Pending |
+| DEPLOY-02 | Phase 7 | Pending |
+| DEPLOY-03 | Phase 7 | Pending |
+| DEPLOY-04 | Phase 7 | Pending |
+| ONBOARD-01 | Phase 8 | Pending |
+| ONBOARD-02 | Phase 8 | Pending |
+| ONBOARD-03 | Phase 8 | Pending |
+| USERDOC-01 | Phase 8 | Pending |
+| USERDOC-02 | Phase 8 | Pending |
+| USERDOC-03 | Phase 8 | Pending |
+| SCENARIO-01 | Phase 8 | Pending |
+| SCENARIO-02 | Phase 8 | Pending |
+| AUDIT-01 | Phase 3 | Pending |
+| AUDIT-02 | Phase 3 | Pending |
+| AUDIT-03 | Phase 3 | Pending |
+| SAFETY-01 | Phase 3 | Pending |
+| SAFETY-02 | Phase 3 | Pending |
+| SAFETY-03 | Phase 3 | Pending |
 
 **Coverage:**
-- v1 requirements: 35 total
-- Mapped to phases: 0
-- Unmapped: 35
+- v1 requirements: 37 total
+- Mapped to phases: 37
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-08*
-*Last updated: 2026-02-08 after initial definition*
+*Last updated: 2026-02-08 after roadmap creation*
