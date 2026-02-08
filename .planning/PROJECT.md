@@ -75,5 +75,23 @@ Every planning artifact must be so specific and deterministic that a person who 
 | Lock in all tech choices | Deterministic plans require opinionated decisions; Frode's sketch already names the tools | — Pending |
 | Role-playing scenarios for CS + engineering | Differentiator — most candidates don't think about post-launch team readiness | — Pending |
 
+## Current Milestone: v1.0 Zero-Shot Implementation Pack
+
+**Goal:** Produce a complete, deterministic planning package that enables any engineer or AI agent to build, deploy, support, and explain Frostbyte's multi-tenant ETL pipeline without ambiguity.
+
+**Target deliverables:**
+- Zero-shot PRD covering full pipeline lifecycle
+- Locked-in tech decisions with rationale for every component
+- Step-by-step implementation plans for each pipeline phase
+- Per-tenant isolation architecture (Hetzner provisioning spec)
+- Dual-mode deployment plans (online API + offline air-gapped Docker)
+- Engineer onboarding tutorials (gold standard)
+- User documentation for vendor data ops leads (Dana persona)
+- Customer success role-playing scenarios
+- Deployed engineer role-playing scenarios
+- Vendor acceptance report workflow
+- Immutable audit stream design
+- Injection defense and document-safety controls
+
 ---
-*Last updated: 2026-02-08 after initialization*
+*Last updated: 2026-02-08 after milestone v1.0 started*
