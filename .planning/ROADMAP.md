@@ -13,7 +13,7 @@ This roadmap delivers the v1.0 Zero-Shot Implementation Pack: a complete, determ
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Product Definition and Tech Decisions** - PRD and locked-in technology choices that every subsequent document references
+- [x] **Phase 1: Product Definition and Tech Decisions** - PRD and locked-in technology choices that every subsequent document references
 - [ ] **Phase 2: Tenant Isolation Architecture** - Per-tenant isolation specifications (Hetzner, storage, encryption, network)
 - [ ] **Phase 3: Audit Stream and Document Safety** - Cross-cutting security and compliance designs that inform all implementation plans
 - [ ] **Phase 4: Foundation and Storage Layer Plans** - Implementation plans for the tenant data model, config framework, and per-tenant storage provisioning
@@ -40,8 +40,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 Plans:
 
-- [ ] 01-01-PLAN.md — Zero-shot PRD (executive summary, pipeline phases, tenant lifecycle, monitoring, API contracts)
-- [ ] 01-02-PLAN.md — Technology decisions and version-pinned dependency manifests
+- [x] 01-01-PLAN.md — Zero-shot PRD (executive summary, pipeline phases, tenant lifecycle, monitoring, API contracts)
+- [x] 01-02-PLAN.md — Technology decisions and version-pinned dependency manifests
 
 ### Phase 2: Tenant Isolation Architecture
 
@@ -178,7 +178,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8
 
 | Phase | Plans Complete | Status | Completed |
 | ----- | -------------- | ------ | ---------- |
-| 1. Product Definition and Tech Decisions | 0/2 | Planned | - |
+| 1. Product Definition and Tech Decisions | 2/2 | Complete | 2026-02-08 |
 | 2. Tenant Isolation Architecture | 0/2 | Not started | - |
 | 3. Audit Stream and Document Safety | 0/2 | Not started | - |
 | 4. Foundation and Storage Layer Plans | 0/2 | Not started | - |
@@ -189,4 +189,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8
 
 ---
 *Created: 2026-02-08*
-*Last updated: 2026-02-08 after Phase 1 planning*
+*Last updated: 2026-02-08 after Phase 1 completion*

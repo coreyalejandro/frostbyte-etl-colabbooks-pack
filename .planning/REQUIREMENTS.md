@@ -9,17 +9,17 @@ Requirements for milestone v1.0: Zero-Shot Implementation Pack. Each maps to roa
 
 ### PRD — Product Requirements Document
 
-- [ ] **PRD-01**: Executive summary of the multi-tenant ETL pipeline (what, why, who, how)
-- [ ] **PRD-02**: Pipeline phase specifications (intake, parsing, enrichment, storage, serving) with data flow diagrams
-- [ ] **PRD-03**: Tenant lifecycle management specification (provisioning, configuration, deprovisioning, kill-switch)
-- [ ] **PRD-04**: Monitoring and observability requirements (job tracking, alerting, metrics)
-- [ ] **PRD-05**: API contract specification (intake, query, admin, audit endpoints)
+- [x] **PRD-01**: Executive summary of the multi-tenant ETL pipeline (what, why, who, how)
+- [x] **PRD-02**: Pipeline phase specifications (intake, parsing, enrichment, storage, serving) with data flow diagrams
+- [x] **PRD-03**: Tenant lifecycle management specification (provisioning, configuration, deprovisioning, kill-switch)
+- [x] **PRD-04**: Monitoring and observability requirements (job tracking, alerting, metrics)
+- [x] **PRD-05**: API contract specification (intake, query, admin, audit endpoints)
 
 ### TECH — Technology Decisions
 
-- [ ] **TECH-01**: Component-by-component tech selection with rationale (parser, embedder, stores, queue, gateway)
-- [ ] **TECH-02**: Version-pinned dependency manifest for online mode
-- [ ] **TECH-03**: Version-pinned dependency manifest for offline mode (local models, ClamAV signatures)
+- [x] **TECH-01**: Component-by-component tech selection with rationale (parser, embedder, stores, queue, gateway)
+- [x] **TECH-02**: Version-pinned dependency manifest for online mode
+- [x] **TECH-03**: Version-pinned dependency manifest for offline mode (local models, ClamAV signatures)
 
 ### IMPL — Implementation Plans
 
@@ -124,14 +124,14 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| PRD-01 | Phase 1 | Pending |
-| PRD-02 | Phase 1 | Pending |
-| PRD-03 | Phase 1 | Pending |
-| PRD-04 | Phase 1 | Pending |
-| PRD-05 | Phase 1 | Pending |
-| TECH-01 | Phase 1 | Pending |
-| TECH-02 | Phase 1 | Pending |
-| TECH-03 | Phase 1 | Pending |
+| PRD-01 | Phase 1 | Complete |
+| PRD-02 | Phase 1 | Complete |
+| PRD-03 | Phase 1 | Complete |
+| PRD-04 | Phase 1 | Complete |
+| PRD-05 | Phase 1 | Complete |
+| TECH-01 | Phase 1 | Complete |
+| TECH-02 | Phase 1 | Complete |
+| TECH-03 | Phase 1 | Complete |
 | IMPL-01 | Phase 4 | Pending |
 | IMPL-02 | Phase 4 | Pending |
 | IMPL-03 | Phase 5 | Pending |
@@ -169,4 +169,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-02-08*
-*Last updated: 2026-02-08 after roadmap creation*
+*Last updated: 2026-02-08 after Phase 1 completion*
