@@ -54,12 +54,12 @@ Plans:
   2. For every stateful component (object store, relational DB, vector store, cache, logs), the document specifies the isolation mechanism, credential scope, and verification method
   3. The encryption key management design covers key generation, envelope encryption, rotation procedure, and key-to-tenant mapping -- with enough detail to implement without interpretation
   4. Network boundary rules are specified as concrete firewall rules (allow/deny, source, destination, port) for both Hetzner Cloud and Docker network modes
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
 
-- [ ] 02-01: Hetzner provisioning specification and network boundaries
-- [ ] 02-02: Per-tenant storage namespace and encryption key management design
+- [ ] 02-01-PLAN.md -- Hetzner provisioning specification and network boundaries (ISOL-01, ISOL-04)
+- [ ] 02-02-PLAN.md -- Per-tenant storage namespace and encryption key management design (ISOL-02, ISOL-03)
 
 ### Phase 3: Audit Stream and Document Safety
 
