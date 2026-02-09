@@ -131,3 +131,280 @@ Qdrant 1.16 (released November 2025) introduces tiered multitenancy with shared 
 **Rationale:** Frostbyte's isolation-by-construction principle requires that no tenant's data shares physical storage with another tenant's data, even with payload-based filtering. Shared shards in tiered multitenancy rely on correct filter application at every query -- a single missing filter clause leaks cross-tenant data. Collection-per-tenant provides structural isolation: each tenant's vectors exist in a separate collection with separate API key scoping. There is no query path that could accidentally return another tenant's vectors.
 
 **Trade-off acknowledged:** Collection-per-tenant incurs higher resource overhead (each collection has its own HNSW index, WAL, and memory allocation). This is acceptable for the target scale of 5-50 tenants. If tenant count grows beyond 50 with many small tenants, tiered multitenancy with a "shared infrastructure" tier (for non-regulated tenants only) is a documented future optimization.
+
+---
+
+## Section 2: Online Mode Dependency Manifest (TECH-02)
+
+This section provides a complete dependency specification for the online (cloud-hosted, internet-connected) deployment mode. An engineer can use this section alone to set up the full development and production environment.
+
+### 2.1 Python Packages
+
+Organized by layer in pyproject.toml format. All version floors match Section 1 decisions.
+
+```toml
+[project]
+name = "frostbyte-etl"
+requires-python = ">=3.12"
+
+[project.dependencies]
+# API layer
+fastapi = ">=0.115"
+uvicorn = {version = ">=0.30", extras = ["standard"]}
+pydantic = ">=2.10"
+pydantic-settings = ">=2.5"
+python-multipart = ">=0.0.9"
+python-jose = {version = ">=3.3", extras = ["cryptography"]}
+httpx = ">=0.27"
+
+# Database layer
+sqlalchemy = {version = ">=2.0.46", extras = ["asyncio"]}
+asyncpg = ">=0.29"
+alembic = ">=1.13"
+
+# Task queue layer
+celery = {version = ">=5.6", extras = ["redis"]}
+redis = ">=5.2"
+
+# Storage layer
+boto3 = ">=1.35"
+qdrant-client = ">=1.13"
+
+# Parsing layer (client-specified)
+docling = ">=2.70"
+unstructured = {version = ">=0.16", extras = ["all-docs"]}
+
+# Security layer
+cryptography = ">=43"
+python-magic = ">=0.4.27"
+
+# Observability layer
+structlog = ">=25.1"
+prometheus-fastapi-instrumentator = ">=7.0"
+
+# Resilience layer
+tenacity = ">=9.0"
+
+# Infrastructure layer
+hcloud = ">=2.10"
+```
+
+```toml
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3",
+    "pytest-asyncio>=0.24",
+    "pytest-cov>=5.0",
+    "ruff>=0.7",
+    "mypy>=1.12",
+    "pre-commit>=3.8",
+]
+```
+
+**Notes:**
+- The `redis` Python package (>=5.2) is the client library. Redis server version (>=8.0) is specified in the Docker images section below.
+- The `sqlalchemy[asyncio]` extra installs the greenlet dependency required for async session support. This is mandatory since SQLAlchemy 2.0.46+ no longer auto-installs it.
+- The `unstructured[all-docs]` extra installs parsers for all supported document formats (PDF, DOCX, XLSX, PPTX, HTML, TXT, images).
+
+### 2.2 Docker Images
+
+Organized by service. For production offline bundles, pin by digest (`@sha256:...`). For the planning pack, version tags are sufficient and more readable.
+
+| Service | Image | Version Tag | Purpose |
+|---------|-------|-------------|---------|
+| PostgreSQL | `postgres` | `16-alpine` | Relational DB for governance metadata, lineage, audit, job state |
+| Redis | `redis` | `8-alpine` | Celery broker, caching, rate limiting |
+| Qdrant | `qdrant/qdrant` | `v1.13.0` | Vector store with per-tenant collections |
+| MinIO | `minio/minio` | `latest` | S3-compatible object storage (per-tenant buckets) |
+| ClamAV | `clamav/clamav` | `1.4` | Malware scanning sidecar for intake gateway |
+| Traefik | `traefik` | `v3` | Reverse proxy, TLS termination, API gateway |
+| Prometheus | `prom/prometheus` | `v3.5.1` | Metrics collection (LTS release) |
+| Grafana | `grafana/grafana` | `11-oss` | Dashboards and alerting |
+| Loki | `grafana/loki` | `3.2` | Log aggregation |
+| Promtail | `grafana/promtail` | `3.2` | Log shipping agent (containers to Loki) |
+
+### 2.3 ML Models (Online Mode)
+
+| Model | Provider | Access Method | Dimensions | Configuration | Use Case |
+|-------|----------|---------------|------------|---------------|----------|
+| text-embedding-3-small | OpenRouter (OpenAI) | HTTP API (`/api/v1/embeddings`) | 768 (configured via `dimensions` parameter) | `model: "openai/text-embedding-3-small"`, `dimensions: 768` | Document chunk embedding for RAG retrieval |
+
+**Note:** The model's native output is 1536 dimensions. The `dimensions=768` parameter instructs the API to return a 768-dimensional vector, matching the offline mode Nomic embed-text v1.5 output. This parameter is supported by OpenAI's text-embedding-3 model family.
+
+---
+
+## Section 3: Offline Mode Dependency Manifest (TECH-03)
+
+The offline manifest is a **strict superset** of the online manifest (Section 2). Every package, image, and model from Section 2 is included. This section documents the additional dependencies required for air-gapped operation.
+
+### 3.1 Python Packages
+
+All Python packages from Section 2.1 are included in the offline bundle. No additional Python packages are required for offline mode -- the same application code runs in both modes, with configuration determining whether to call OpenRouter (online) or the local Nomic model (offline) for embeddings.
+
+### 3.2 Docker Images
+
+All Docker images from Section 2.2 are included in the offline bundle, saved as `.tar` files via `docker save`. The following images are additional offline-only services:
+
+| Service | Image | Version Tag | Purpose | Approximate Compressed Size |
+|---------|-------|-------------|---------|----------------------------|
+| **All images from Section 2.2** | | | | |
+| PostgreSQL | `postgres` | `16-alpine` | Same as online | ~90 MB |
+| Redis | `redis` | `8-alpine` | Same as online | ~40 MB |
+| Qdrant | `qdrant/qdrant` | `v1.13.0` | Same as online | ~120 MB |
+| MinIO | `minio/minio` | `latest` | Same as online | ~150 MB |
+| ClamAV | `clamav/clamav` | `1.4` | Same as online (bundled signatures) | ~300 MB |
+| Traefik | `traefik` | `v3` | Not required for offline single-host | ~100 MB |
+| Prometheus | `prom/prometheus` | `v3.5.1` | Optional for offline | ~100 MB |
+| Grafana | `grafana/grafana` | `11-oss` | Optional for offline | ~150 MB |
+| Loki | `grafana/loki` | `3.2` | Not included in offline mode | N/A |
+| Promtail | `grafana/promtail` | `3.2` | Not included in offline mode | N/A |
+| **Offline-only images** | | | | |
+| Nomic embed-text | Custom (GPT4All-based) | v1.5 | Local embedding inference | ~500 MB |
+| Application (API) | `frostbyte/api` | v1.0 | FastAPI application server | ~250 MB |
+| Application (Worker) | `frostbyte/worker` | v1.0 | Celery worker for document processing | ~250 MB |
+
+### 3.3 Local ML Model Weights
+
+These model weights must be bundled in the offline archive. They are not downloaded at runtime.
+
+| Model | Source | Version | Native Dimensions | File Format | Approximate Size | Checksum Requirement |
+|-------|--------|---------|-------------------|-------------|------------------|---------------------|
+| Nomic embed-text v1.5 | Hugging Face: `nomic-ai/nomic-embed-text-v1.5` | v1.5 | 768 | GGUF (quantized Q8_0) for resource-constrained environments; full weights for maximum quality | ~275 MB (Q8_0 GGUF) / ~550 MB (full weights) | SHA-256 hash verified at bundle build time; hash recorded in `MANIFEST.json` |
+| PII / NER model | spaCy `en_core_web_lg` or Presidio analyzer | Latest at bundle build time | N/A (NLP, not embedding) | spaCy model package (`.tar.gz`) | ~750 MB | SHA-256 hash verified at bundle build time; hash recorded in `MANIFEST.json` |
+
+**Offline embedding routing:** The application configuration for offline mode points the embedding service to the local Nomic container instead of OpenRouter. The same embedding interface is used; only the endpoint URL changes. No code branching is required.
+
+### 3.4 ClamAV Signature Database
+
+ClamAV requires a signature database to detect malware. In offline mode, signatures are bundled and cannot be updated over the network.
+
+| Component | Source | Update Mechanism | Approximate Size |
+|-----------|--------|------------------|------------------|
+| `main.cvd` | `clamav.net/downloads` | Shipped in bundle; updated via signed tarball on sneakernet | ~160 MB |
+| `daily.cvd` | `clamav.net/downloads` | Shipped in bundle; updated via signed tarball on sneakernet | ~120 MB |
+| `bytecode.cvd` | `clamav.net/downloads` | Shipped in bundle; updated via signed tarball on sneakernet | ~1 MB |
+
+**Security trade-off:** Offline ClamAV signatures freeze at bundle build time. New malware signatures released after the bundle is built will not be detected until the next bundle update is delivered via sneakernet. This trade-off is inherent to air-gapped operation and is documented for operator awareness.
+
+**Update procedure:** When a new signature database is available, Frostbyte packages the updated `.cvd` files into a signed tarball. The operator verifies the signature, extracts the files to the ClamAV data volume, and restarts the ClamAV container. No full bundle rebuild is required for signature-only updates.
+
+### 3.5 Total Bundle Size Estimate
+
+| Category | Components | Estimated Size |
+|----------|-----------|---------------|
+| Docker images (compressed tarballs) | PostgreSQL, Redis, Qdrant, MinIO, ClamAV, Prometheus, Grafana, Nomic, API, Worker | ~2.0 GB |
+| ML model weights | Nomic embed-text v1.5 (full) + PII/NER model | ~1.3 GB |
+| ClamAV signatures | main.cvd + daily.cvd + bytecode.cvd | ~280 MB |
+| Application code + configuration | docker-compose.yml, .env, policy rules, allowlists | ~10 MB |
+| Scripts + documentation | install.sh, verify.sh, export.sh, MANIFEST.json | ~5 MB |
+| **Estimated total (compressed)** | | **~3.6 GB** |
+| **Estimated total (with safety margin)** | Including future growth, additional models, and overhead | **~5-7 GB** |
+
+**Note:** The safety margin accounts for: (1) Docker image layer overlap reducing compression efficiency, (2) future model additions, (3) sample data for smoke tests, (4) documentation bundled with the archive. Plan for 8 GB of transfer media (USB drive or secure file transfer) to accommodate the bundle plus verification artifacts.
+
+### 3.6 Offline-Specific Configuration
+
+| Concern | Offline Configuration | Rationale |
+|---------|----------------------|-----------|
+| Embedding routing | Nomic embed-text v1.5 container (local, no outbound network calls) | Air-gapped operation; no access to OpenRouter |
+| Audit stream | Local append-only PostgreSQL table (single tenant) | No central audit plane to aggregate to; all audit data stays local |
+| Docker network | `internal: true` on all service networks | Structural guarantee of no outbound connectivity, regardless of host firewall configuration |
+| Monitoring | Prometheus + Grafana optional (included but not required for operation) | Operators may not have monitoring expertise; pipeline functions without it |
+| Log aggregation | Docker log driver only (`docker compose logs`) | Loki not included in offline mode; operational logs accessible via Docker commands |
+| Tenant configuration | Static `docker-compose.yml` with single tenant | No Hetzner Cloud API access; exactly one tenant per offline deployment |
+| Secrets | SOPS + age (pre-decrypted at bundle build time) or static `.env` file | No dynamic secret rotation in air-gapped environments |
+
+---
+
+## Section 4: Cross-Mode Compatibility Matrix
+
+This section documents every component with its online and offline versions and whether data can be transferred between modes.
+
+### 4.1 Component Compatibility Table
+
+| Component | Online Mode | Offline Mode | Data Transferable? | Notes |
+|-----------|-------------|--------------|-------------------|-------|
+| API framework | FastAPI (same codebase) | FastAPI (same codebase) | N/A | Identical application code; mode determined by configuration |
+| Relational DB | PostgreSQL 16 (per-tenant instance) | PostgreSQL 16 (single container) | Yes (`pg_dump` / `pg_restore`) | Schema identical across modes; tenant_id column present in both |
+| Vector store | Qdrant (per-tenant collection) | Qdrant (single collection) | Yes (snapshot export/import) | Both use 768d vectors; collection structure identical |
+| Object storage | MinIO (per-tenant bucket) | MinIO (single bucket) | Yes (`mc mirror` or `aws s3 sync`) | S3 API identical; bucket structure and object keys match |
+| Embeddings | OpenRouter text-embedding-3-small (768d) | Nomic embed-text v1.5 (768d) | Yes (same dimension) | Vectors are cross-compatible in dimension; see Explicit Divergences below |
+| Task queue | Celery + Redis | Celery + Redis | N/A | Identical configuration; same task definitions |
+| Malware scanning | ClamAV (live signature updates) | ClamAV (bundled signatures) | N/A | Scan results comparable; offline signatures may lag |
+| Audit stream | PostgreSQL (append-only, central audit plane) | PostgreSQL (append-only, local) | Yes (JSON Lines export) | Export format identical; offline audit can be imported into online audit plane |
+| Monitoring | Prometheus + Grafana + Loki | Prometheus + Grafana (optional) | N/A | No Loki in offline mode; Prometheus metrics format identical |
+| Secrets | SOPS + age (per-tenant age keys) | SOPS + age (or static `.env`) | N/A | Same encryption mechanism; offline may use pre-decrypted static config |
+| API gateway | Traefik (TLS, routing, rate limiting) | Not required (single-host, no TLS needed) | N/A | Offline bundle is accessed via localhost only |
+| Tenant provisioning | Hetzner Cloud API (dynamic) | Static `docker-compose.yml` | N/A | Offline has exactly one tenant; no dynamic provisioning |
+| Networking | Per-tenant Hetzner firewall rules | Docker `internal: true` network | N/A | Both achieve zero cross-tenant traffic by construction |
+| Document parsing | Docling + Unstructured (same code) | Docling + Unstructured (same code) | N/A | Identical parsing pipeline; same canonical JSON output |
+| PII detection | Policy engine (same rules) | Policy engine (same rules) | N/A | Same detection patterns and thresholds |
+| Injection defense | Policy engine (same rules) | Policy engine (same rules) | N/A | Same scoring heuristics and quarantine thresholds |
+
+### 4.2 Explicit Divergences
+
+The following are documented differences between online and offline modes that operators and engineers must be aware of:
+
+**Divergence 1: Embedding Model Differences**
+
+Online mode uses OpenRouter's `text-embedding-3-small` (an OpenAI model). Offline mode uses Nomic embed-text v1.5. Both produce 768-dimensional vectors, enabling storage and retrieval compatibility. However, the two models produce **semantically similar but not identical** vector representations. A query vector generated by one model will return reasonable but potentially different ranking results when searched against vectors generated by the other model.
+
+**Impact:** If data migrates from offline to online (or vice versa), full re-indexing with the target mode's embedding model is recommended for optimal retrieval quality. Cross-mode search will function but may produce suboptimal ranking.
+
+**Divergence 2: Audit Stream Aggregation**
+
+Online mode aggregates audit events from all tenant data planes into a central audit plane (shared, append-only PostgreSQL). Offline mode keeps audit events local to the single-tenant deployment in a local PostgreSQL table.
+
+**Impact:** When an offline deployment later connects to the online infrastructure (e.g., the customer brings the offline environment online), the local audit log can be exported as JSON Lines and imported into the central audit plane. The export format is identical, enabling seamless migration. During offline operation, there is no central audit visibility.
+
+**Divergence 3: ClamAV Signature Currency**
+
+Online mode can update ClamAV signatures via the internet (`freshclam` daemon). Offline mode's signatures freeze at bundle build time.
+
+**Impact:** Offline deployments may not detect malware that uses signatures released after the bundle was built. This is a documented security trade-off inherent to air-gapped operation. Mitigation: signature-only update tarballs can be delivered via sneakernet without rebuilding the full bundle.
+
+**Divergence 4: Log Aggregation**
+
+Online mode uses Loki for centralized, searchable log aggregation with Grafana exploration. Offline mode uses Docker's built-in log driver, accessible via `docker compose logs`.
+
+**Impact:** Operational log search in offline mode is limited to Docker CLI commands. There is no full-text log search or log correlation across services. This is acceptable because: (1) audit logs (the compliance-critical data) are always stored in PostgreSQL, not in operational logs, and (2) offline deployments have a single tenant with a simpler operational surface.
+
+---
+
+## Section 5: Version Pin Update Procedure
+
+This section describes how to update the version pins in this document as dependencies release new versions.
+
+### 5.1 Update Cadence
+
+Perform a version audit **quarterly** (or when a security advisory is published for any dependency). The audit covers:
+
+1. **Python packages:** Check PyPI for each package listed in Section 2.1.
+2. **Docker images:** Check Docker Hub and upstream release pages for each image in Section 2.2.
+3. **ML models:** Check Hugging Face and model provider release notes for each model in Sections 2.3 and 3.3.
+4. **ClamAV signatures:** Updated independently via the signature update procedure (Section 3.4).
+
+### 5.2 Update Steps
+
+1. **Run a version audit script.** For each dependency, query the package registry (PyPI, Docker Hub, GitHub Releases) and compare the current latest version against the floor specified in this document.
+
+2. **Evaluate breaking changes.** For each dependency with a new major or minor version, read the changelog and identify breaking changes that affect this project.
+
+3. **Update the version floors in this document.** Raise version floors only when the new version provides a required fix (security, compatibility) or when the old floor is no longer available.
+
+4. **Update the offline bundle.** Rebuild all Docker images with the new dependencies. Re-download model weights if updated. Regenerate SHA-256 hashes for all bundle components.
+
+5. **Run the full test suite.** Execute unit tests, integration tests, and end-to-end tests against the updated dependencies. All tests must pass before the version floor is officially raised.
+
+6. **Verify hash integrity.** For the offline bundle, verify that all SHA-256 hashes in `MANIFEST.json` match the rebuilt components.
+
+7. **Document the change.** Record the version update in the project CHANGELOG with: the dependency name, old version floor, new version floor, reason for the update, and the date.
+
+### 5.3 Emergency Security Updates
+
+When a security advisory (CVE) is published for a dependency:
+
+1. **Assess impact.** Determine whether the vulnerability affects this project's usage of the dependency.
+2. **If affected:** Update the version floor immediately, rebuild the offline bundle, and release a patch.
+3. **If not affected:** Document the CVE and the reason it does not apply. Update the version floor at the next scheduled audit if a fixed version is available.
+4. **Notify operators.** For offline deployments, deliver the updated bundle or component tarball via sneakernet with the CVE advisory included.
