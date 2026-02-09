@@ -21,7 +21,7 @@ This phase produces documents, not code. The "stack" here is the set of authorin
 All versions below were verified via WebSearch on 2026-02-08 against PyPI, GitHub Releases, or official docs. Changes from the STACK.md estimates are flagged.
 
 | Component | STACK.md Version | Verified Current Version | Status | Source |
-|-----------|-----------------|-------------------------|--------|--------|
+| --------- | ---------------- | ----------------------- | ------ | ------ |
 | **FastAPI** | >=0.115 | Latest release 2026-02-07 (version number not retrieved but actively releasing) | UPDATE: pin to >=0.115, verify exact latest on PyPI | [GitHub Releases](https://github.com/fastapi/fastapi/releases), [PyPI](https://pypi.org/project/fastapi/) |
 | **Pydantic** | >=2.9 | 2.12.5 | UPDATE: raise floor to >=2.10 for Python 3.14 support | [PyPI](https://pypi.org/project/pydantic/) |
 | **SQLAlchemy** | >=2.0 | 2.0.46 (stable), 2.1.0b1 (beta) | CONFIRMED: >=2.0.46; note asyncio greenlet no longer auto-installed, use `sqlalchemy[asyncio]` | [GitHub Releases](https://github.com/sqlalchemy/sqlalchemy/releases) |
@@ -42,7 +42,7 @@ All versions below were verified via WebSearch on 2026-02-08 against PyPI, GitHu
 OpenRouter provides an OpenAI-compatible embeddings API supporting multiple models:
 
 | Model | Dimensions | Use Case |
-|-------|-----------|----------|
+| ----- | ---------- | -------- |
 | `openai/text-embedding-3-small` | 1536 (configurable) | Cost-effective online embedding |
 | `openai/text-embedding-3-large` | 3072 (configurable) | Higher quality online embedding |
 | `qwen/qwen3-embedding-0.6b` | 1024 | Small, fast |
@@ -51,6 +51,7 @@ OpenRouter provides an OpenAI-compatible embeddings API supporting multiple mode
 **Confidence: MEDIUM** -- OpenRouter model availability changes frequently. The PRD must specify which model(s) to use and pin the dimension count.
 
 **Critical dimension alignment issue:** Nomic embed-text v1.5 produces 768d vectors. OpenRouter models produce different dimensions (1536, 3072, etc.). The PRD must either:
+
 1. Lock both modes to the same dimension (e.g., use OpenRouter's dimension reduction to 768d to match Nomic), OR
 2. Document that online and offline vector indices are incompatible and vectors cannot be transferred between modes
 
@@ -59,7 +60,7 @@ This is a product decision that must be resolved in the PRD, not deferred.
 ### Alternatives Considered
 
 | Instead of | Could Use | Tradeoff | Recommendation |
-|------------|-----------|----------|----------------|
+| ---------- | --------- | -------- | --------------- |
 | MinIO (maintenance mode) | Garage (Rust, v2.0, Apache 2.0) | Garage is newer, less battle-tested, but actively developed | **Evaluate Garage** -- MinIO maintenance mode is a real risk for a new project. See Open Questions. |
 | MinIO (maintenance mode) | SeaweedFS (Go, Apache 2.0) | More mature than Garage, distributed by default | Alternative if Garage does not meet requirements |
 | MinIO (maintenance mode) | Hetzner Object Storage (S3-compat) | Managed service, no self-hosting needed for online mode; but unavailable for offline | Online-only option; still need something for offline bundle |
@@ -75,7 +76,7 @@ This is a product decision that must be resolved in the PRD, not deferred.
 
 **Structure:**
 
-```
+```text
 PRD Document
 |
 +-- 1. Executive Summary (PRD-01)
@@ -132,7 +133,7 @@ PRD Document
 
 **Structure:**
 
-```
+```text
 Tech Decisions Document
 |
 +-- 1. Component Decision Table
@@ -176,7 +177,7 @@ Tech Decisions Document
 
 **States and transitions:**
 
-```
+```text
                    create_tenant()
                          |
                          v
@@ -223,7 +224,7 @@ Tech Decisions Document
 **Per-state details required for each transition:**
 
 | Transition | Trigger | Pre-conditions | Actions | Audit Event | Rollback |
-|-----------|---------|---------------|---------|-------------|----------|
+| ---------- | ------- | -------------- | ------- | ----------- | -------- |
 | PENDING -> PROVISIONING | API call | Valid tenant config | Begin infrastructure creation | TENANT_PROVISION_STARTED | Delete partial resources |
 | PROVISIONING -> ACTIVE | Automatic | All resources healthy | Enable API routing | TENANT_PROVISIONED | N/A |
 | PROVISIONING -> FAILED | Automatic | Resource creation failed | Log failure details | TENANT_PROVISION_FAILED | Cleanup partial resources |
@@ -247,7 +248,7 @@ Tech Decisions Document
 Problems that look simple but have existing solutions. Since this phase produces documents, "don't hand-roll" means "don't write from scratch when existing artifacts exist."
 
 | Problem | Don't Build From Scratch | Use Instead | Why |
-|---------|------------------------|-------------|-----|
+| ------- | ------------------------ | ----------- | --- |
 | Pipeline phase descriptions | Write new prose from nothing | Synthesize from `ETL_PIPELINE_PROPOSAL.md` phases A-E + `ARCHITECTURE.md` data flow diagrams | Existing artifacts contain detailed phase descriptions with inputs/outputs already specified |
 | Persona definitions | Invent new personas | Reference `CUSTOMER_JOURNEY_MAP.md` Dana persona and journey map | Dana is already well-defined with pain points P1-P5 and a stage-by-stage journey |
 | Threat/safety requirements | Enumerate threats from scratch | Reference `THREAT_MODEL_SAFETY.md` controls A-F | Threat model already covers boundary, ingestion, parsing, retrieval, tenancy, and audit controls |
@@ -385,7 +386,7 @@ Not applicable -- Phase 1 produces documents, not code. However, the PRD must in
 ## State of the Art
 
 | Old Approach | Current Approach | When Changed | Impact on Phase 1 |
-|--------------|------------------|--------------|-------------------|
+| ------------ | ----------------- | ------------ | ----------------- |
 | MinIO community (actively developed) | MinIO community (maintenance mode) | Dec 2025 | Tech decisions must address this; evaluate Garage or SeaweedFS |
 | Prometheus 2.x | Prometheus 3.x (current) | 2024 | Update version pins from >=2.54 to >=3.5 |
 | Nomic embed-text v1 | Nomic embed-text v1.5 (stable) / v2 MoE (new, local TBD) | v1.5: 2024, v2: late 2025 | Lock to v1.5 for offline (confirmed local inference); consider v2 when Ollama support confirmed |
@@ -396,6 +397,7 @@ Not applicable -- Phase 1 produces documents, not code. However, the PRD must in
 | SQLAlchemy greenlet auto-install | SQLAlchemy asyncio requires explicit install target | 2025/2026 | Must use `sqlalchemy[asyncio]` in requirements |
 
 **Deprecated/outdated from STACK.md:**
+
 - MinIO community as "actively developed" -- now in maintenance mode
 - Prometheus 2.x version range -- Prometheus 3.x is current
 - Nomic embed-text v1 as the only option -- v1.5 is the stable local choice, v2 exists but local support pending
@@ -407,6 +409,7 @@ Things that require product decisions and cannot be resolved by research alone. 
 ### 1. MinIO Maintenance Mode: Continue or Switch?
 
 **What we know:**
+
 - MinIO community edition entered maintenance mode in December 2025
 - No new features, PRs, or enhancements will be accepted
 - Security fixes evaluated "case by case"
@@ -415,11 +418,13 @@ Things that require product decisions and cannot be resolved by research alone. 
 - Alternatives exist: Garage (Rust, Apache 2.0, v2.0), SeaweedFS (Go, Apache 2.0), Hetzner Object Storage (online only)
 
 **What's unclear:**
+
 - Whether MinIO's maintenance mode will lead to eventual archival
 - Whether the "case by case" security fix policy is acceptable for regulated deployments
 - Whether Garage v2.0 is mature enough for production use in regulated environments
 
 **Recommendation:** Make one of these decisions in the tech document:
+
 - **Option A (pragmatic):** Continue with MinIO. The S3 API is stable, the codebase is mature, and for a planning pack this is the lowest-risk choice. Document the maintenance mode status and note Garage as the migration target if MinIO is abandoned entirely.
 - **Option B (forward-looking):** Switch to Garage for the long-term recommendation. Document MinIO as acceptable for initial deployment with a migration plan to Garage.
 - **Option C (split):** Use Hetzner Object Storage for online mode, MinIO for offline bundle only. Minimizes the surface area of the maintenance-mode dependency.
@@ -429,6 +434,7 @@ Things that require product decisions and cannot be resolved by research alone. 
 ### 2. Embedding Dimension Alignment Across Modes
 
 **What we know:**
+
 - Nomic embed-text v1.5: 768 dimensions (configurable down to 64 via Matryoshka)
 - Nomic embed-text v2 MoE: 768 dimensions (configurable to 256)
 - OpenRouter `openai/text-embedding-3-small`: 1536 dimensions (configurable)
@@ -436,10 +442,12 @@ Things that require product decisions and cannot be resolved by research alone. 
 - OpenRouter `text-embedding-3-small` supports dimension reduction via the API
 
 **What's unclear:**
+
 - Whether the project requires cross-mode vector compatibility (can an offline-created index be queried in online mode?)
 - If dimension reduction on OpenRouter models to 768d provides acceptable retrieval quality
 
 **Recommendation:** Lock both modes to 768 dimensions:
+
 - Offline: Nomic embed-text v1.5 at native 768d
 - Online: OpenRouter `text-embedding-3-small` with `dimensions: 768` parameter (OpenAI models support this)
 - This enables cross-mode vector compatibility if needed
@@ -448,11 +456,13 @@ Things that require product decisions and cannot be resolved by research alone. 
 ### 3. Nomic v1.5 vs v2 for Offline Mode
 
 **What we know:**
+
 - v1.5: Confirmed local inference via GPT4All, supports CPU and GPU, well-tested
 - v2 MoE: Better quality (esp. multilingual), but Ollama local inference support announced as "coming soon" with no confirmed date
 - v1.5 GGUF quantized versions available for resource-constrained environments
 
 **What's unclear:**
+
 - v2 Ollama release timeline
 - v2 local inference performance characteristics (475M params, MoE routing overhead)
 - Whether v2 CPU-only performance is acceptable for offline bundle use
@@ -462,12 +472,14 @@ Things that require product decisions and cannot be resolved by research alone. 
 ### 4. Qdrant: Collection-Per-Tenant vs Tiered Multitenancy (1.16)
 
 **What we know:**
+
 - ARCHITECTURE.md recommends collection-per-tenant
 - Qdrant 1.16 (released Nov 2025) introduces tiered multitenancy: shared fallback shard for small tenants, dedicated shards for large tenants via "promotion"
 - Qdrant docs recommend starting with single-collection payload-based multitenancy and promoting large tenants
 - For Frostbyte, per-tenant isolation is a hard requirement
 
 **What's unclear:**
+
 - Whether tiered multitenancy provides sufficient isolation for regulated workloads (payload-based filtering in shared shard could leak data on filter misconfiguration)
 - Whether collection-per-tenant introduces unacceptable resource overhead
 
@@ -480,7 +492,7 @@ What the planner can draw from vs. what must be written fresh.
 ### Available for Synthesis (existing content to formalize)
 
 | Artifact | Location | What It Provides for Phase 1 |
-|----------|----------|------------------------------|
+| -------- | -------- | ---------------------------- |
 | ETL_PIPELINE_PROPOSAL.md | `docs/` | Executive summary draft, pipeline phases A-E, acceptance criteria, deployment modes |
 | CUSTOMER_JOURNEY_MAP.md | `docs/` | Dana persona, pain points P1-P5, journey stages with required artifacts |
 | THREAT_MODEL_SAFETY.md | `docs/` | Security controls A-F, primary risks |
@@ -496,7 +508,7 @@ What the planner can draw from vs. what must be written fresh.
 ### Must Be Written Fresh (not covered by existing artifacts)
 
 | Content | Requirement | Why It Does Not Exist Yet |
-|---------|-------------|---------------------------|
+| ------- | ----------- | ------------------------- |
 | Tenant lifecycle state machine | PRD-03 | ETL_PIPELINE_PROPOSAL mentions kill-switch but does not define states/transitions |
 | Per-phase data flow diagrams with I/O schemas | PRD-02 | architecture.mmd shows the macro flow; per-phase diagrams with typed inputs/outputs do not exist |
 | API contract specification (endpoints, schemas, errors) | PRD-05 | No API spec exists anywhere in the project |
@@ -509,11 +521,13 @@ What the planner can draw from vs. what must be written fresh.
 ## Sources
 
 ### Primary (HIGH confidence)
+
 - Project artifacts: `docs/ETL_PIPELINE_PROPOSAL.md`, `docs/CUSTOMER_JOURNEY_MAP.md`, `docs/THREAT_MODEL_SAFETY.md`, `diagrams/*.mmd`, `templates/VENDOR_ACCEPTANCE_REPORT.md` -- read in full
 - Prior research: `.planning/research/STACK.md`, `.planning/research/FEATURES.md`, `.planning/research/ARCHITECTURE.md`, `.planning/research/PITFALLS.md` -- read in full
 - Project state: `.planning/PROJECT.md`, `.planning/ROADMAP.md`, `.planning/REQUIREMENTS.md`, `.planning/STATE.md` -- read in full
 
 ### Secondary (MEDIUM confidence -- WebSearch verified against official sources)
+
 - [FastAPI PyPI](https://pypi.org/project/fastapi/) -- version currency confirmed
 - [FastAPI GitHub Releases](https://github.com/fastapi/fastapi/releases) -- actively maintained, Starlette >=0.40 supported
 - [Pydantic PyPI](https://pypi.org/project/pydantic/) -- v2.12.5 confirmed, Python 3.14 support
@@ -538,12 +552,14 @@ What the planner can draw from vs. what must be written fresh.
 - [SAP Tenant Lifecycle](https://architecture.learning.sap.com/docs/ref-arch/d31bedf420/3) -- provisioning/deprovisioning patterns
 
 ### Tertiary (LOW confidence -- training data only)
+
 - Tenant lifecycle state machine patterns -- based on established SaaS architecture knowledge, not verified against a specific 2026 source
 - API contract best practices for multi-tenant systems -- general REST API design knowledge
 
 ## Metadata
 
 **Confidence breakdown:**
+
 - Verified version pins: HIGH -- all checked against PyPI/GitHub on 2026-02-08
 - PRD structure patterns: HIGH -- derived from success criteria + standard PRD practices
 - Technology decision finalization: MEDIUM -- MinIO status creates an open question requiring product decision
