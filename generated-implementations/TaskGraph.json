@@ -1,0 +1,411 @@
+{
+  "version": "1.0.0",
+  "generated": "2026-02-10T17:37:49.340834Z",
+  "phases": {
+    "1": {
+      "name": "Foundation & Quick Wins",
+      "tasks": [
+        "E01",
+        "E04",
+        "E10"
+      ]
+    },
+    "2": {
+      "name": "Core Platform Features",
+      "tasks": [
+        "E07",
+        "E03",
+        "E06"
+      ]
+    },
+    "3": {
+      "name": "Infrastructure & Integration",
+      "tasks": [
+        "E02",
+        "E08"
+      ]
+    },
+    "4": {
+      "name": "Advanced Capabilities",
+      "tasks": [
+        "E05",
+        "E09"
+      ]
+    }
+  },
+  "tasks": [
+    {
+      "id": "E01",
+      "name": "OpenAPI/Swagger Spec for All APIs",
+      "phase": 1,
+      "dependencies": [],
+      "intent": "Implement OpenAPI/Swagger Spec for All APIs",
+      "inputs": {
+        "repository": "$FROSTBYTE_REPO_ROOT",
+        "environment": "$FROSTBYTE_ENV"
+      },
+      "outputs": [
+        "docs/api/openapi.yaml - Complete OpenAPI specification",
+        "scripts/validate-openapi.sh - Validation script",
+        "packages/api/src/routes/swagger.ts - Swagger UI route"
+      ],
+      "acceptance": {
+        "criteria": [
+          "OpenAPI 3.1 spec file exists at docs/api/openapi.yaml",
+          "All API endpoints are documented with request/response schemas",
+          "Swagger UI is accessible at /docs endpoint",
+          "Spec validates without errors using openapi-validator"
+        ],
+        "command": "./verify-implementations.sh --check 1"
+      },
+      "resources": {
+        "max_seconds": 14400,
+        "max_retries": 3
+      },
+      "evidence": {
+        "logs": "logs/E01.log",
+        "manifest": "evidence/E01.json"
+      }
+    },
+    {
+      "id": "E04",
+      "name": "Configurable Schema Extensions",
+      "phase": 1,
+      "dependencies": [
+        "E01"
+      ],
+      "intent": "Implement Configurable Schema Extensions",
+      "inputs": {
+        "repository": "$FROSTBYTE_REPO_ROOT",
+        "environment": "$FROSTBYTE_ENV"
+      },
+      "outputs": [
+        "packages/core/src/services/schema-extension.service.ts",
+        "schemas/tenant-custom-schema.json - Validation schema",
+        "migrations/004_add_custom_metadata.sql"
+      ],
+      "acceptance": {
+        "criteria": [
+          "Tenant can define custom schema via API",
+          "Custom fields are stored in JSONB column",
+          "Schema validation rejects invalid custom fields",
+          "Custom fields appear in retrieval results"
+        ],
+        "command": "./verify-implementations.sh --check 4"
+      },
+      "resources": {
+        "max_seconds": 14400,
+        "max_retries": 3
+      },
+      "evidence": {
+        "logs": "logs/E04.log",
+        "manifest": "evidence/E04.json"
+      }
+    },
+    {
+      "id": "E10",
+      "name": "Automated Test Suite with Compliance Templates",
+      "phase": 1,
+      "dependencies": [],
+      "intent": "Implement Automated Test Suite with Compliance Templates",
+      "inputs": {
+        "repository": "$FROSTBYTE_REPO_ROOT",
+        "environment": "$FROSTBYTE_ENV"
+      },
+      "outputs": [
+        "tests/compliance/gdpr/ - GDPR compliance tests",
+        "tests/compliance/hipaa/ - HIPAA compliance tests",
+        "tests/compliance/fedramp/ - FedRAMP compliance tests",
+        "scripts/generate-compliance-report.sh"
+      ],
+      "acceptance": {
+        "criteria": [
+          "Compliance test suite runs with npm run test:compliance",
+          "GDPR data residency tests pass",
+          "HIPAA PHI handling tests pass",
+          "FedRAMP audit trail tests pass",
+          "All tests produce machine-readable evidence"
+        ],
+        "command": "./verify-implementations.sh --check 10"
+      },
+      "resources": {
+        "max_seconds": 14400,
+        "max_retries": 3
+      },
+      "evidence": {
+        "logs": "logs/E10.log",
+        "manifest": "evidence/E10.json"
+      }
+    },
+    {
+      "id": "E07",
+      "name": "SSO/SAML/OIDC Integration",
+      "phase": 2,
+      "dependencies": [
+        "E01"
+      ],
+      "intent": "Implement SSO/SAML/OIDC Integration",
+      "inputs": {
+        "repository": "$FROSTBYTE_REPO_ROOT",
+        "environment": "$FROSTBYTE_ENV"
+      },
+      "outputs": [
+        "packages/auth/src/sso/saml.strategy.ts",
+        "packages/auth/src/sso/oidc.strategy.ts",
+        "packages/auth/src/middleware/sso.middleware.ts",
+        "docs/integration/sso-setup.md"
+      ],
+      "acceptance": {
+        "criteria": [
+          "SAML 2.0 authentication flow works",
+          "OIDC authentication flow works",
+          "User attributes are correctly mapped",
+          "Session management follows security best practices",
+          "Logout (SLO) works correctly"
+        ],
+        "command": "./verify-implementations.sh --check 7"
+      },
+      "resources": {
+        "max_seconds": 43200,
+        "max_retries": 3
+      },
+      "evidence": {
+        "logs": "logs/E07.log",
+        "manifest": "evidence/E07.json"
+      }
+    },
+    {
+      "id": "E03",
+      "name": "Batch Processing API with Progress Streaming",
+      "phase": 2,
+      "dependencies": [
+        "E01",
+        "E10"
+      ],
+      "intent": "Implement Batch Processing API with Progress Streaming",
+      "inputs": {
+        "repository": "$FROSTBYTE_REPO_ROOT",
+        "environment": "$FROSTBYTE_ENV"
+      },
+      "outputs": [
+        "packages/api/src/routes/batch.routes.ts",
+        "packages/core/src/services/batch-processor.service.ts",
+        "packages/core/src/services/progress-streamer.service.ts",
+        "docs/api/batch-processing.md"
+      ],
+      "acceptance": {
+        "criteria": [
+          "Batch submission returns job ID immediately",
+          "Progress events stream via SSE/WebSocket",
+          "Job status can be queried via API",
+          "Failed items are tracked separately",
+          "Batch can be cancelled mid-processing"
+        ],
+        "command": "./verify-implementations.sh --check 3"
+      },
+      "resources": {
+        "max_seconds": 43200,
+        "max_retries": 3
+      },
+      "evidence": {
+        "logs": "logs/E03.log",
+        "manifest": "evidence/E03.json"
+      }
+    },
+    {
+      "id": "E06",
+      "name": "Web-Based Admin Dashboard",
+      "phase": 2,
+      "dependencies": [
+        "E01",
+        "E07"
+      ],
+      "intent": "Implement Web-Based Admin Dashboard",
+      "inputs": {
+        "repository": "$FROSTBYTE_REPO_ROOT",
+        "environment": "$FROSTBYTE_ENV"
+      },
+      "outputs": [
+        "packages/dashboard/src/ - React dashboard application",
+        "packages/dashboard/src/components/tenant-selector.tsx",
+        "packages/dashboard/src/pages/audit-log.tsx",
+        "packages/dashboard/src/pages/batch-monitor.tsx"
+      ],
+      "acceptance": {
+        "criteria": [
+          "Dashboard loads in under 3 seconds",
+          "All API functions have UI equivalents",
+          "Tenant isolation is visually clear",
+          "Audit log is searchable and filterable",
+          "Dashboard is responsive (mobile-friendly)"
+        ],
+        "command": "./verify-implementations.sh --check 6"
+      },
+      "resources": {
+        "max_seconds": 43200,
+        "max_retries": 3
+      },
+      "evidence": {
+        "logs": "logs/E06.log",
+        "manifest": "evidence/E06.json"
+      }
+    },
+    {
+      "id": "E02",
+      "name": "Terraform/Pulumi Provider for Infrastructure Provisioning",
+      "phase": 3,
+      "dependencies": [
+        "E01",
+        "E03"
+      ],
+      "intent": "Implement Terraform/Pulumi Provider for Infrastructure Provisioning",
+      "inputs": {
+        "repository": "$FROSTBYTE_REPO_ROOT",
+        "environment": "$FROSTBYTE_ENV"
+      },
+      "outputs": [
+        "terraform-provider-frostbyte/ - Terraform provider source",
+        "examples/terraform/tenant-deployment/",
+        "docs/infrastructure/terraform-setup.md"
+      ],
+      "acceptance": {
+        "criteria": [
+          "Terraform provider installs from registry",
+          "Hetzner Cloud resources provision correctly",
+          "Tenant isolation is enforced at network level",
+          "State management is configured (S3 backend)",
+          "Destroy operation cleans up all resources"
+        ],
+        "command": "./verify-implementations.sh --check 2"
+      },
+      "resources": {
+        "max_seconds": 43200,
+        "max_retries": 3
+      },
+      "evidence": {
+        "logs": "logs/E02.log",
+        "manifest": "evidence/E02.json"
+      }
+    },
+    {
+      "id": "E08",
+      "name": "Signed Export Bundles with Verification",
+      "phase": 3,
+      "dependencies": [
+        "E01",
+        "E03"
+      ],
+      "intent": "Implement Signed Export Bundles with Verification",
+      "inputs": {
+        "repository": "$FROSTBYTE_REPO_ROOT",
+        "environment": "$FROSTBYTE_ENV"
+      },
+      "outputs": [
+        "packages/core/src/services/export-signer.service.ts",
+        "packages/core/src/services/verify-export.service.ts",
+        "scripts/verify-export-bundle.sh",
+        "docs/integration/export-format.md"
+      ],
+      "acceptance": {
+        "criteria": [
+          "Exports are signed with tenant-specific key",
+          "Signature verification succeeds with public key",
+          "Bundle includes manifest with checksums",
+          "Tampered bundle fails verification",
+          "Export format is documented and versioned"
+        ],
+        "command": "./verify-implementations.sh --check 8"
+      },
+      "resources": {
+        "max_seconds": 43200,
+        "max_retries": 3
+      },
+      "evidence": {
+        "logs": "logs/E08.log",
+        "manifest": "evidence/E08.json"
+      }
+    },
+    {
+      "id": "E05",
+      "name": "Graph RAG Support",
+      "phase": 4,
+      "dependencies": [
+        "E01",
+        "E04"
+      ],
+      "intent": "Implement Graph RAG Support",
+      "inputs": {
+        "repository": "$FROSTBYTE_REPO_ROOT",
+        "environment": "$FROSTBYTE_ENV"
+      },
+      "outputs": [
+        "packages/core/src/services/entity-extraction.service.ts",
+        "packages/core/src/services/graph-builder.service.ts",
+        "packages/core/src/services/hybrid-retrieval.service.ts",
+        "docs/architecture/graph-rag.md"
+      ],
+      "acceptance": {
+        "criteria": [
+          "Entity extraction identifies named entities",
+          "Relationship extraction creates graph edges",
+          "Graph queries return connected entities",
+          "Hybrid search (vector + graph) works",
+          "Graph is exportable in standard formats (RDF, Neo4j)"
+        ],
+        "command": "./verify-implementations.sh --check 5"
+      },
+      "resources": {
+        "max_seconds": 86400,
+        "max_retries": 3
+      },
+      "evidence": {
+        "logs": "logs/E05.log",
+        "manifest": "evidence/E05.json"
+      }
+    },
+    {
+      "id": "E09",
+      "name": "Multi-Modal Document Support",
+      "phase": 4,
+      "dependencies": [
+        "E01",
+        "E03",
+        "E04"
+      ],
+      "intent": "Implement Multi-Modal Document Support",
+      "inputs": {
+        "repository": "$FROSTBYTE_REPO_ROOT",
+        "environment": "$FROSTBYTE_ENV"
+      },
+      "outputs": [
+        "packages/pipeline/src/processors/image-processor.ts",
+        "packages/pipeline/src/processors/audio-processor.ts",
+        "packages/pipeline/src/processors/video-processor.ts",
+        "docs/pipeline/multimodal-processing.md"
+      ],
+      "acceptance": {
+        "criteria": [
+          "Image files are processed and indexed",
+          "Audio files are transcribed and indexed",
+          "Video files have frame extraction + transcription",
+          "Multi-modal embeddings are consistent",
+          "Cross-modal search works (text query finds images)"
+        ],
+        "command": "./verify-implementations.sh --check 9"
+      },
+      "resources": {
+        "max_seconds": 86400,
+        "max_retries": 3
+      },
+      "evidence": {
+        "logs": "logs/E09.log",
+        "manifest": "evidence/E09.json"
+      }
+    }
+  ],
+  "metadata": {
+    "total_enhancements": 10,
+    "total_phases": 4,
+    "estimated_total_seconds": 432000
+  }
+}

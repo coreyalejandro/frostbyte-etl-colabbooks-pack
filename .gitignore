@@ -1,3 +1,12 @@
+# Secrets - Exclude private keys and plaintext, keep structure
+.secrets/*.key
+.secrets/**/*.age
+.secrets/**/*.yaml
+.secrets/**/*.env
+.secrets/tenants/*/
+!.secrets/.gitkeep
+!.secrets/README.md
+
 # OpenMemory - IDE/Assistant specific rules
 .cursor/rules/openmemory.mdc
 
@@ -34,3 +43,4 @@ venv/
 # OS / IDE
 .DS_Store
 .vscode/
+.windsurf/rules/openmemory.md

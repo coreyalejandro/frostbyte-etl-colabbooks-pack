@@ -1,0 +1,24 @@
+# SOPS Configuration for Frostbyte
+# This file configures SOPS to use age encryption for per-tenant secrets
+# Documentation: https://github.com/getsops/sops
+
+# Default: use environment variable SOPS_AGE_KEY_FILE for the master key
+# For tenant-specific encryption, use the scripts/init-secrets.sh workflow
+
+creation_rules:
+  # Master key for project-level secrets
+  - path_regex: \.secrets/secrets\.enc\.yaml$
+    age: $SOPS_AGE_RECIPIENT
+
+  # Per-tenant secrets pattern: .secrets/tenants/{tenant_id}/secrets.enc.yaml
+  - path_regex: \.secrets/tenants/([^/]+)/secrets\.enc\.yaml$
+    age: ${SOPS_AGE_RECIPIENT}
+
+# Key groups for multiple recipient support (e.g., backup keys)
+# Uncomment and configure for production:
+# key_groups:
+#   - age:
+#       - recipient: age1...
+#         # primary key
+#       - recipient: age1...
+#         # backup/recovery key
