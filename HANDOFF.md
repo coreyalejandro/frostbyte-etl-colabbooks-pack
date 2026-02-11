@@ -1,11 +1,18 @@
 # Agent Handoff: Frostbyte ETL Planning Pack
 
 **Date:** 2026-02-11
-**Status:** Phase 5 Complete — Ready for Phase 6 (Policy, Embedding, and Serving Layer Plans)
+**Status:** Phase 6 Complete — Ready for Phase 7 (Deployment Architecture)
 
 ## What Was Just Completed
 
-- **Phase 5 (Intake and Parsing Pipeline Plans)** — **complete** (2/2 plans)
+- **Phase 6 (Policy, Embedding, and Serving Layer Plans)** — **complete** (3/3 plans)
+  - **Plan 06-01** — `docs/POLICY_ENGINE_PLAN.md`: PII (REDACT/FLAG/BLOCK), classification (rule+ML), injection (DOCUMENT_SAFETY)
+  - **Plan 06-02** — `docs/EMBEDDING_INDEXING_PLAN.md`: OpenRouter/Nomic, 768d, three-store write, rollback
+  - **Plan 06-03** — `docs/SERVING_LAYER_PLAN.md`: RAG retrieval, retrieval proof, cite-only-from-retrieval
+  - Phase 6 folder: `.planning/phases/06-policy-embedding-serving/` with 06-RESEARCH.md, 06-01/02/03-PLAN.md, summaries
+- Phase 1–6 all complete
+
+## Previous: Phase 5 (Intake and Parsing Pipeline Plans) — complete (2/2 plans)
   - **Plan 05-01** — `docs/INTAKE_GATEWAY_PLAN.md` created:
     - Full request flow: auth, manifest validation, MIME/size/checksum/malware checks
     - API endpoints (POST batch, GET batch, GET receipt), error response formats
@@ -58,6 +65,9 @@
 - `docs/STORAGE_LAYER_PLAN.md` — MinIO, PostgreSQL, Qdrant, Redis provisioning, credentials, verification
 - `docs/INTAKE_GATEWAY_PLAN.md` — Intake flow, API endpoints, MIME/checksum/malware, receipts
 - `docs/PARSING_PIPELINE_PLAN.md` — Docling + Unstructured, canonical JSON schema, lineage
+- `docs/POLICY_ENGINE_PLAN.md` — PII, classification, injection (DOCUMENT_SAFETY)
+- `docs/EMBEDDING_INDEXING_PLAN.md` — OpenRouter/Nomic, 768d, three-store write
+- `docs/SERVING_LAYER_PLAN.md` — RAG retrieval, retrieval proof, cite-only-from-retrieval
 
 ### Project Structure
 
@@ -69,6 +79,7 @@
     03-audit-stream-and-document-safety/   # Phase 3 — complete (03-01, 03-02; AUDIT_*, DOCUMENT_SAFETY)
     04-foundation-and-storage-layer/       # Phase 4 — complete (04-01, 04-02; FOUNDATION_*, STORAGE_*)
     05-intake-and-parsing/                 # Phase 5 — complete (05-01, 05-02; INTAKE_*, PARSING_*)
+    06-policy-embedding-serving/           # Phase 6 — complete (06-01, 06-02, 06-03; POLICY_*, EMBEDDING_*, SERVING_*)
   research/            # ARCHITECTURE, FEATURES, PITFALLS, STACK
 docs/                  # PRD, TECH_DECISIONS, NOTION_EXPORT, api/openapi.yaml
 packages/api|core/     # API server, schema extension service
@@ -79,16 +90,16 @@ notebooks/             # 5 variant notebooks (05 = Hetzner multi-tenant)
 
 ## Recommended Next Steps
 
-1. **Phase 6 (Policy, Embedding, and Serving Layer Plans)** — Next roadmap phase per ROADMAP.md. Plans 06-01 (policy engine), 06-02 (embedding/indexing), 06-03 (serving layer) to be created and executed.
+1. **Phase 7 (Deployment Architecture)** — Next roadmap phase per ROADMAP.md. Plans 07-01 (online deployment + offline Docker bundle) and 07-02 (mode parity matrix + offline update cycle).
 2. **Build in 1hr (immediate):** Follow `BUILD_1HR.md` — `docker compose up -d`, `cd pipeline && pip install -e . && uvicorn pipeline.main:app --port 8000`
 3. **Phase 1 UAT** (optional) — `01-UAT.md` shows 8 tests pending; manual validation if desired
 
 ## Prompt for Next Conversation
 
-Copy and paste this into a new chat to start Phase 6:
+Copy and paste this into a new chat to start Phase 7:
 
 ```
-Execute Phase 6 (Policy, Embedding, and Serving Layer Plans). Read HANDOFF.md and .planning/ROADMAP.md Phase 6 section. Create .planning/phases/06-policy-embedding-serving/ with 06-RESEARCH.md, 06-01-PLAN.md (policy engine: PII, classification, injection, chunking), 06-02-PLAN.md (embedding + indexing), 06-03-PLAN.md (serving layer RAG API). Reference docs/PRD.md, docs/AUDIT_ARCHITECTURE.md, docs/DOCUMENT_SAFETY.md. Produce docs/ outputs per ROADMAP success criteria. Update HANDOFF.md when done.
+Execute Phase 7 (Deployment Architecture). Read HANDOFF.md and .planning/ROADMAP.md Phase 7 section. Create .planning/phases/07-deployment-architecture/ with 07-RESEARCH.md, 07-01-PLAN.md (online Hetzner + offline Docker bundle), 07-02-PLAN.md (mode parity matrix + offline update cycle). Reference docs/TENANT_ISOLATION_HETZNER.md, docs/STORAGE_LAYER_PLAN.md. Produce docs/ outputs per ROADMAP success criteria. Update HANDOFF.md when done.
 ```
 
 ## Important Context
@@ -124,11 +135,11 @@ Execute Phase 6 (Policy, Embedding, and Serving Layer Plans). Read HANDOFF.md an
 - **Project:** Frostbyte ETL Zero-Shot Implementation Pack
 - **Branch:** master
 - **Last Commit:** [to be updated after commit]
-- **Progress:** ~55% (Phases 1, 2, 3, 4, 5 complete)
-- **Phase 5 Plans:** 2/2 complete
+- **Progress:** ~70% (Phases 1, 2, 3, 4, 5, 6 complete)
+- **Phase 6 Plans:** 3/3 complete
 
 ---
 
-**Status:** Phase 5 complete; ready for Phase 6
-**Recommendation:** Proceed to Phase 6 (Policy, Embedding, and Serving Layer Plans) per ROADMAP.md
-**Confidence:** High — audit and document safety specs complete, ROADMAP success criteria met
+**Status:** Phase 6 complete; ready for Phase 7
+**Recommendation:** Proceed to Phase 7 (Deployment Architecture) per ROADMAP.md
+**Confidence:** High — policy, embedding, serving specs complete; ROADMAP success criteria met

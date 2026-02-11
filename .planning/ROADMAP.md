@@ -18,7 +18,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 3: Audit Stream and Document Safety** - Cross-cutting security and compliance designs that inform all implementation plans
 - [x] **Phase 4: Foundation and Storage Layer Plans** - Implementation plans for the tenant data model, config framework, and per-tenant storage provisioning
 - [x] **Phase 5: Intake and Parsing Pipeline Plans** - Implementation plans for the intake gateway and document parsing pipeline
-- [ ] **Phase 6: Policy, Embedding, and Serving Layer Plans** - Implementation plans for the policy engine, embedding service, and RAG serving layer
+- [x] **Phase 6: Policy, Embedding, and Serving Layer Plans** - Implementation plans for the policy engine, embedding service, and RAG serving layer
 - [ ] **Phase 7: Deployment Architecture** - Online and offline deployment specifications, mode parity, and update cycles
 - [ ] **Phase 8: Team Readiness Documentation** - Engineer onboarding, user guides for Dana, and role-playing scenarios for CS and engineering
 
@@ -129,9 +129,9 @@ Plans:
 
 Plans:
 
-- [ ] 06-01: Policy engine implementation plan
-- [ ] 06-02: Embedding and indexing implementation plan
-- [ ] 06-03: Serving layer (RAG API) implementation plan
+- [x] 06-01: Policy engine implementation plan (docs/POLICY_ENGINE_PLAN.md)
+- [x] 06-02: Embedding and indexing implementation plan (docs/EMBEDDING_INDEXING_PLAN.md)
+- [x] 06-03: Serving layer (RAG API) implementation plan (docs/SERVING_LAYER_PLAN.md)
 
 ### Phase 7: Deployment Architecture
 
@@ -183,10 +183,10 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8
 | 3. Audit Stream and Document Safety | 2/2 | Complete | 2026-02-11 |
 | 4. Foundation and Storage Layer Plans | 2/2 | Complete | 2026-02-11 |
 | 5. Intake and Parsing Pipeline Plans | 2/2 | Complete | 2026-02-11 |
-| 6. Policy, Embedding, and Serving Layer Plans | 0/3 | Not started | - |
+| 6. Policy, Embedding, and Serving Layer Plans | 3/3 | Complete | 2026-02-11 |
 | 7. Deployment Architecture | 0/2 | Not started | - |
 | 8. Team Readiness Documentation | 0/3 | Not started | - |
 
 ---
 *Created: 2026-02-08*
-*Last updated: 2026-02-11 after Phase 4 completion*
+*Last updated: 2026-02-11 after Phase 6 completion*

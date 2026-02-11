@@ -27,9 +27,9 @@ Requirements for milestone v1.0: Zero-Shot Implementation Pack. Each maps to roa
 - [x] **IMPL-02**: Storage layer plan (MinIO, PostgreSQL, Qdrant, Redis per-tenant provisioning)
 - [x] **IMPL-03**: Intake gateway plan (auth, manifest, checksum, malware scan, receipts)
 - [x] **IMPL-04**: Parsing pipeline plan (Docling + Unstructured orchestration, canonical JSON schema)
-- [ ] **IMPL-05**: Policy engine plan (PII detection, classification, injection defense, chunking)
-- [ ] **IMPL-06**: Embedding and indexing plan (OpenRouter online, Nomic offline, vector writes)
-- [ ] **IMPL-07**: Serving layer plan (RAG API, retrieval proofs, cite-only-from-retrieval)
+- [x] **IMPL-05**: Policy engine plan (PII detection, classification, injection defense, chunking)
+- [x] **IMPL-06**: Embedding and indexing plan (OpenRouter online, Nomic offline, vector writes)
+- [x] **IMPL-07**: Serving layer plan (RAG API, retrieval proofs, cite-only-from-retrieval)
 
 ### ISOL — Tenant Isolation Architecture
 
@@ -136,9 +136,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | IMPL-02 | Phase 4 | Complete |
 | IMPL-03 | Phase 5 | Complete |
 | IMPL-04 | Phase 5 | Complete |
-| IMPL-05 | Phase 6 | Pending |
-| IMPL-06 | Phase 6 | Pending |
-| IMPL-07 | Phase 6 | Pending |
+| IMPL-05 | Phase 6 | Complete |
+| IMPL-06 | Phase 6 | Complete |
+| IMPL-07 | Phase 6 | Complete |
 | ISOL-01 | Phase 2 | Pending |
 | ISOL-02 | Phase 2 | Pending |
 | ISOL-03 | Phase 2 | Pending |
@@ -170,4 +170,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-02-08*
-*Last updated: 2026-02-08 after Phase 1 completion*
+*Last updated: 2026-02-11 after Phase 6 completion*
