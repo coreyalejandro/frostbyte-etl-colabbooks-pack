@@ -23,10 +23,10 @@ Requirements for milestone v1.0: Zero-Shot Implementation Pack. Each maps to roa
 
 ### IMPL — Implementation Plans
 
-- [ ] **IMPL-01**: Foundation layer plan (tenant data model, config framework, Docker skeleton, audit schema)
-- [ ] **IMPL-02**: Storage layer plan (MinIO, PostgreSQL, Qdrant, Redis per-tenant provisioning)
-- [ ] **IMPL-03**: Intake gateway plan (auth, manifest, checksum, malware scan, receipts)
-- [ ] **IMPL-04**: Parsing pipeline plan (Docling + Unstructured orchestration, canonical JSON schema)
+- [x] **IMPL-01**: Foundation layer plan (tenant data model, config framework, Docker skeleton, audit schema)
+- [x] **IMPL-02**: Storage layer plan (MinIO, PostgreSQL, Qdrant, Redis per-tenant provisioning)
+- [x] **IMPL-03**: Intake gateway plan (auth, manifest, checksum, malware scan, receipts)
+- [x] **IMPL-04**: Parsing pipeline plan (Docling + Unstructured orchestration, canonical JSON schema)
 - [ ] **IMPL-05**: Policy engine plan (PII detection, classification, injection defense, chunking)
 - [ ] **IMPL-06**: Embedding and indexing plan (OpenRouter online, Nomic offline, vector writes)
 - [ ] **IMPL-07**: Serving layer plan (RAG API, retrieval proofs, cite-only-from-retrieval)
@@ -64,15 +64,15 @@ Requirements for milestone v1.0: Zero-Shot Implementation Pack. Each maps to roa
 
 ### AUDIT — Audit Stream Design
 
-- [ ] **AUDIT-01**: Audit event schema specification (event types, fields, hash chain design)
-- [ ] **AUDIT-02**: Immutable storage design (append-only guarantees, tamper evidence)
-- [ ] **AUDIT-03**: Query patterns and export specification (auditor workflows, SIEM integration)
+- [x] **AUDIT-01**: Audit event schema specification (event types, fields, hash chain design)
+- [x] **AUDIT-02**: Immutable storage design (append-only guarantees, tamper evidence)
+- [x] **AUDIT-03**: Query patterns and export specification (auditor workflows, SIEM integration)
 
 ### SAFETY — Document Safety Controls
 
-- [ ] **SAFETY-01**: Injection defense specification (pattern scanning, heuristic scoring, quarantine rules)
-- [ ] **SAFETY-02**: Content boundary enforcement design (envelope pattern, content/control separation)
-- [ ] **SAFETY-03**: File-type allowlisting and MIME verification specification
+- [x] **SAFETY-01**: Injection defense specification (pattern scanning, heuristic scoring, quarantine rules)
+- [x] **SAFETY-02**: Content boundary enforcement design (envelope pattern, content/control separation)
+- [x] **SAFETY-03**: File-type allowlisting and MIME verification specification
 
 ## v2 Requirements
 
@@ -132,10 +132,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TECH-01 | Phase 1 | Complete |
 | TECH-02 | Phase 1 | Complete |
 | TECH-03 | Phase 1 | Complete |
-| IMPL-01 | Phase 4 | Pending |
-| IMPL-02 | Phase 4 | Pending |
-| IMPL-03 | Phase 5 | Pending |
-| IMPL-04 | Phase 5 | Pending |
+| IMPL-01 | Phase 4 | Complete |
+| IMPL-02 | Phase 4 | Complete |
+| IMPL-03 | Phase 5 | Complete |
+| IMPL-04 | Phase 5 | Complete |
 | IMPL-05 | Phase 6 | Pending |
 | IMPL-06 | Phase 6 | Pending |
 | IMPL-07 | Phase 6 | Pending |
@@ -155,12 +155,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | USERDOC-03 | Phase 8 | Pending |
 | SCENARIO-01 | Phase 8 | Pending |
 | SCENARIO-02 | Phase 8 | Pending |
-| AUDIT-01 | Phase 3 | Pending |
-| AUDIT-02 | Phase 3 | Pending |
-| AUDIT-03 | Phase 3 | Pending |
-| SAFETY-01 | Phase 3 | Pending |
-| SAFETY-02 | Phase 3 | Pending |
-| SAFETY-03 | Phase 3 | Pending |
+| AUDIT-01 | Phase 3 | Complete |
+| AUDIT-02 | Phase 3 | Complete |
+| AUDIT-03 | Phase 3 | Complete |
+| SAFETY-01 | Phase 3 | Complete |
+| SAFETY-02 | Phase 3 | Complete |
+| SAFETY-03 | Phase 3 | Complete |
 
 **Coverage:**
 

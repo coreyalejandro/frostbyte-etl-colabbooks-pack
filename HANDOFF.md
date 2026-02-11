@@ -1,24 +1,47 @@
 # Agent Handoff: Frostbyte ETL Planning Pack
 
 **Date:** 2026-02-11
-**Status:** Phase 2 Complete — Ready for Phase 3 (new conversation)
+**Status:** Phase 5 Complete — Ready for Phase 6 (Policy, Embedding, and Serving Layer Plans)
 
 ## What Was Just Completed
 
-- **Handoff prep for new conversation** — HANDOFF.md updated with Prompt for Next Conversation; Phase 3 scope clarified (plans TBD, create folder + PLAN files first)
-- **New conversation / phase handoff rule** — `.cursor/rules/new-conversation-phase-handoff.mdc`:
-  - When to start new conversation (phase boundary, plan boundary for 6/8, user request)
-  - Handoff protocol (HANDOFF.md update, commit, prompt for next session)
-  - Conversation scope table by phase; Phases 6 and 8 = one plan per conversation
-- **Context window strategy** — `.planning/CONTEXT_WINDOW_STRATEGY.md`:
-  - Line/token estimates for PRD, plans, outputs
-  - Phase 3–8 fit assessment; Phases 6 and 8 split by plan
-- **Plan 02-02** — `docs/TENANT_ISOLATION_STORAGE_ENCRYPTION.md` created:
-  - MinIO, PostgreSQL, Qdrant, Redis isolation (provisioning, verification, deprovisioning)
-  - SOPS + age key hierarchy, rotation, registry schema
-  - Combined provisioning sequence (PRD 3.4 steps 4–7)
-- Phase 2 (Tenant Isolation Architecture) — **complete** (2/2 plans)
-- Phase 1 and Phase 2 both complete
+- **Phase 5 (Intake and Parsing Pipeline Plans)** — **complete** (2/2 plans)
+  - **Plan 05-01** — `docs/INTAKE_GATEWAY_PLAN.md` created:
+    - Full request flow: auth, manifest validation, MIME/size/checksum/malware checks
+    - API endpoints (POST batch, GET batch, GET receipt), error response formats
+    - Audit events: BATCH_RECEIVED, DOCUMENT_INGESTED, DOCUMENT_REJECTED, DOCUMENT_QUARANTINED
+  - **Plan 05-02** — `docs/PARSING_PIPELINE_PLAN.md` created:
+    - Docling + Unstructured orchestration (Stage 1 layout, Stage 2 chunking, Stage 3 assembly)
+    - Canonical JSON schema (Pydantic-ready models)
+    - Lineage, deterministic chunk_id, parse failure reporting
+  - Phase 5 folder: `.planning/phases/05-intake-and-parsing/` with 05-RESEARCH.md, 05-01-PLAN.md, 05-02-PLAN.md, summaries
+- Phase 1, Phase 2, Phase 3, Phase 4, and Phase 5 all complete
+
+## Previous: Phase 4 (Foundation and Storage Layer) — complete (2/2 plans)
+  - **Plan 04-01** — `docs/FOUNDATION_LAYER_PLAN.md` created:
+    - Tenant data model (tenants table DDL, migrations/001_tenant_registry.sql)
+    - Configuration framework (env vars, tenant config JSONB, SOPS secrets)
+    - Docker Compose skeleton (migration order, audit DDL reference)
+    - Audit event emission (emit_audit_event, TENANT_CREATED/PROVISION_STARTED/PROVISIONED/CONFIG_UPDATED)
+  - **Plan 04-02** — `docs/STORAGE_LAYER_PLAN.md` created:
+    - MinIO, PostgreSQL, Qdrant, Redis per-tenant provisioning
+    - Credential generation and SOPS workflow
+    - Combined provisioning sequence with rollback
+    - Cross-store verification and audit emission
+  - Phase 4 folder: `.planning/phases/04-foundation-and-storage-layer/` with 04-RESEARCH.md, 04-01-PLAN.md, 04-02-PLAN.md, summaries
+- Phase 1, Phase 2, Phase 3, and Phase 4 all complete
+
+## Previous: Phase 3 (Audit Stream and Document Safety) — complete (2/2 plans)
+  - **Plan 03-01** — `docs/AUDIT_ARCHITECTURE.md` created:
+    - Audit event schema (fields, 24+ event types, hash chain design)
+    - Immutable storage (PostgreSQL DDL, GRANT/REVOKE, optional trigger)
+    - Query patterns (by tenant, by document, by time range) with example SQL and export format (JSON Lines + manifest)
+  - **Plan 03-02** — `docs/DOCUMENT_SAFETY.md` created:
+    - Injection defense (10+ regex patterns, heuristic scorer, PASS/FLAG/QUARANTINE decision tree)
+    - Content boundary enforcement (envelope pattern at Stages A–E, delimiter spec)
+    - File-type allowlisting (MIME verification via libmagic, per-tenant config)
+  - Phase 3 folder: `.planning/phases/03-audit-stream-and-document-safety/` with 03-RESEARCH.md, 03-01-PLAN.md, 03-02-PLAN.md, summaries
+- Phase 1, Phase 2, and Phase 3 all complete
 
 ## Current Project State
 
@@ -29,6 +52,12 @@
 - Phase 2 research — verified patterns for Hetzner provisioning, SOPS+age, MinIO/PostgreSQL/Qdrant isolation, Docker `internal: true`
 - `docs/TENANT_ISOLATION_HETZNER.md` — Hetzner provisioning, firewall rules, Docker offline
 - `docs/TENANT_ISOLATION_STORAGE_ENCRYPTION.md` — storage namespaces, encryption, key rotation
+- `docs/AUDIT_ARCHITECTURE.md` — audit schema, immutable storage, query patterns
+- `docs/DOCUMENT_SAFETY.md` — injection defense, content boundary, file allowlisting
+- `docs/FOUNDATION_LAYER_PLAN.md` — tenant data model, config framework, Docker skeleton, audit emission
+- `docs/STORAGE_LAYER_PLAN.md` — MinIO, PostgreSQL, Qdrant, Redis provisioning, credentials, verification
+- `docs/INTAKE_GATEWAY_PLAN.md` — Intake flow, API endpoints, MIME/checksum/malware, receipts
+- `docs/PARSING_PIPELINE_PLAN.md` — Docling + Unstructured, canonical JSON schema, lineage
 
 ### Project Structure
 
@@ -37,6 +66,9 @@
   phases/
     01-.../            # Phase 1 — complete (01-VERIFICATION.md passed)
     02-.../            # Phase 2 — complete (02-01, 02-02 summaries; TENANT_ISOLATION_*.md)
+    03-audit-stream-and-document-safety/   # Phase 3 — complete (03-01, 03-02; AUDIT_*, DOCUMENT_SAFETY)
+    04-foundation-and-storage-layer/       # Phase 4 — complete (04-01, 04-02; FOUNDATION_*, STORAGE_*)
+    05-intake-and-parsing/                 # Phase 5 — complete (05-01, 05-02; INTAKE_*, PARSING_*)
   research/            # ARCHITECTURE, FEATURES, PITFALLS, STACK
 docs/                  # PRD, TECH_DECISIONS, NOTION_EXPORT, api/openapi.yaml
 packages/api|core/     # API server, schema extension service
@@ -47,16 +79,16 @@ notebooks/             # 5 variant notebooks (05 = Hetzner multi-tenant)
 
 ## Recommended Next Steps
 
-1. **Phase 3 (Audit Architecture)** — Next roadmap phase per ROADMAP.md. Phase 3 folder and 03-01/03-02 PLAN files need to be created first (TBD in ROADMAP).
+1. **Phase 6 (Policy, Embedding, and Serving Layer Plans)** — Next roadmap phase per ROADMAP.md. Plans 06-01 (policy engine), 06-02 (embedding/indexing), 06-03 (serving layer) to be created and executed.
 2. **Build in 1hr (immediate):** Follow `BUILD_1HR.md` — `docker compose up -d`, `cd pipeline && pip install -e . && uvicorn pipeline.main:app --port 8000`
 3. **Phase 1 UAT** (optional) — `01-UAT.md` shows 8 tests pending; manual validation if desired
 
 ## Prompt for Next Conversation
 
-Copy and paste this into a new chat to start Phase 3:
+Copy and paste this into a new chat to start Phase 6:
 
 ```
-Execute Phase 3 (Audit Stream and Document Safety). Read HANDOFF.md and .planning/ROADMAP.md Phase 3 section. Phase 3 plans (03-01, 03-02) are TBD — first create .planning/phases/03-audit-stream-and-document-safety/ with 03-RESEARCH.md, 03-01-PLAN.md (audit event schema, immutable storage, query patterns), 03-02-PLAN.md (injection defense, content boundary, file-type allowlisting) following the structure of phases 01 and 02. Then execute 03-01 and 03-02 to produce docs/ outputs per ROADMAP success criteria. Update HANDOFF.md when done.
+Execute Phase 6 (Policy, Embedding, and Serving Layer Plans). Read HANDOFF.md and .planning/ROADMAP.md Phase 6 section. Create .planning/phases/06-policy-embedding-serving/ with 06-RESEARCH.md, 06-01-PLAN.md (policy engine: PII, classification, injection, chunking), 06-02-PLAN.md (embedding + indexing), 06-03-PLAN.md (serving layer RAG API). Reference docs/PRD.md, docs/AUDIT_ARCHITECTURE.md, docs/DOCUMENT_SAFETY.md. Produce docs/ outputs per ROADMAP success criteria. Update HANDOFF.md when done.
 ```
 
 ## Important Context
@@ -76,8 +108,9 @@ Execute Phase 3 (Audit Stream and Document Safety). Read HANDOFF.md and .plannin
 ### Key Files to Review
 
 - `docs/PRD.md` Section 3.4 (provisioning), 3.6 (deprovisioning)
+- `docs/AUDIT_ARCHITECTURE.md` — audit schema, immutable storage, query patterns
+- `docs/DOCUMENT_SAFETY.md` — injection defense, content boundary, file allowlisting
 - `.planning/phases/02-tenant-isolation-architecture/02-RESEARCH.md` — patterns and pitfalls
-- `.planning/phases/02-tenant-isolation-architecture/02-01-PLAN.md` — full task spec
 - `docs/TECH_DECISIONS.md` — component choices
 
 ## Known Issues / Considerations
@@ -90,12 +123,12 @@ Execute Phase 3 (Audit Stream and Document Safety). Read HANDOFF.md and .plannin
 
 - **Project:** Frostbyte ETL Zero-Shot Implementation Pack
 - **Branch:** master
-- **Last Commit:** 46a04b5 — docs: Update HANDOFF Quick Reference
-- **Progress:** 25% (Phase 1 and Phase 2 complete)
-- **Phase 2 Plans:** 2/2 complete
+- **Last Commit:** [to be updated after commit]
+- **Progress:** ~55% (Phases 1, 2, 3, 4, 5 complete)
+- **Phase 5 Plans:** 2/2 complete
 
 ---
 
-**Status:** Phase 2 complete; ready for Phase 3
-**Recommendation:** Proceed to Phase 3 (Audit architecture) per ROADMAP.md
-**Confidence:** High — both isolation documents complete, verification criteria met
+**Status:** Phase 5 complete; ready for Phase 6
+**Recommendation:** Proceed to Phase 6 (Policy, Embedding, and Serving Layer Plans) per ROADMAP.md
+**Confidence:** High — audit and document safety specs complete, ROADMAP success criteria met

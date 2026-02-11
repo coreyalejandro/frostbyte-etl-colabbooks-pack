@@ -15,9 +15,9 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Product Definition and Tech Decisions** - PRD and locked-in technology choices that every subsequent document references
 - [ ] **Phase 2: Tenant Isolation Architecture** - Per-tenant isolation specifications (Hetzner, storage, encryption, network)
-- [ ] **Phase 3: Audit Stream and Document Safety** - Cross-cutting security and compliance designs that inform all implementation plans
-- [ ] **Phase 4: Foundation and Storage Layer Plans** - Implementation plans for the tenant data model, config framework, and per-tenant storage provisioning
-- [ ] **Phase 5: Intake and Parsing Pipeline Plans** - Implementation plans for the intake gateway and document parsing pipeline
+- [x] **Phase 3: Audit Stream and Document Safety** - Cross-cutting security and compliance designs that inform all implementation plans
+- [x] **Phase 4: Foundation and Storage Layer Plans** - Implementation plans for the tenant data model, config framework, and per-tenant storage provisioning
+- [x] **Phase 5: Intake and Parsing Pipeline Plans** - Implementation plans for the intake gateway and document parsing pipeline
 - [ ] **Phase 6: Policy, Embedding, and Serving Layer Plans** - Implementation plans for the policy engine, embedding service, and RAG serving layer
 - [ ] **Phase 7: Deployment Architecture** - Online and offline deployment specifications, mode parity, and update cycles
 - [ ] **Phase 8: Team Readiness Documentation** - Engineer onboarding, user guides for Dana, and role-playing scenarios for CS and engineering
@@ -77,8 +77,8 @@ Plans:
 
 Plans:
 
-- [ ] 03-01: Audit event schema, immutable storage design, and query patterns
-- [ ] 03-02: Injection defense, content boundary enforcement, and file-type allowlisting
+- [x] 03-01: Audit event schema, immutable storage design, and query patterns
+- [x] 03-02: Injection defense, content boundary enforcement, and file-type allowlisting
 
 ### Phase 4: Foundation and Storage Layer Plans
 
@@ -90,12 +90,12 @@ Plans:
   1. The foundation layer plan specifies the tenant data model schema, configuration framework (env vars, secrets, feature flags), Docker Compose skeleton, and audit event emission pattern for the foundation layer
   2. The storage layer plan specifies MinIO bucket provisioning, PostgreSQL database provisioning, Qdrant collection provisioning, and Redis setup -- all with per-tenant credential generation and isolation verification steps
   3. Both plans reference the Phase 2 isolation architecture and Phase 3 audit schema by specific section, not by vague allusion
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
 
-- [ ] 04-01: Foundation layer implementation plan
-- [ ] 04-02: Storage layer implementation plan
+- [x] 04-01: Foundation layer implementation plan (docs/FOUNDATION_LAYER_PLAN.md)
+- [x] 04-02: Storage layer implementation plan (docs/STORAGE_LAYER_PLAN.md)
 
 ### Phase 5: Intake and Parsing Pipeline Plans
 
@@ -107,12 +107,12 @@ Plans:
   1. The intake gateway plan specifies the full request flow (auth, manifest validation, checksum, MIME check, malware scan, object store write, receipt generation, audit event, job enqueue) with API endpoint definitions and error response formats
   2. The parsing pipeline plan specifies Docling + Unstructured orchestration, canonical JSON schema with field definitions, lineage pointer structure, and parse failure reporting -- with enough detail to write the canonical schema as a Pydantic model
   3. Both plans include the audit event types they emit, referencing the Phase 3 audit schema
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
 
-- [ ] 05-01: Intake gateway implementation plan
-- [ ] 05-02: Parsing pipeline implementation plan
+- [x] 05-01: Intake gateway implementation plan (docs/INTAKE_GATEWAY_PLAN.md)
+- [x] 05-02: Parsing pipeline implementation plan (docs/PARSING_PIPELINE_PLAN.md)
 
 ### Phase 6: Policy, Embedding, and Serving Layer Plans
 
@@ -179,14 +179,14 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8
 | Phase | Plans Complete | Status | Completed |
 | ----- | -------------- | ------ | ---------- |
 | 1. Product Definition and Tech Decisions | 2/2 | Complete | 2026-02-08 |
-| 2. Tenant Isolation Architecture | 0/2 | Not started | - |
-| 3. Audit Stream and Document Safety | 0/2 | Not started | - |
-| 4. Foundation and Storage Layer Plans | 0/2 | Not started | - |
-| 5. Intake and Parsing Pipeline Plans | 0/2 | Not started | - |
+| 2. Tenant Isolation Architecture | 2/2 | Complete | 2026-02-09 |
+| 3. Audit Stream and Document Safety | 2/2 | Complete | 2026-02-11 |
+| 4. Foundation and Storage Layer Plans | 2/2 | Complete | 2026-02-11 |
+| 5. Intake and Parsing Pipeline Plans | 2/2 | Complete | 2026-02-11 |
 | 6. Policy, Embedding, and Serving Layer Plans | 0/3 | Not started | - |
 | 7. Deployment Architecture | 0/2 | Not started | - |
 | 8. Team Readiness Documentation | 0/3 | Not started | - |
 
 ---
 *Created: 2026-02-08*
-*Last updated: 2026-02-08 after Phase 1 completion*
+*Last updated: 2026-02-11 after Phase 4 completion*
