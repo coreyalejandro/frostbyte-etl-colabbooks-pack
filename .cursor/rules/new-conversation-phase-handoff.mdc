@@ -1,0 +1,58 @@
+---
+description: When to start a new conversation and how to hand off between sessions for the Frostbyte ETL planning pack
+globs: 
+  - "**/*.md"
+  - ".planning/**"
+  - "docs/**"
+alwaysApply: true
+---
+
+# New Conversation and Phase Handoff Rule
+
+## When to Start a New Conversation
+
+**Start a new conversation at:**
+
+1. **Phase boundary** — When moving from Phase N to Phase N+1
+2. **Plan boundary (phases with 3+ plans)** — Phase 6 (3 plans) and Phase 8 (3 plans): one plan per conversation
+3. **User request** — When the user says "start new conversation", "new chat", or "fresh context"
+4. **Context exhaustion** — When the agent notices repeated summarization, lost detail, or confusion about prior steps
+
+## Handoff Protocol (Before Ending Session)
+
+**MANDATORY before switching conversations:**
+
+1. **Update HANDOFF.md**
+   - "What Was Just Completed" — list deliverables and file paths
+   - "Recommended Next Steps" — next plan ID (e.g., `03-01-PLAN.md`) with one-line description
+   - "Quick Reference" — last commit, progress %, phase/plan counts
+   - Status, Recommendation, Confidence
+
+2. **Ensure work is committed**
+   - All new files staged and committed
+   - Meaningful commit message (e.g., `docs: add AUDIT_SCHEMA.md (Plan 03-01)`)
+
+3. **Prompt for next session**
+   - Provide the next agent a clear opener, e.g.:
+   - "Execute Plan 03-01. Read HANDOFF.md and .planning/phases/03-audit/03-01-PLAN.md. Create docs/AUDIT_SCHEMA.md per the plan."
+
+## Conversation Scope by Phase
+
+| Phase | Plans | Suggested Scope | Rationale |
+|-------|-------|-----------------|------------|
+| 3 | 03-01, 03-02 | 1 conversation (both plans) or 2 if tight | 2 plans; audit + safety are related |
+| 4 | 04-01, 04-02 | 1–2 conversations | 2 plans; foundation + storage |
+| 5 | 05-01, 05-02 | 1–2 conversations | 2 plans; intake + parsing |
+| 6 | 06-01, 06-02, 06-03 | **3 conversations** (one per plan) | 3 plans; each plan is substantial |
+| 7 | 07-01, 07-02 | 1–2 conversations | 2 plans |
+| 8 | 08-01, 08-02, 08-03 | **3 conversations** (one per plan) | 3 plans; onboarding + docs + scenarios |
+
+## First Message in New Conversation
+
+When starting a new conversation for plan execution, the user (or agent) should say something like:
+
+```
+Execute Plan {NN-MM}. Read HANDOFF.md and .planning/phases/{phase-folder}/{NN-MM}-PLAN.md. 
+Create {output-path} per the plan. Reference docs/PRD.md and docs/TECH_DECISIONS.md as needed. 
+Update HANDOFF.md when done.
+```

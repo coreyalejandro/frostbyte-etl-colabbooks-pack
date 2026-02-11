@@ -1,10 +1,18 @@
 # Agent Handoff: Frostbyte ETL Planning Pack
 
 **Date:** 2026-02-11
-**Status:** Phase 2 Complete — Tenant Isolation Architecture
+**Status:** Phase 2 Complete — Ready for Phase 3 (new conversation)
 
 ## What Was Just Completed
 
+- **Handoff prep for new conversation** — HANDOFF.md updated with Prompt for Next Conversation; Phase 3 scope clarified (plans TBD, create folder + PLAN files first)
+- **New conversation / phase handoff rule** — `.cursor/rules/new-conversation-phase-handoff.mdc`:
+  - When to start new conversation (phase boundary, plan boundary for 6/8, user request)
+  - Handoff protocol (HANDOFF.md update, commit, prompt for next session)
+  - Conversation scope table by phase; Phases 6 and 8 = one plan per conversation
+- **Context window strategy** — `.planning/CONTEXT_WINDOW_STRATEGY.md`:
+  - Line/token estimates for PRD, plans, outputs
+  - Phase 3–8 fit assessment; Phases 6 and 8 split by plan
 - **Plan 02-02** — `docs/TENANT_ISOLATION_STORAGE_ENCRYPTION.md` created:
   - MinIO, PostgreSQL, Qdrant, Redis isolation (provisioning, verification, deprovisioning)
   - SOPS + age key hierarchy, rotation, registry schema
@@ -39,9 +47,17 @@ notebooks/             # 5 variant notebooks (05 = Hetzner multi-tenant)
 
 ## Recommended Next Steps
 
-1. **Phase 3 (Audit Architecture)** — Next roadmap phase per ROADMAP.md
+1. **Phase 3 (Audit Architecture)** — Next roadmap phase per ROADMAP.md. Phase 3 folder and 03-01/03-02 PLAN files need to be created first (TBD in ROADMAP).
 2. **Build in 1hr (immediate):** Follow `BUILD_1HR.md` — `docker compose up -d`, `cd pipeline && pip install -e . && uvicorn pipeline.main:app --port 8000`
 3. **Phase 1 UAT** (optional) — `01-UAT.md` shows 8 tests pending; manual validation if desired
+
+## Prompt for Next Conversation
+
+Copy and paste this into a new chat to start Phase 3:
+
+```
+Execute Phase 3 (Audit Stream and Document Safety). Read HANDOFF.md and .planning/ROADMAP.md Phase 3 section. Phase 3 plans (03-01, 03-02) are TBD — first create .planning/phases/03-audit-stream-and-document-safety/ with 03-RESEARCH.md, 03-01-PLAN.md (audit event schema, immutable storage, query patterns), 03-02-PLAN.md (injection defense, content boundary, file-type allowlisting) following the structure of phases 01 and 02. Then execute 03-01 and 03-02 to produce docs/ outputs per ROADMAP success criteria. Update HANDOFF.md when done.
+```
 
 ## Important Context
 
@@ -74,7 +90,7 @@ notebooks/             # 5 variant notebooks (05 = Hetzner multi-tenant)
 
 - **Project:** Frostbyte ETL Zero-Shot Implementation Pack
 - **Branch:** master
-- **Last Commit:** 5fb97fe — feat: Add API key configuration, environment setup, and secrets management
+- **Last Commit:** 8957492 — chore: Add new-conversation handoff rule and context window strategy; prep Phase 3 prompt
 - **Progress:** 25% (Phase 1 and Phase 2 complete)
 - **Phase 2 Plans:** 2/2 complete
 
