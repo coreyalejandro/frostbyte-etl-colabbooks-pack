@@ -40,27 +40,27 @@ Requirements for milestone v1.0: Zero-Shot Implementation Pack. Each maps to roa
 
 ### DEPLOY — Deployment Plans
 
-- [ ] **DEPLOY-01**: Online mode deployment architecture (Hetzner topology, scaling, HA)
-- [ ] **DEPLOY-02**: Offline air-gapped Docker bundle specification (compose, images, models, scripts)
-- [ ] **DEPLOY-03**: Mode parity matrix (what works where, explicit divergences)
-- [ ] **DEPLOY-04**: Offline update cycle specification (signed bundles, verification, zero-downtime cutover)
+- [x] **DEPLOY-01**: Online mode deployment architecture (Hetzner topology, scaling, HA)
+- [x] **DEPLOY-02**: Offline air-gapped Docker bundle specification (compose, images, models, scripts)
+- [x] **DEPLOY-03**: Mode parity matrix (what works where, explicit divergences)
+- [x] **DEPLOY-04**: Offline update cycle specification (signed bundles, verification, zero-downtime cutover)
 
 ### ONBOARD — Engineer Onboarding
 
-- [ ] **ONBOARD-01**: Architecture walkthrough tutorial (control plane, data plane, audit plane)
-- [ ] **ONBOARD-02**: Local development environment setup guide (Docker, dependencies, test data)
-- [ ] **ONBOARD-03**: First-task guide (add a new document type to the pipeline, end-to-end)
+- [x] **ONBOARD-01**: Architecture walkthrough tutorial (control plane, data plane, audit plane)
+- [x] **ONBOARD-02**: Local development environment setup guide (Docker, dependencies, test data)
+- [x] **ONBOARD-03**: First-task guide (add a new document type to the pipeline, end-to-end)
 
 ### USERDOC — User Documentation (Dana Persona)
 
-- [ ] **USERDOC-01**: Vendor data operations guide (batch submission, manifest format, authentication)
-- [ ] **USERDOC-02**: Acceptance report interpretation guide (what each field means, common issues)
-- [ ] **USERDOC-03**: Troubleshooting guide (common errors, resolution steps, escalation paths)
+- [x] **USERDOC-01**: Vendor data operations guide (batch submission, manifest format, authentication)
+- [x] **USERDOC-02**: Acceptance report interpretation guide (what each field means, common issues)
+- [x] **USERDOC-03**: Troubleshooting guide (common errors, resolution steps, escalation paths)
 
 ### SCENARIO — Role-Playing Scenarios
 
-- [ ] **SCENARIO-01**: Customer success scenarios (3+ situations: onboarding questions, batch failures, compliance inquiries)
-- [ ] **SCENARIO-02**: Deployed engineer scenarios (3+ situations: parse failures, tenant provisioning issues, audit queries)
+- [x] **SCENARIO-01**: Customer success scenarios (3+ situations: onboarding questions, batch failures, compliance inquiries)
+- [x] **SCENARIO-02**: Deployed engineer scenarios (3+ situations: parse failures, tenant provisioning issues, audit queries)
 
 ### AUDIT — Audit Stream Design
 
@@ -143,18 +143,18 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ISOL-02 | Phase 2 | Pending |
 | ISOL-03 | Phase 2 | Pending |
 | ISOL-04 | Phase 2 | Pending |
-| DEPLOY-01 | Phase 7 | Pending |
-| DEPLOY-02 | Phase 7 | Pending |
-| DEPLOY-03 | Phase 7 | Pending |
-| DEPLOY-04 | Phase 7 | Pending |
-| ONBOARD-01 | Phase 8 | Pending |
-| ONBOARD-02 | Phase 8 | Pending |
-| ONBOARD-03 | Phase 8 | Pending |
-| USERDOC-01 | Phase 8 | Pending |
-| USERDOC-02 | Phase 8 | Pending |
-| USERDOC-03 | Phase 8 | Pending |
-| SCENARIO-01 | Phase 8 | Pending |
-| SCENARIO-02 | Phase 8 | Pending |
+| DEPLOY-01 | Phase 7 | Complete |
+| DEPLOY-02 | Phase 7 | Complete |
+| DEPLOY-03 | Phase 7 | Complete |
+| DEPLOY-04 | Phase 7 | Complete |
+| ONBOARD-01 | Phase 8 | Complete |
+| ONBOARD-02 | Phase 8 | Complete |
+| ONBOARD-03 | Phase 8 | Complete |
+| USERDOC-01 | Phase 8 | Complete |
+| USERDOC-02 | Phase 8 | Complete |
+| USERDOC-03 | Phase 8 | Complete |
+| SCENARIO-01 | Phase 8 | Complete |
+| SCENARIO-02 | Phase 8 | Complete |
 | AUDIT-01 | Phase 3 | Complete |
 | AUDIT-02 | Phase 3 | Complete |
 | AUDIT-03 | Phase 3 | Complete |
@@ -170,4 +170,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-02-08*
-*Last updated: 2026-02-11 after Phase 6 completion*
+*Last updated: 2026-02-11 after Phase 8 completion — All 37 v1 requirements complete*

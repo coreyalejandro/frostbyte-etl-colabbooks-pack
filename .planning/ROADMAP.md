@@ -19,8 +19,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 4: Foundation and Storage Layer Plans** - Implementation plans for the tenant data model, config framework, and per-tenant storage provisioning
 - [x] **Phase 5: Intake and Parsing Pipeline Plans** - Implementation plans for the intake gateway and document parsing pipeline
 - [x] **Phase 6: Policy, Embedding, and Serving Layer Plans** - Implementation plans for the policy engine, embedding service, and RAG serving layer
-- [ ] **Phase 7: Deployment Architecture** - Online and offline deployment specifications, mode parity, and update cycles
-- [ ] **Phase 8: Team Readiness Documentation** - Engineer onboarding, user guides for Dana, and role-playing scenarios for CS and engineering
+- [x] **Phase 7: Deployment Architecture** - Online and offline deployment specifications, mode parity, and update cycles
+- [x] **Phase 8: Team Readiness Documentation** - Engineer onboarding, user guides for Dana, and role-playing scenarios for CS and engineering
 
 ## Phase Details
 
@@ -148,8 +148,8 @@ Plans:
 
 Plans:
 
-- [ ] 07-01: Online deployment architecture and offline Docker bundle specification
-- [ ] 07-02: Mode parity matrix and offline update cycle
+- [x] 07-01: Online deployment architecture and offline Docker bundle specification (docs/DEPLOYMENT_ARCHITECTURE.md)
+- [x] 07-02: Mode parity matrix and offline update cycle (docs/MODE_PARITY_AND_OFFLINE_UPDATE.md)
 
 ### Phase 8: Team Readiness Documentation
 
@@ -167,9 +167,9 @@ Plans:
 
 Plans:
 
-- [ ] 08-01: Engineer onboarding tutorials (architecture walkthrough, dev setup, first task)
-- [ ] 08-02: User documentation for Dana persona (operations guide, acceptance reports, troubleshooting)
-- [ ] 08-03: Role-playing scenarios (customer success and deployed engineer)
+- [x] 08-01: Engineer onboarding tutorials (docs/ENGINEER_ONBOARDING.md)
+- [x] 08-02: User documentation for Dana persona (docs/VENDOR_OPERATIONS_GUIDE.md)
+- [x] 08-03: Role-playing scenarios (docs/ROLE_PLAYING_SCENARIOS.md)
 
 ## Progress
 
@@ -184,9 +184,9 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8
 | 4. Foundation and Storage Layer Plans | 2/2 | Complete | 2026-02-11 |
 | 5. Intake and Parsing Pipeline Plans | 2/2 | Complete | 2026-02-11 |
 | 6. Policy, Embedding, and Serving Layer Plans | 3/3 | Complete | 2026-02-11 |
-| 7. Deployment Architecture | 0/2 | Not started | - |
-| 8. Team Readiness Documentation | 0/3 | Not started | - |
+| 7. Deployment Architecture | 2/2 | Complete | 2026-02-11 |
+| 8. Team Readiness Documentation | 3/3 | Complete | 2026-02-11 |
 
 ---
 *Created: 2026-02-08*
-*Last updated: 2026-02-11 after Phase 6 completion*
+*Last updated: 2026-02-11 after Phase 8 completion — Roadmap 100% complete*

@@ -1,11 +1,24 @@
 # Agent Handoff: Frostbyte ETL Planning Pack
 
 **Date:** 2026-02-11
-**Status:** Phase 6 Complete — Ready for Phase 7 (Deployment Architecture)
+**Status:** Roadmap Complete — All 8 Phases Delivered
 
 ## What Was Just Completed
 
-- **Phase 6 (Policy, Embedding, and Serving Layer Plans)** — **complete** (3/3 plans)
+- **Phase 8 (Team Readiness Documentation)** — **complete** (3/3 plans)
+  - **Plan 08-01** — `docs/ENGINEER_ONBOARDING.md`: Architecture walkthrough, dev setup, first-task guide
+  - **Plan 08-02** — `docs/VENDOR_OPERATIONS_GUIDE.md`: Batch submission, acceptance reports, troubleshooting (Dana)
+  - **Plan 08-03** — `docs/ROLE_PLAYING_SCENARIOS.md`: CS scenarios (3), deployed engineer scenarios (3)
+  - Phase 8 folder: `.planning/phases/08-team-readiness/` with 08-RESEARCH.md, 08-01/02/03-PLAN.md, summaries
+- **All 8 phases complete.** Zero-Shot Implementation Pack v1.0 delivered.
+
+## Previous: Phase 7 (Deployment Architecture) — complete (2/2 plans)
+  - **Plan 07-01** — `docs/DEPLOYMENT_ARCHITECTURE.md`: Online Hetzner topology, runbook, offline Docker bundle (compose, images, models, scripts)
+  - **Plan 07-02** — `docs/MODE_PARITY_AND_OFFLINE_UPDATE.md`: Mode parity matrix, six divergences with workarounds, offline update cycle
+  - Phase 7 folder: `.planning/phases/07-deployment-architecture/` with 07-RESEARCH.md, 07-01/02-PLAN.md, summaries
+- Phase 1–7 all complete
+
+## Previous: Phase 6 (Policy, Embedding, and Serving Layer Plans) — complete (3/3 plans)
   - **Plan 06-01** — `docs/POLICY_ENGINE_PLAN.md`: PII (REDACT/FLAG/BLOCK), classification (rule+ML), injection (DOCUMENT_SAFETY)
   - **Plan 06-02** — `docs/EMBEDDING_INDEXING_PLAN.md`: OpenRouter/Nomic, 768d, three-store write, rollback
   - **Plan 06-03** — `docs/SERVING_LAYER_PLAN.md`: RAG retrieval, retrieval proof, cite-only-from-retrieval
@@ -68,6 +81,11 @@
 - `docs/POLICY_ENGINE_PLAN.md` — PII, classification, injection (DOCUMENT_SAFETY)
 - `docs/EMBEDDING_INDEXING_PLAN.md` — OpenRouter/Nomic, 768d, three-store write
 - `docs/SERVING_LAYER_PLAN.md` — RAG retrieval, retrieval proof, cite-only-from-retrieval
+- `docs/DEPLOYMENT_ARCHITECTURE.md` — Online Hetzner topology, provisioning runbook, offline bundle
+- `docs/MODE_PARITY_AND_OFFLINE_UPDATE.md` — Mode parity matrix, offline update cycle
+- `docs/ENGINEER_ONBOARDING.md` — Architecture, dev setup, first-task guide
+- `docs/VENDOR_OPERATIONS_GUIDE.md` — Dana: batch submission, acceptance reports, troubleshooting
+- `docs/ROLE_PLAYING_SCENARIOS.md` — CS and deployed engineer role-play scenarios
 
 ### Project Structure
 
@@ -80,6 +98,8 @@
     04-foundation-and-storage-layer/       # Phase 4 — complete (04-01, 04-02; FOUNDATION_*, STORAGE_*)
     05-intake-and-parsing/                 # Phase 5 — complete (05-01, 05-02; INTAKE_*, PARSING_*)
     06-policy-embedding-serving/           # Phase 6 — complete (06-01, 06-02, 06-03; POLICY_*, EMBEDDING_*, SERVING_*)
+    07-deployment-architecture/           # Phase 7 — complete (07-01, 07-02; DEPLOYMENT_*, MODE_PARITY_*)
+    08-team-readiness/                    # Phase 8 — complete (08-01, 08-02, 08-03; ENGINEER_*, VENDOR_*, ROLE_*)
   research/            # ARCHITECTURE, FEATURES, PITFALLS, STACK
 docs/                  # PRD, TECH_DECISIONS, NOTION_EXPORT, api/openapi.yaml
 packages/api|core/     # API server, schema extension service
@@ -90,16 +110,16 @@ notebooks/             # 5 variant notebooks (05 = Hetzner multi-tenant)
 
 ## Recommended Next Steps
 
-1. **Phase 7 (Deployment Architecture)** — Next roadmap phase per ROADMAP.md. Plans 07-01 (online deployment + offline Docker bundle) and 07-02 (mode parity matrix + offline update cycle).
+1. **Implementation** — All planning phases complete. Engineers can now execute plans in `docs/` (FOUNDATION_LAYER_PLAN, STORAGE_LAYER_PLAN, INTAKE_GATEWAY_PLAN, etc.).
 2. **Build in 1hr (immediate):** Follow `BUILD_1HR.md` — `docker compose up -d`, `cd pipeline && pip install -e . && uvicorn pipeline.main:app --port 8000`
 3. **Phase 1 UAT** (optional) — `01-UAT.md` shows 8 tests pending; manual validation if desired
 
 ## Prompt for Next Conversation
 
-Copy and paste this into a new chat to start Phase 7:
+No further roadmap phases. For implementation work:
 
 ```
-Execute Phase 7 (Deployment Architecture). Read HANDOFF.md and .planning/ROADMAP.md Phase 7 section. Create .planning/phases/07-deployment-architecture/ with 07-RESEARCH.md, 07-01-PLAN.md (online Hetzner + offline Docker bundle), 07-02-PLAN.md (mode parity matrix + offline update cycle). Reference docs/TENANT_ISOLATION_HETZNER.md, docs/STORAGE_LAYER_PLAN.md. Produce docs/ outputs per ROADMAP success criteria. Update HANDOFF.md when done.
+Implement [component] per docs/[PLAN].md. Reference HANDOFF.md for project state. Follow implementation plans in order: foundation → storage → intake → parsing → policy → embedding → serving. Deployment per DEPLOYMENT_ARCHITECTURE.md.
 ```
 
 ## Important Context
@@ -135,11 +155,11 @@ Execute Phase 7 (Deployment Architecture). Read HANDOFF.md and .planning/ROADMAP
 - **Project:** Frostbyte ETL Zero-Shot Implementation Pack
 - **Branch:** master
 - **Last Commit:** [to be updated after commit]
-- **Progress:** ~70% (Phases 1, 2, 3, 4, 5, 6 complete)
-- **Phase 6 Plans:** 3/3 complete
+- **Progress:** 100% (All 8 phases complete)
+- **Phase 8 Plans:** 3/3 complete
 
 ---
 
-**Status:** Phase 6 complete; ready for Phase 7
-**Recommendation:** Proceed to Phase 7 (Deployment Architecture) per ROADMAP.md
-**Confidence:** High — policy, embedding, serving specs complete; ROADMAP success criteria met
+**Status:** Roadmap complete; all 8 phases delivered
+**Recommendation:** Begin implementation per docs/ plans; no further planning phases
+**Confidence:** High — Zero-Shot Implementation Pack v1.0 complete
