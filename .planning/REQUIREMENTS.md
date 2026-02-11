@@ -163,6 +163,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SAFETY-03 | Phase 3 | Pending |
 
 **Coverage:**
+
 - v1 requirements: 37 total
 - Mapped to phases: 37
 - Unmapped: 0

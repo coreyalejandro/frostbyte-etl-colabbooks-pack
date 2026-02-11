@@ -202,6 +202,7 @@ dev = [
 ```
 
 **Notes:**
+
 - The `redis` Python package (>=5.2) is the client library. Redis server version (>=8.0) is specified in the Docker images section below.
 - The `sqlalchemy[asyncio]` extra installs the greenlet dependency required for async session support. This is mandatory since SQLAlchemy 2.0.46+ no longer auto-installs it.
 - The `unstructured[all-docs]` extra installs parsers for all supported document formats (PDF, DOCX, XLSX, PPTX, HTML, TXT, images).

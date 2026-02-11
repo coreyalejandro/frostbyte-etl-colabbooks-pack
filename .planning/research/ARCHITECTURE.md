@@ -14,7 +14,7 @@ The architecture has three tiers:
 2. **Data Plane (per-tenant)** -- isolated compute, storage, and networking per tenant
 3. **Audit Plane** -- append-only, immutable, write-once log store shared across tenants but write-only from each
 
-```text
+```
                     +---------------------------+
                     |      CONTROL PLANE        |
                     |  (shared, multi-tenant)    |
@@ -51,7 +51,7 @@ The architecture has three tiers:
                     |  Immutable Log DB   |
                     |  Event Stream       |
                     +---------------------+
-```text
+```
 
 ### Why This Architecture
 
@@ -99,7 +99,7 @@ The architecture has three tiers:
 
 ### Online Mode -- Full Pipeline
 
-```mermaid
+```
 VENDOR                 CONTROL PLANE              DATA PLANE (Tenant X)           AUDIT PLANE
   |                         |                            |                            |
   |-- Upload batch -------->|                            |                            |
@@ -150,11 +150,11 @@ VENDOR                 CONTROL PLANE              DATA PLANE (Tenant X)         
   |                         |                     - Return answer + provenance        |
   |                         |                     - Emit audit event ----------------->|
   |                         |                            |                            |
-```text
+```
 
 ### Data Transformation Chain
 
-```text
+```
 Raw Document (PDF/DOCX/etc)
     |
     v
@@ -177,13 +177,13 @@ Embedded Chunks (stored in three places)
   Object Store:  raw + normalized artifacts (immutable)
   Relational DB: chunk metadata, lineage, job state
   Vector Store:  embedding vector + chunk_id + metadata filter fields
-```text
+```
 
 ### Offline Mode -- Collapsed Data Plane
 
 In offline mode, the three-tier architecture collapses into a single Docker Compose stack running on an air-gapped host:
 
-```text
+```
 AIR-GAPPED HOST
   |
   +-- Docker Compose
@@ -209,7 +209,7 @@ AIR-GAPPED HOST
             /data/db            (postgres persistence)
             /data/audit         (append-only audit log)
             /data/export        (signed export bundles)
-```text
+```
 
 **Key differences from online mode:**
 
@@ -232,7 +232,7 @@ Each tenant gets a fully isolated environment provisioned via the Hetzner Cloud 
 
 ### Provisioning Sequence
 
-```text
+```
 1. Control Plane receives "create tenant" request
     |
 2. Create Hetzner Cloud Project (or use API tokens scoped per tenant)
@@ -268,7 +268,7 @@ Each tenant gets a fully isolated environment provisioned via the Hetzner Cloud 
     - Record provisioning state, endpoints, health check URLs
     |
 9. Emit audit event: TENANT_PROVISIONED
-```text
+```
 
 ### Tenant Isolation Evidence
 
@@ -292,7 +292,7 @@ The intake gateway is the most critical security boundary in the system. Every d
 
 ### Request Flow
 
-```text
+```
 Vendor Request
     |
     v
@@ -340,7 +340,7 @@ Vendor Request
     v
 [Return Batch Receipt]
   { batch_id, file_count, accepted, rejected, quarantined }
-```text
+```
 
 ---
 
@@ -352,7 +352,7 @@ Docling and Unstructured serve complementary roles. Use both, in sequence, for m
 
 **Confidence: MEDIUM** -- Based on training data about both libraries. Docling excels at layout-aware PDF conversion (tables, figures, reading order). Unstructured excels at partitioning and chunking with metadata. The combination is additive, not redundant.
 
-```text
+```
 Raw Document
     |
     v
@@ -381,7 +381,7 @@ Raw Document
   - Assign deterministic chunk IDs
   - Record lineage: { raw_sha256, docling_version, unstructured_version }
   - Write to Object Store as normalized/{tenant_id}/{doc_id}/structured.json
-```text
+```
 
 ### Why Two Tools
 
@@ -402,7 +402,7 @@ Policy gates are synchronous checkpoints in the pipeline. A document cannot proc
 
 ### Gate 1: PII/PHI Detection
 
-```text
+```
 Input: Canonical structured document chunks
     |
     v
@@ -420,11 +420,11 @@ Input: Canonical structured document chunks
     v
 [Record in metadata]
   - pii_types_found, pii_action_taken, redacted_spans[]
-```text
+```
 
 ### Gate 2: Document Classification
 
-```text
+```
 Input: Canonical structured document
     |
     v
@@ -441,11 +441,11 @@ Input: Canonical structured document
     v
 [Record in metadata]
   - classification, confidence_score, classifier_version, human_override
-```text
+```
 
 ### Gate 3: Injection Defense
 
-```text
+```
 Input: Document text content (all chunks)
     |
     v
@@ -470,7 +470,7 @@ Input: Document text content (all chunks)
     v
 [Record in metadata]
   - injection_score, patterns_matched[], action_taken
-```text
+```
 
 **Critical architectural decision:** Injection defense happens BEFORE embedding. Malicious content must never reach the vector store where it could influence retrieval results.
 
@@ -482,7 +482,7 @@ Input: Document text content (all chunks)
 
 Every tenant has three isolated stores. This is not optional -- the separation exists because each store serves a different access pattern and retention policy.
 
-```text
+```
 +------------------+     +------------------+     +------------------+
 |   OBJECT STORE   |     |  RELATIONAL DB   |     |  VECTOR STORE    |
 |   (MinIO)        |     |  (PostgreSQL)    |     |  (Qdrant)        |
@@ -502,7 +502,7 @@ Every tenant has three isolated stores. This is not optional -- the separation e
    | Immutable blobs        | Queryable metadata     | Similarity search
    | Retention: configurable| Retention: long        | Retention: rebuildable
    | Backup: snapshots      | Backup: pg_dump        | Backup: rebuild from source
-```text
+```
 
 ### Why Three Stores
 
@@ -530,7 +530,7 @@ Every tenant has three isolated stores. This is not optional -- the separation e
 
 ### Retrieval Flow
 
-```text
+```
 Query Request
   { tenant_id, query_text, top_k, filters }
     |
@@ -574,7 +574,7 @@ Query Request
     v
 [Emit audit event] -- RETRIEVAL_EXECUTED
   { query_id, tenant_id, chunks_returned, timestamp }
-```text
+```
 
 ### Cite-Only-From-Retrieval Enforcement
 
@@ -618,17 +618,19 @@ The serving layer MUST enforce that any generated answer is grounded in the retu
   },
   "previous_event_id": "uuid of preceding event in chain (for lineage)"
 }
-```text
+```
 
 ### Implementation
 
 **Online mode:**
+
 - Each data plane component emits events to a local Redis stream (or Kafka topic if scale warrants)
 - Audit Stream Aggregator in control plane consumes from all tenant streams
 - Writes to append-only PostgreSQL table with `INSERT`-only grants (no `UPDATE`, no `DELETE`)
 - Alternatively: append-only log file with periodic rotation and signing
 
 **Offline mode:**
+
 - Events written to local append-only SQLite database
 - Exported as part of the signed bundle
 - File-level integrity: SHA-256 of audit log included in export manifest
@@ -641,7 +643,7 @@ The serving layer MUST enforce that any generated answer is grounded in the retu
 
 ### Bundle Contents
 
-```bash
+```
 frostbyte-etl-offline-v{version}.tar.gz
   |
   +-- docker-compose.yml           # Full stack definition
@@ -666,7 +668,7 @@ frostbyte-etl-offline-v{version}.tar.gz
   |     +-- export.sh               # Generate signed export bundle
   +-- MANIFEST.json                 # Bundle manifest with SHA-256 of every file
   +-- COMPATIBILITY.md              # Hardware/OS/GPU requirements
-```bash
+```
 
 ### Network Isolation
 
@@ -676,13 +678,13 @@ networks:
   etl-internal:
     driver: bridge
     internal: true    # <-- KEY: no outbound connectivity
-```text
+```
 
 All services bind to `etl-internal` network only. No service has a port mapped to the host except the validation UI (mapped to localhost only).
 
 ### Offline Update Cycle
 
-```text
+```
 1. Frostbyte builds new bundle version on CI
 2. Bundle is signed (GPG or cosign)
 3. Bundle shipped to customer (secure transfer, USB, etc.)
@@ -692,7 +694,7 @@ All services bind to `etl-internal` network only. No service has a port mapped t
    c. Run database migrations
    d. Verify health checks
 5. Zero-downtime cutover (stop old, start new)
-```text
+```
 
 ---
 
@@ -702,7 +704,7 @@ All services bind to `etl-internal` network only. No service has a port mapped t
 
 **Recommendation:** Use a lightweight reverse proxy (Traefik or Caddy) rather than a heavy API gateway (Kong, AWS API Gateway). Reason: Hetzner environment is self-managed, and the gateway needs are straightforward -- TLS, routing, rate limiting, JWT validation.
 
-```mermaid
+```
 Internet --> [Traefik/Caddy]
                 |
                 +-- /api/v1/tenants/*      --> Tenant Registry service
@@ -710,7 +712,7 @@ Internet --> [Traefik/Caddy]
                 +-- /api/v1/query/*        --> routes to tenant-specific Serving API
                 +-- /api/v1/admin/*        --> Control Plane admin endpoints
                 +-- /api/v1/audit/*        --> Audit read endpoints (operations only)
-```text
+```
 
 ### Internal Communication
 
@@ -728,7 +730,7 @@ Rationale: Service meshes (Istio, Linkerd) add operational complexity. For a sys
 
 **Recommendation:** Celery with Redis as broker. Reason: Python ecosystem standard, well-understood, supports task chains, retries, and dead-letter queues. The pipeline is batch-oriented (not streaming), making Celery appropriate.
 
-```text
+```
 [Intake Gateway]
     |
     v
@@ -750,13 +752,14 @@ Rationale: Service meshes (Istio, Linkerd) add operational complexity. For a sys
 [Celery Worker: index]
     |-- success --> mark job complete, emit audit event
     |-- failure --> retry (max 3) --> dead-letter: tenant_{id}.dlq
-```text
+```
 
 ### Idempotency
 
 Every task must be idempotent. If a task is retried, the result must be identical to the first execution.
 
 Implementation patterns:
+
 - **Parse**: Deterministic output for same input. Use file SHA-256 as cache key. Skip if normalized output already exists with matching hash.
 - **Policy**: Deterministic for same input + same policy version. Policy version recorded in metadata.
 - **Embed**: Use chunk content hash + model version as cache key. Skip if vector already exists.
@@ -802,7 +805,7 @@ message = {
     "tenant_id": "abc",
     "instruction": f"Process this document: {raw_document_text}"  # INJECTION RISK
 }
-```text
+```
 
 ### Pattern 2: Hash Chain for Lineage
 
@@ -810,10 +813,10 @@ message = {
 
 **When:** Every pipeline stage transition.
 
-```mermaid
+```
 raw_sha256 --> parse(raw) --> normalized_sha256 --> policy(normalized) -->
 chunk_sha256 --> embed(chunk) --> vector_sha256
-```text
+```
 
 ### Pattern 3: Tenant Context Propagation
 
@@ -838,7 +841,7 @@ def validate_tenant_context(request):
         raise AuthorizationError("Missing tenant context")
     if tenant_id != expected_tenant_for_this_data_plane:
         raise AuthorizationError("Tenant context mismatch")
-```text
+```
 
 ---
 
@@ -903,7 +906,7 @@ def validate_tenant_context(request):
 
 Components must be built in dependency order. Each layer depends on the layers below it.
 
-```text
+```
 LAYER 0: Foundation (no dependencies)
   [0a] Tenant data model + registry schema
   [0b] Audit event schema + append-only store
@@ -947,13 +950,13 @@ LAYER 8: Validation (depends on Layer 7)
   [8a] Vendor acceptance report generation
   [8b] Validation UI (receipts, diffs, export)
   [8c] End-to-end integration tests
-```text
+```
 
 ### Critical Path
 
 The critical path for a minimum demonstrable pipeline:
 
-```mermaid
+```
 [0a] Tenant model --> [0c] Config --> [0d] Docker skeleton
                                           |
 [1a] Object Store --> [1b] PostgreSQL --> [1d] Redis
@@ -969,7 +972,7 @@ The critical path for a minimum demonstrable pipeline:
                       [6a] RAG API --------------+
                                                  |
                       [0b] Audit Schema ---------+  (must be wired from start)
-```text
+```
 
 **Build order rationale:**
 
@@ -991,7 +994,7 @@ The critical path for a minimum demonstrable pipeline:
 
 ### Online Mode
 
-```text
+```test
                     INTERNET
                        |
               [Hetzner Load Balancer]
@@ -1021,11 +1024,11 @@ The critical path for a minimum demonstrable pipeline:
               [Audit Store Server]
               (Append-only PostgreSQL)
               (Accessed by control plane only)
-```text
+```
 
 ### Offline Mode
 
-```text
+```
   AIR-GAPPED HOST (single machine)
          |
   [Docker Compose]
@@ -1056,27 +1059,29 @@ The critical path for a minimum demonstrable pipeline:
   /data/db
   /data/audit
   /data/export
-```text
+```
 
 ---
 
 ## Sources
 
 - Project artifacts: `docs/ETL_PIPELINE_PROPOSAL.md`, `docs/THREAT_MODEL_SAFETY.md`, `docs/CUSTOMER_JOURNEY_MAP.md`, `diagrams/*.mmd`, `notebooks/05_multi_tenant_isolation_hetzner.ipynb` (primary source, HIGH confidence)
-- Hetzner Cloud API documentation: https://docs.hetzner.cloud/ (referenced but not fetched in this session -- MEDIUM confidence on specific API details)
-- Qdrant multi-tenancy documentation: https://qdrant.tech/documentation/guides/multiple-partitions/ (referenced but not fetched -- MEDIUM confidence)
-- Docling documentation: https://docling-project.github.io/docling/ (referenced but not fetched -- MEDIUM confidence)
-- Unstructured documentation: https://docs.unstructured.io/open-source/introduction/overview (referenced but not fetched -- MEDIUM confidence)
+- Hetzner Cloud API documentation: <https://docs.hetzner.cloud/> (referenced but not fetched in this session -- MEDIUM confidence on specific API details)
+- Qdrant multi-tenancy documentation: <https://qdrant.tech/documentation/guides/multiple-partitions/> (referenced but not fetched -- MEDIUM confidence)
+- Docling documentation: <https://docling-project.github.io/docling/> (referenced but not fetched -- MEDIUM confidence)
+- Unstructured documentation: <https://docs.unstructured.io/open-source/introduction/overview> (referenced but not fetched -- MEDIUM confidence)
 - Architecture patterns (control plane/data plane separation, envelope pattern, hash chain lineage): Based on training data from AWS multi-account patterns, GCP per-project isolation, and enterprise SaaS architecture literature (MEDIUM confidence -- well-established patterns but not verified against 2026 sources)
 
 ### Verification Notes
 
 External research tools (WebSearch, WebFetch, Context7) were unavailable during this research session. All findings are based on:
+
 1. **Project artifacts** (HIGH confidence) -- the existing proposal, threat model, diagrams, and notebooks
 2. **Training data** (MEDIUM confidence) -- established architecture patterns for multi-tenant regulated systems
 3. **No live verification** was possible for specific library versions, API endpoints, or current best practices
 
 **Recommendations for verification:**
+
 - Verify Hetzner Cloud API supports Project-level isolation and per-project API tokens
 - Verify Qdrant collection-level isolation semantics and API key scoping
 - Verify Docling + Unstructured can be composed in the described sequence

@@ -44,6 +44,7 @@ Every planning artifact must be so specific and deterministic that a person who 
 **Frostbyte's positioning:** Enterprise AI infrastructure for regulated industries. Data sovereignty is non-negotiable. Documents are treated as untrusted inputs. Tenant isolation is by construction, not by policy.
 
 **Existing artifacts in this repo:**
+
 - `docs/ETL_PIPELINE_PROPOSAL.md` — full proposal (phases, tools, alternatives)
 - `docs/CUSTOMER_JOURNEY_MAP.md` — Dana persona + journey map with pain points
 - `docs/THREAT_MODEL_SAFETY.md` — security posture, injection defenses, auditability
@@ -52,6 +53,7 @@ Every planning artifact must be so specific and deterministic that a person who 
 - `notebooks/05_multi_tenant_isolation_hetzner.ipynb` — the source variant being expanded
 
 **Audience:** This planning pack serves two consumers:
+
 1. Human engineers — Frode's team or future hires who implement the pipeline
 2. AI agents — Claude, GPT, or similar tools that execute deterministic prompts
 
@@ -80,6 +82,7 @@ Every planning artifact must be so specific and deterministic that a person who 
 **Goal:** Produce a complete, deterministic planning package that enables any engineer or AI agent to build, deploy, support, and explain Frostbyte's multi-tenant ETL pipeline without ambiguity.
 
 **Target deliverables:**
+
 - Zero-shot PRD covering full pipeline lifecycle
 - Locked-in tech decisions with rationale for every component
 - Step-by-step implementation plans for each pipeline phase

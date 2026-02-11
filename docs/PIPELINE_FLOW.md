@@ -22,6 +22,7 @@ A linear, left-to-right view of how data moves. No spatial reasoning required.
 ```
 
 **In words:**
+
 1. You send a file to the Pipeline API.
 2. The API stores the raw file in MinIO.
 3. The API creates a vector and stores it in Qdrant.

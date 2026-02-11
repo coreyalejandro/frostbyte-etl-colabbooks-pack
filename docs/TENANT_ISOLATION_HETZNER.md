@@ -112,6 +112,7 @@ sequenceDiagram
 ```
 
 **Expected response:** `201 Created` with server object containing:
+
 - `id` (integer)
 - `name` (string)
 - `public_net.ipv4.ip` (string)

@@ -1,6 +1,7 @@
 # Plan 01-01 Summary: Zero-Shot PRD
 
 ## Plan
+
 - **Phase:** 01 — Product Definition and Tech Decisions
 - **Plan:** 01-01 — Zero-Shot PRD
 - **Status:** Complete
@@ -26,12 +27,14 @@ Created the comprehensive Product Requirements Document (PRD) for the Frostbyte 
 ### Section Summary
 
 **Section 1: Executive Summary (PRD-01)**
+
 - What/Why/Who/How with three-tier architecture diagram
 - Four personas: Dana (Vendor Data Ops Lead), Frode (Platform Owner), Engineers, Auditors
 - Deployment modes: online (cloud) and offline (air-gapped Docker)
 - Anti-features table: 6 explicitly excluded features with rationale
 
 **Section 2: Pipeline Phase Specifications (PRD-02)**
+
 - Phase A: Intake Gateway — manifest validation, MIME check, checksum verification, malware scan, receipt generation
 - Phase B: Document Normalization — two-stage parsing (layout + chunking), canonical JSON schema with deterministic chunk IDs
 - Phase C: Policy Gates — PII detection, document classification, injection defense (all run before embedding)
@@ -39,6 +42,7 @@ Created the comprehensive Product Requirements Document (PRD) for the Frostbyte 
 - Phase E: Serving — RAG retrieval with provenance, cite-only-from-retrieval enforcement
 
 **Section 3: Tenant Lifecycle Management (PRD-03)**
+
 - State machine with 7 states: PENDING, PROVISIONING, ACTIVE, SUSPENDED, DEPROVISIONING, DEPROVISIONED, FAILED
 - 13 state transitions with triggers, pre-conditions, actions, audit events, and rollback
 - Kill-switch specification: instant (< 1s routing disable) and reversible
@@ -46,6 +50,7 @@ Created the comprehensive Product Requirements Document (PRD) for the Frostbyte 
 - Deprovisioning cascade: 10 steps with verification at each stage
 
 **Section 4: Monitoring and Observability (PRD-04)**
+
 - Job tracking with per-file, per-stage granularity
 - 20 concrete metric names (counters, histograms, gauges)
 - 12 alert conditions with severity (CRITICAL/HIGH/MEDIUM/LOW), thresholds, and actions
@@ -53,6 +58,7 @@ Created the comprehensive Product Requirements Document (PRD) for the Frostbyte 
 - Dashboard specifications for per-tenant and platform-wide views
 
 **Section 5: API Contract Specification (PRD-05)**
+
 - 17 endpoints across Intake (3), Query (3), Admin (7), and Audit (4) groups
 - Standard error envelope with machine-readable codes
 - Full request/response schemas with field descriptions
@@ -61,6 +67,7 @@ Created the comprehensive Product Requirements Document (PRD) for the Frostbyte 
 - Rate limits per endpoint group
 
 **Appendices:**
+
 - A: Complete audit event type reference (24 event types)
 - B: Cross-reference matrix (audit events to APIs, transitions to endpoints, metrics to phases, personas to endpoints)
 - C: Document format allowlist with explicitly unsupported formats

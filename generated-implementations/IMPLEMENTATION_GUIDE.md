@@ -18,11 +18,13 @@ all 10 cross-cutting product enhancements identified in the Frostbyte Product Vi
 **Description:** High-value, low-effort enhancements that unblock later work
 
 **Prerequisites:**
+
 - Node.js 18+
 - TypeScript project structure
 - Existing API routes
 
 **Enhancements in this phase:**
+
 - E01: OpenAPI/Swagger Spec for All APIs (Low effort)
 - E04: Configurable Schema Extensions (Low effort)
 - E10: Automated Test Suite with Compliance Templates (Low effort)
@@ -34,11 +36,13 @@ all 10 cross-cutting product enhancements identified in the Frostbyte Product Vi
 **Description:** Table stakes features required for enterprise adoption
 
 **Prerequisites:**
+
 - Phase 1 complete
 - Database schema established
 - Authentication system
 
 **Enhancements in this phase:**
+
 - E07: SSO/SAML/OIDC Integration (Medium effort)
 - E03: Batch Processing API with Progress Streaming (Medium effort)
 - E06: Web-Based Admin Dashboard (Medium effort)
@@ -50,11 +54,13 @@ all 10 cross-cutting product enhancements identified in the Frostbyte Product Vi
 **Description:** Infrastructure automation and data portability
 
 **Prerequisites:**
+
 - Phase 2 complete
 - Cloud provider accounts
 - CI/CD pipeline
 
 **Enhancements in this phase:**
+
 - E02: Terraform/Pulumi Provider for Infrastructure Provisioning (Medium effort)
 - E08: Signed Export Bundles with Verification (Medium effort)
 
@@ -65,22 +71,24 @@ all 10 cross-cutting product enhancements identified in the Frostbyte Product Vi
 **Description:** High-effort differentiating features
 
 **Prerequisites:**
+
 - Phase 3 complete
 - GPU resources for ML models
 - Graph database
 
 **Enhancements in this phase:**
+
 - E05: Graph RAG Support (High effort)
 - E09: Multi-Modal Document Support (High effort)
 
 ## Detailed Implementation Instructions
 
 Each enhancement follows the same structure:
+
 1. **Pre-conditions** - What must be true before starting
 2. **Implementation Steps** - Exact, unambiguous actions
 3. **Verification** - How to confirm correct implementation
 4. **Rollback** - How to undo if issues arise
-
 
 ---
 
@@ -112,12 +120,14 @@ node --version | grep -E '^v(18|20|22)' || exit 1
 ### Implementation Steps
 
 1. Install Fastify Swagger plugin:
+
    ```bash
    cd $FROSTBYTE_REPO_ROOT/packages/api
    npm install @fastify/swagger @fastify/swagger-ui
    ```
 
 2. Register plugin in server.ts:
+
    ```typescript
    import swagger from '@fastify/swagger';
    import swaggerUi from '@fastify/swagger-ui';
@@ -132,6 +142,7 @@ node --version | grep -E '^v(18|20|22)' || exit 1
 3. Add schema decorators to all routes
 
 4. Export OpenAPI spec:
+
    ```bash
    npm run generate-openapi
    ```
@@ -143,6 +154,7 @@ All of the following must pass:
 1. OpenAPI 3.1 spec file exists at docs/api/openapi.yaml
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 1.1
    ```
@@ -150,6 +162,7 @@ All of the following must pass:
 2. All API endpoints are documented with request/response schemas
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 1.2
    ```
@@ -157,6 +170,7 @@ All of the following must pass:
 3. Swagger UI is accessible at /docs endpoint
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 1.3
    ```
@@ -164,6 +178,7 @@ All of the following must pass:
 4. Spec validates without errors using openapi-validator
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 1.4
    ```
@@ -200,6 +215,7 @@ echo 'E01 rolled back successfully'
 **Rationale:** Allow tenants to define custom metadata fields on documents/chunks. Critical for legal (matter numbers), pharma (trial IDs), defense (classification markings).
 
 **Dependencies:**
+
 - E01: OpenAPI/Swagger Spec for All APIs
 
 ### Pre-conditions
@@ -220,18 +236,21 @@ node --version | grep -E '^v(18|20|22)' || exit 1
 ### Implementation Steps
 
 1. Create database migration:
+
    ```bash
    cd $FROSTBYTE_REPO_ROOT
    npx knex migrate:make add_custom_metadata
    ```
 
 2. Add JSONB column to documents table:
+
    ```sql
    ALTER TABLE documents ADD COLUMN custom_metadata JSONB DEFAULT '{}';
    CREATE INDEX idx_custom_metadata ON documents USING GIN (custom_metadata);
    ```
 
 3. Create schema validation service:
+
    ```bash
    mkdir -p packages/core/src/services
    cat > packages/core/src/services/schema-extension.service.ts << 'EOF'
@@ -242,6 +261,7 @@ node --version | grep -E '^v(18|20|22)' || exit 1
 4. Add API endpoints for schema management
 
 5. Run migration:
+
    ```bash
    npm run migrate
    ```
@@ -253,6 +273,7 @@ All of the following must pass:
 1. Tenant can define custom schema via API
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 4.1
    ```
@@ -260,6 +281,7 @@ All of the following must pass:
 2. Custom fields are stored in JSONB column
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 4.2
    ```
@@ -267,6 +289,7 @@ All of the following must pass:
 3. Schema validation rejects invalid custom fields
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 4.3
    ```
@@ -274,6 +297,7 @@ All of the following must pass:
 4. Custom fields appear in retrieval results
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 4.4
    ```
@@ -327,16 +351,19 @@ node --version | grep -E '^v(18|20|22)' || exit 1
 ### Implementation Steps
 
 1. Create compliance test directory structure:
+
    ```bash
    mkdir -p tests/compliance/{gdpr,hipaa,fedramp}
    ```
 
 2. Install test dependencies:
+
    ```bash
    npm install --save-dev jest @types/jest supertest
    ```
 
 3. Create GDPR test suite:
+
    ```bash
    cat > tests/compliance/gdpr/data-residency.test.ts << 'EOF'
    // Test implementation
@@ -348,6 +375,7 @@ node --version | grep -E '^v(18|20|22)' || exit 1
 5. Create FedRAMP audit trail tests
 
 6. Add npm script:
+
    ```json
    "test:compliance": "jest tests/compliance --coverage"
    ```
@@ -359,6 +387,7 @@ All of the following must pass:
 1. Compliance test suite runs with npm run test:compliance
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 10.1
    ```
@@ -366,6 +395,7 @@ All of the following must pass:
 2. GDPR data residency tests pass
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 10.2
    ```
@@ -373,6 +403,7 @@ All of the following must pass:
 3. HIPAA PHI handling tests pass
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 10.3
    ```
@@ -380,6 +411,7 @@ All of the following must pass:
 4. FedRAMP audit trail tests pass
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 10.4
    ```
@@ -387,6 +419,7 @@ All of the following must pass:
 5. All tests produce machine-readable evidence
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 10.5
    ```
@@ -424,6 +457,7 @@ echo 'E10 rolled back successfully'
 **Rationale:** Enterprise requirement across all verticals. Critical for legal firms with existing identity providers, defense with ICAM, pharma with corporate SSO.
 
 **Dependencies:**
+
 - E01: OpenAPI/Swagger Spec for All APIs
 
 ### Pre-conditions
@@ -444,12 +478,14 @@ node --version | grep -E '^v(18|20|22)' || exit 1
 ### Implementation Steps
 
 1. Install authentication libraries:
+
    ```bash
    npm install passport passport-saml passport-openidconnect
    npm install @node-saml/passport-saml
    ```
 
 2. Create SAML strategy configuration:
+
    ```bash
    mkdir -p packages/auth/src/sso
    ```
@@ -471,6 +507,7 @@ All of the following must pass:
 1. SAML 2.0 authentication flow works
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 7.1
    ```
@@ -478,6 +515,7 @@ All of the following must pass:
 2. OIDC authentication flow works
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 7.2
    ```
@@ -485,6 +523,7 @@ All of the following must pass:
 3. User attributes are correctly mapped
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 7.3
    ```
@@ -492,6 +531,7 @@ All of the following must pass:
 4. Session management follows security best practices
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 7.4
    ```
@@ -499,6 +539,7 @@ All of the following must pass:
 5. Logout (SLO) works correctly
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 7.5
    ```
@@ -536,6 +577,7 @@ echo 'E07 rolled back successfully'
 **Rationale:** All verticals need visibility into large document batch processing. Essential for legal discovery, pharma trial document loads, defense bulk ingestion.
 
 **Dependencies:**
+
 - E01: OpenAPI/Swagger Spec for All APIs
 - E10: Automated Test Suite with Compliance Templates
 
@@ -557,16 +599,19 @@ node --version | grep -E '^v(18|20|22)' || exit 1
 ### Implementation Steps
 
 1. Create batch processor service:
+
    ```bash
    mkdir -p packages/core/src/services
    ```
 
 2. Implement job queue with Bull/Redis:
+
    ```bash
    npm install bull @types/bull
    ```
 
 3. Create progress streamer using SSE:
+
    ```typescript
    // Server-Sent Events implementation
    ```
@@ -586,6 +631,7 @@ All of the following must pass:
 1. Batch submission returns job ID immediately
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 3.1
    ```
@@ -593,6 +639,7 @@ All of the following must pass:
 2. Progress events stream via SSE/WebSocket
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 3.2
    ```
@@ -600,6 +647,7 @@ All of the following must pass:
 3. Job status can be queried via API
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 3.3
    ```
@@ -607,6 +655,7 @@ All of the following must pass:
 4. Failed items are tracked separately
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 3.4
    ```
@@ -614,6 +663,7 @@ All of the following must pass:
 5. Batch can be cancelled mid-processing
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 3.5
    ```
@@ -651,6 +701,7 @@ echo 'E03 rolled back successfully'
 **Rationale:** All personas (Dana, Frode, auditors) need UI beyond APIs. Essential for adoption across all verticals.
 
 **Dependencies:**
+
 - E01: OpenAPI/Swagger Spec for All APIs
 - E07: SSO/SAML/OIDC Integration
 
@@ -672,6 +723,7 @@ node --version | grep -E '^v(18|20|22)' || exit 1
 ### Implementation Steps
 
 1. Initialize dashboard package:
+
    ```bash
    mkdir -p packages/dashboard
    cd packages/dashboard
@@ -679,6 +731,7 @@ node --version | grep -E '^v(18|20|22)' || exit 1
    ```
 
 2. Install UI dependencies:
+
    ```bash
    npm install tailwindcss @radix-ui/react-*
    npx shadcn-ui@latest init
@@ -701,6 +754,7 @@ All of the following must pass:
 1. Dashboard loads in under 3 seconds
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 6.1
    ```
@@ -708,6 +762,7 @@ All of the following must pass:
 2. All API functions have UI equivalents
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 6.2
    ```
@@ -715,6 +770,7 @@ All of the following must pass:
 3. Tenant isolation is visually clear
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 6.3
    ```
@@ -722,6 +778,7 @@ All of the following must pass:
 4. Audit log is searchable and filterable
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 6.4
    ```
@@ -729,6 +786,7 @@ All of the following must pass:
 5. Dashboard is responsive (mobile-friendly)
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 6.5
    ```
@@ -766,6 +824,7 @@ echo 'E06 rolled back successfully'
 **Rationale:** Enables consistent tenant provisioning across all deployment modes. High value for FoundationRAG (SaaS customers).
 
 **Dependencies:**
+
 - E01: OpenAPI/Swagger Spec for All APIs
 - E03: Batch Processing API with Progress Streaming
 
@@ -787,6 +846,7 @@ node --version | grep -E '^v(18|20|22)' || exit 1
 ### Implementation Steps
 
 1. Initialize Terraform provider project:
+
    ```bash
    mkdir -p terraform-provider-frostbyte
    cd terraform-provider-frostbyte
@@ -794,6 +854,7 @@ node --version | grep -E '^v(18|20|22)' || exit 1
    ```
 
 2. Install Terraform SDK:
+
    ```bash
    go get github.com/hashicorp/terraform-plugin-framework
    ```
@@ -815,6 +876,7 @@ All of the following must pass:
 1. Terraform provider installs from registry
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 2.1
    ```
@@ -822,6 +884,7 @@ All of the following must pass:
 2. Hetzner Cloud resources provision correctly
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 2.2
    ```
@@ -829,6 +892,7 @@ All of the following must pass:
 3. Tenant isolation is enforced at network level
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 2.3
    ```
@@ -836,6 +900,7 @@ All of the following must pass:
 4. State management is configured (S3 backend)
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 2.4
    ```
@@ -843,6 +908,7 @@ All of the following must pass:
 5. Destroy operation cleans up all resources
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 2.5
    ```
@@ -879,6 +945,7 @@ echo 'E02 rolled back successfully'
 **Rationale:** Enable cryptographically signed data exports for inter-organization transfer. High value for legal (discovery production), defense (intel sharing).
 
 **Dependencies:**
+
 - E01: OpenAPI/Swagger Spec for All APIs
 - E03: Batch Processing API with Progress Streaming
 
@@ -900,11 +967,13 @@ node --version | grep -E '^v(18|20|22)' || exit 1
 ### Implementation Steps
 
 1. Install cryptographic libraries:
+
    ```bash
    npm install tweetnacl @types/tweetnacl
    ```
 
 2. Create export signer service:
+
    ```typescript
    // Ed25519 signing implementation
    ```
@@ -929,6 +998,7 @@ All of the following must pass:
 1. Exports are signed with tenant-specific key
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 8.1
    ```
@@ -936,6 +1006,7 @@ All of the following must pass:
 2. Signature verification succeeds with public key
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 8.2
    ```
@@ -943,6 +1014,7 @@ All of the following must pass:
 3. Bundle includes manifest with checksums
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 8.3
    ```
@@ -950,6 +1022,7 @@ All of the following must pass:
 4. Tampered bundle fails verification
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 8.4
    ```
@@ -957,6 +1030,7 @@ All of the following must pass:
 5. Export format is documented and versioned
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 8.5
    ```
@@ -994,6 +1068,7 @@ echo 'E08 rolled back successfully'
 **Rationale:** Extend beyond vector retrieval to entity/relationship graphs. High value for legal (citation networks), pharma (adverse event relationships).
 
 **Dependencies:**
+
 - E01: OpenAPI/Swagger Spec for All APIs
 - E04: Configurable Schema Extensions
 
@@ -1015,11 +1090,13 @@ node --version | grep -E '^v(18|20|22)' || exit 1
 ### Implementation Steps
 
 1. Set up Neo4j database:
+
    ```bash
    docker run -p 7474:7474 -p 7687:7687 neo4j:latest
    ```
 
 2. Install Neo4j driver:
+
    ```bash
    npm install neo4j-driver
    ```
@@ -1041,6 +1118,7 @@ All of the following must pass:
 1. Entity extraction identifies named entities
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 5.1
    ```
@@ -1048,6 +1126,7 @@ All of the following must pass:
 2. Relationship extraction creates graph edges
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 5.2
    ```
@@ -1055,6 +1134,7 @@ All of the following must pass:
 3. Graph queries return connected entities
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 5.3
    ```
@@ -1062,6 +1142,7 @@ All of the following must pass:
 4. Hybrid search (vector + graph) works
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 5.4
    ```
@@ -1069,6 +1150,7 @@ All of the following must pass:
 5. Graph is exportable in standard formats (RDF, Neo4j)
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 5.5
    ```
@@ -1106,6 +1188,7 @@ echo 'E05 rolled back successfully'
 **Rationale:** Extend beyond text to images, audio, video transcription. Critical for legal (bodycam footage), defense (drone imagery), pharma (medical imaging).
 
 **Dependencies:**
+
 - E01: OpenAPI/Swagger Spec for All APIs
 - E03: Batch Processing API with Progress Streaming
 - E04: Configurable Schema Extensions
@@ -1128,6 +1211,7 @@ node --version | grep -E '^v(18|20|22)' || exit 1
 ### Implementation Steps
 
 1. Install processing dependencies:
+
    ```bash
    npm install sharp # Image processing
    # Audio: Use Python whisper via child process
@@ -1160,6 +1244,7 @@ All of the following must pass:
 1. Image files are processed and indexed
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 9.1
    ```
@@ -1167,6 +1252,7 @@ All of the following must pass:
 2. Audio files are transcribed and indexed
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 9.2
    ```
@@ -1174,6 +1260,7 @@ All of the following must pass:
 3. Video files have frame extraction + transcription
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 9.3
    ```
@@ -1181,6 +1268,7 @@ All of the following must pass:
 4. Multi-modal embeddings are consistent
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 9.4
    ```
@@ -1188,6 +1276,7 @@ All of the following must pass:
 5. Cross-modal search works (text query finds images)
 
    Verification command:
+
    ```bash
    ./verify-implementations.sh --check 9.5
    ```

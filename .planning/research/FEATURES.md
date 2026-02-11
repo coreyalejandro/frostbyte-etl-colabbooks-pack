@@ -249,25 +249,29 @@ The dependency graph reveals a clear critical path for implementation:
 For MVP, prioritize all table stakes features and one high-impact differentiator cluster:
 
 ### Phase 1: Foundation (must ship first)
+
 1. **Tenant provisioning and isolation** (TS-4.1, TS-4.2, TS-6.2, TS-6.4)
 2. **Intake gateway** (TS-1.1 through TS-1.7)
 3. **Immutable audit log** (TS-5.1) — must exist before production data flows
 
 ### Phase 2: Core Pipeline
+
 4. **Document parsing** (TS-2.1 through TS-2.6)
-5. **Three-store writes** (TS-4.3)
-6. **Provenance chain** (TS-5.2, TS-5.3)
+2. **Three-store writes** (TS-4.3)
+3. **Provenance chain** (TS-5.2, TS-5.3)
 
 ### Phase 3: Governance + Transparency (the differentiator)
+
 7. **PII detection and redaction** (TS-3.1, TS-3.2)
-8. **Document classification** (TS-3.3)
-9. **Vendor Acceptance Report** (D-1.1) — highest-ROI differentiator; solves Dana's core pain point
-10. **Injection defense** (TS-6.1)
+2. **Document classification** (TS-3.3)
+3. **Vendor Acceptance Report** (D-1.1) — highest-ROI differentiator; solves Dana's core pain point
+4. **Injection defense** (TS-6.1)
 
 ### Phase 4: Retrieval and Serving
+
 11. **RAG retrieval with retrieval proofs** (D-1.3)
-12. **Idempotent delta processing** (D-4.1)
-13. **Pipeline job status tracking** (TS-7.1, TS-7.2)
+2. **Idempotent delta processing** (D-4.1)
+3. **Pipeline job status tracking** (TS-7.1, TS-7.2)
 
 ### Defer to Post-MVP
 

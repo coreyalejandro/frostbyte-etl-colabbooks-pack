@@ -986,12 +986,14 @@ When a tenant transitions from `PENDING` to `PROVISIONING` to `ACTIVE`, the foll
 The kill-switch (ACTIVE -> SUSPENDED) must be **instant and reversible**.
 
 **Instant** means:
+
 1. **Disable API routing** -- The API gateway stops routing requests to the tenant's data plane within 1 second of the suspend command. Any in-flight requests are allowed to complete (no abrupt connection termination), but no new requests are accepted.
 2. **Pause all processing jobs** -- The task queue drains: currently running jobs are allowed to complete, but no new jobs are dequeued for this tenant. Queue depth is frozen.
 3. **Revoke tenant API keys** -- Invalidate all active API keys for this tenant in the gateway's authentication cache. Subsequent requests with revoked keys receive 401 responses.
 4. **Emit audit event** -- `TENANT_SUSPENDED` with actor, reason, and timestamp.
 
 **Reversible** means:
+
 1. **SUSPENDED -> ACTIVE** restores full functionality:
    - Re-enable API routing (new requests accepted).
    - Resume paused processing jobs (queue resumes dequeuing).

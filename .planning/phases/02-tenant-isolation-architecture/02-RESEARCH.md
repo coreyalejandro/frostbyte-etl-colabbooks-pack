@@ -44,6 +44,7 @@ The established libraries/tools for multi-tenant infrastructure isolation in thi
 | Collection-per-tenant (Qdrant) | Payload-based filtering in single collection | Single collection is simpler but payload filtering is fragile; collection-per-tenant provides stronger isolation |
 
 **Installation:**
+
 ```bash
 # Hetzner Cloud SDK
 pip install hcloud>=2.10
@@ -196,6 +197,7 @@ The nine-step sequence from ARCHITECTURE.md expanded with Hetzner API specifics:
 **When to use:** Always. Every resource provisioned for a tenant must have `tenant_id` label.
 
 **Example:**
+
 ```python
 # Source: Hetzner Cloud API documentation
 from hcloud import Client
@@ -216,6 +218,7 @@ tenant_servers = client.servers.get_all(label_selector=f"tenant_id={tenant_id}")
 ```
 
 **Verification:**
+
 ```python
 # List all servers for a tenant
 servers = client.servers.get_all(label_selector=f"tenant_id={tenant_id}")
@@ -235,6 +238,7 @@ other_tenant_servers = client.servers.get_all(
 **When to use:** For all per-tenant secrets (DB passwords, API keys, object store credentials).
 
 **Example:**
+
 ```bash
 # Source: SOPS documentation + age specification
 # 1. Generate per-tenant age key
@@ -258,6 +262,7 @@ sops --decrypt tenant-abc-secrets.enc.yaml
 ```
 
 **Key Hierarchy:**
+
 ```
 age recipient key (KEK, per-tenant)
   └─> SOPS data key (DEK, generated per-file, 256-bit AES)
@@ -265,6 +270,7 @@ age recipient key (KEK, per-tenant)
 ```
 
 **Rotation procedure:**
+
 ```bash
 # Source: SOPS key rotation documentation
 # 1. Generate new age key
@@ -291,6 +297,7 @@ shred -u .secrets/tenant-abc.age
 **When to use:** Always. No shared namespaces across tenants.
 
 **Example (MinIO):**
+
 ```bash
 # Source: MinIO bucket policy documentation
 # Create bucket
@@ -327,6 +334,7 @@ mc ls tenant-abc-minio
 ```
 
 **Example (PostgreSQL):**
+
 ```sql
 -- Source: PostgreSQL documentation + pg_hba.conf patterns
 -- Create database and user
@@ -351,6 +359,7 @@ REVOKE CONNECT ON DATABASE tenant_abc FROM PUBLIC;
 ```
 
 **Example (Qdrant):**
+
 ```python
 # Source: Qdrant multitenancy documentation
 from qdrant_client import QdrantClient
@@ -383,6 +392,7 @@ assert len(tenant_collections) == 1
 **When to use:** Offline mode deployments on air-gapped hosts.
 
 **Example:**
+
 ```yaml
 # Source: Docker Compose networks documentation
 version: '3.8'
@@ -439,6 +449,7 @@ volumes:
 ```
 
 **Behavior:**
+
 - Containers can communicate with each other via service names (e.g., `postgres:5432`)
 - Containers CANNOT reach the internet (no default gateway)
 - Port mappings only work to localhost (`127.0.0.1:`), not `0.0.0.0:`
@@ -447,21 +458,25 @@ volumes:
 ### Anti-Patterns to Avoid
 
 **Anti-Pattern 1: Shared Database with Row-Level Security**
+
 - **What:** Using PostgreSQL RLS instead of separate databases per tenant
 - **Why bad:** One query without tenant filter leaks all data; compliance auditors flag as insufficient
 - **Instead:** Separate database per tenant; blast radius limited by construction
 
 **Anti-Pattern 2: Payload-Based Filtering Only (Qdrant)**
+
 - **What:** Single Qdrant collection with `tenant_id` in payload, filtering via search parameters
 - **Why bad:** Application bug forgetting tenant filter exposes all vectors; no structural isolation
 - **Instead:** Collection-per-tenant; tenant filter is collection name, not search parameter
 
 **Anti-Pattern 3: Trusting Host Firewall for Offline Isolation**
+
 - **What:** Relying on iptables or host network rules to block outbound traffic
 - **Why bad:** Customer may modify host rules; defense must be structural (Docker `internal: true`)
 - **Instead:** Application-level guarantee via Docker network config
 
 **Anti-Pattern 4: Reusing Age Keys Across Tenants**
+
 - **What:** Single age key pair for all tenant secrets
 - **Why bad:** Key compromise exposes all tenants; rotation requires re-encrypting all secrets
 - **Instead:** Per-tenant age keys; rotation scoped to one tenant
@@ -489,6 +504,7 @@ Problems that look simple but have existing solutions:
 **Why it happens:** As of December 2025, Hetzner Cloud API enforces that CIDR blocks must have host bits zeroed (e.g., `10.1.1.0/24`, not `10.1.1.5/24`).
 
 **How to avoid:** Always normalize CIDRs before API calls:
+
 ```python
 import ipaddress
 
@@ -509,6 +525,7 @@ normalize_cidr("10.1.1.5/24")  # Returns "10.1.1.0/24"
 **Why it happens:** Hetzner Cloud private networks have a hard limit of 100 nodes per network.
 
 **How to avoid:** Plan network topology early:
+
 - For <100 servers per tenant: Single private network per tenant
 - For >100 servers per tenant: Multiple private networks with routing, or use public network with firewall rules
 
@@ -521,6 +538,7 @@ normalize_cidr("10.1.1.5/24")  # Returns "10.1.1.0/24"
 **Why it happens:** SOPS rotation re-encrypts the data key but doesn't decrypt with the old key afterward.
 
 **How to avoid:**
+
 1. Test decryption before deleting old key
 2. Keep old keys in secure offline storage for backup recovery period (e.g., 90 days)
 3. Document key-to-backup-date mapping in control plane registry
@@ -534,6 +552,7 @@ normalize_cidr("10.1.1.5/24")  # Returns "10.1.1.0/24"
 **Why it happens:** Hetzner Cloud Firewalls default to "outbound ACCEPT" if no outbound rules exist. Defining even one outbound rule changes to "implicit deny" for unmatched traffic.
 
 **How to avoid:** Explicitly define outbound rules for all allowed traffic:
+
 ```python
 rules = [
     # Inbound rules...
@@ -558,6 +577,7 @@ rules = [
 **Why it happens:** MinIO bucket policies follow S3 semantics but only apply to anonymous (no credentials) access. User access is controlled by IAM policies attached to the user.
 
 **How to avoid:** Use IAM policies for per-tenant user isolation:
+
 ```bash
 # WRONG: Bucket policy for user access
 mc admin policy create minio-prod tenant-policy bucket-policy.json
@@ -868,6 +888,7 @@ verify_tenant_access(tenant_id, requested_collection)
 | Docker `--link` for networking | Docker Compose networks with `internal: true` | 2016 | Explicit network isolation control, no deprecated flags |
 
 **Deprecated/outdated:**
+
 - **Hetzner Cloud API v1.0**: Replaced by current REST API with OpenAPI spec
 - **SOPS with PGP**: Still supported but age is recommended for new deployments
 - **Qdrant single collection + payload filtering**: Still works but v1.16 tiered multitenancy is recommended for scale
@@ -905,6 +926,7 @@ Things that couldn't be fully resolved:
 ## Sources
 
 ### Primary (HIGH confidence)
+
 - [Hetzner Cloud API Overview](https://docs.hetzner.cloud/) - API structure, service coverage
 - [Hetzner Cloud API Reference](https://docs.hetzner.cloud/reference/cloud) - Server, network, firewall, volume endpoints
 - [Hetzner Cloud Firewalls FAQ](https://docs.hetzner.com/cloud/firewalls/faq/) - CIDR limits (100 max), firewall rule behavior
@@ -918,6 +940,7 @@ Things that couldn't be fully resolved:
 - [Qdrant 1.16 Tiered Multitenancy](https://qdrant.tech/blog/qdrant-1.16.x/) - Shard promotion, fallback shards
 
 ### Secondary (MEDIUM confidence)
+
 - [Rotating SOPS Encryption Keys (Techno Tim)](https://technotim.com/posts/rotate-sops-encryption-keys/) - Practical key rotation workflow
 - [MinIO Multi-Tenancy Configuration (OneUpTime)](https://oneuptime.com/blog/post/2026-01-28-minio-multi-tenancy/view) - Shared cluster with IAM policies
 - [MinIO Bucket Policies (OneUpTime)](https://oneuptime.com/blog/post/2026-01-27-minio-bucket-policies/view) - Bucket policy vs IAM policy clarification
@@ -927,6 +950,7 @@ Things that couldn't be fully resolved:
 - [PostgreSQL Row-Level Security (AWS Database Blog)](https://aws.amazon.com/blogs/database/multi-tenant-data-isolation-with-postgresql-row-level-security/) - Alternative to database-per-tenant
 
 ### Tertiary (LOW confidence)
+
 - Hetzner Cloud 100-server private network limit - sourced from community forums (LowEndTalk), needs official verification
 - Qdrant API key collection scoping - not found in official docs, may not exist or be undocumented
 - MinIO bucket policy behavior with authenticated users - conflicting information in community sources vs official docs
@@ -934,6 +958,7 @@ Things that couldn't be fully resolved:
 ## Metadata
 
 **Confidence breakdown:**
+
 - Hetzner Cloud API: MEDIUM - Official API reference consulted but some constraints (Projects, CIDR normalization) from secondary sources
 - SOPS + age envelope encryption: HIGH - Official documentation for both tools, clear key hierarchy and rotation procedures
 - Storage isolation (MinIO, PostgreSQL, Qdrant): MEDIUM - Official docs consulted but verification commands not tested hands-on

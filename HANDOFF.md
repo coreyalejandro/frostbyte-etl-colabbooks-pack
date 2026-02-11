@@ -46,13 +46,13 @@ notebooks/             # 5 variant notebooks (05 = Hetzner multi-tenant)
    - Deprovisioning sequence, cross-tenant denial proof, verification runbook
    - Min 600 lines, references PRD 3.4/3.6, ISOL-01/ISOL-04
 
-2. **Execute Plan 02-02** — create `docs/TENANT_ISOLATION_STORAGE_ENCRYPTION.md`
+3. **Execute Plan 02-02** — create `docs/TENANT_ISOLATION_STORAGE_ENCRYPTION.md`
    - Per-tenant storage namespaces (MinIO, PostgreSQL, Qdrant, Redis)
    - Encryption key management (SOPS+age, key hierarchy, rotation)
    - Cross-tenant storage access denial verification
    - Depends on 02-01 for coherence; can run in parallel if preferred
 
-3. **Phase 1 UAT** (optional, parallel) — `01-UAT.md` shows 8 tests pending; manual validation if desired
+4. **Phase 1 UAT** (optional, parallel) — `01-UAT.md` shows 8 tests pending; manual validation if desired
 
 ## Important Context
 

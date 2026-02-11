@@ -1,3 +1,21 @@
 # markdownlint-cli2 config
 ignores:
-  - ".planning/**"
+  - "docs/notion_variants/**"
+  - "docs/NOTION_EXPORT.md"
+  - "docs/CUSTOMER_JOURNEY_MAP.md"
+  - "docs/ETL_PIPELINE_PROPOSAL.md"
+  - ".windsurf/**"
+  - "generated-implementations/**"
+  - "**/node_modules/**"
+  - "**/.cursor/**"
+config:
+  MD013: false          # line-length (80 chars too strict for docs)
+  MD060: false          # table-column-style (noisy)
+  MD034: false          # no-bare-urls (URLs in lists/common)
+  MD040: false          # fenced-code-language (many code blocks without lang)
+  MD041: false          # first-line-heading (rules files start with content)
+  MD036: false          # no-emphasis-as-heading (bold used for labels)
+  MD024: false          # no-duplicate-heading (PRD/guides repeat Inputs/Outputs)
+  MD056: false          # table-column-count (complex tables)
+  MD033: false          # no-inline-html (plan files use <objective>, <task>, etc.)
+  MD029: false          # ol-prefix (ordered list style)
