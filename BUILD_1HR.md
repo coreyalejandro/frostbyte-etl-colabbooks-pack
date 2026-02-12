@@ -29,10 +29,10 @@ If you want tenant registry and audit events (per `docs/FOUNDATION_LAYER_PLAN.md
 ./scripts/run_migrations.sh
 ```
 
-Or manually with psql:
+Or manually with psql (use port 5433 to match Docker Postgres):
 ```bash
-psql -U frostbyte -d frostbyte -f migrations/001_tenant_registry.sql
-psql -U frostbyte -d frostbyte -f migrations/002_audit_events.sql
+PGPORT=5433 psql -h 127.0.0.1 -U frostbyte -d frostbyte -f migrations/001_tenant_registry.sql
+PGPORT=5433 psql -h 127.0.0.1 -U frostbyte -d frostbyte -f migrations/002_audit_events.sql
 ```
 
 ---
@@ -53,7 +53,7 @@ docker compose ps
 | Service   | Port  | Purpose                          |
 |-----------|-------|----------------------------------|
 | MinIO     | 9000  | Object store (S3-compatible)    |
-| PostgreSQL| 5432  | Relational metadata              |
+| PostgreSQL| 5433  | Relational metadata (5433 to avoid host Postgres on 5432) |
 | Redis     | 6379  | Queue broker / cache             |
 | Qdrant    | 6333  | Vector store (768d)              |
 
@@ -89,6 +89,9 @@ pip install -e .
 ```bash
 cd pipeline
 pip install -e .
+# Use port 5433 to match Docker Postgres (avoids host Postgres on 5432)
+FROSTBYTE_CONTROL_DB_URL="postgresql://frostbyte:frostbyte@127.0.0.1:5433/frostbyte" \
+FROSTBYTE_AUTH_BYPASS=1 \
 uvicorn pipeline.main:app --reload --host 0.0.0.0 --port 8000
 ```
 

@@ -1,0 +1,195 @@
+openapi: 3.0.3
+info:
+  title: Frostbyte ETL Pipeline API
+  version: 1.0.0
+  description: Data-sovereign document ingestion and vector query API.
+paths:
+  /documents:
+    post:
+      summary: Upload a document
+      operationId: uploadDocument
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DocumentUploadRequest'
+      responses:
+        '202':
+          description: Accepted for processing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentMetadata'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /documents/{id}:
+    get:
+      summary: Get document metadata
+      operationId: getDocument
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: {type: string, format: uuid}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentMetadata'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /documents/{id}/chunks:
+    get:
+      summary: List all chunks for a document
+      operationId: listChunks
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: {type: string, format: uuid}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Chunk'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /collections:
+    post:
+      summary: Create a new collection
+      operationId: createCollection
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CollectionCreateRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name: {type: string}
+                  created_at: {type: string, format: date-time}
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /collections/{name}/query:
+    post:
+      summary: Query a collection
+      operationId: queryCollection
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema: {type: string}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QueryRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /health:
+    get:
+      summary: Health check
+      operationId: healthCheck
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: {type: string, enum: [healthy]}
+                  timestamp: {type: string, format: date-time}
+components:
+  schemas:
+    DocumentUploadRequest:
+      type: object
+      required: [filename, content]
+      properties:
+        filename: {type: string}
+        content:  {type: string, format: binary}
+        metadata: {type: object, additionalProperties: true}
+    DocumentMetadata:
+      type: object
+      properties:
+        id:         {type: string, format: uuid}
+        filename:   {type: string}
+        status:     {type: string, enum: [pending, processing, completed, failed]}
+        created_at: {type: string, format: date-time}
+    Chunk:
+      type: object
+      properties:
+        chunk_id:    {type: string, format: uuid}
+        document_id: {type: string, format: uuid}
+        content:     {type: string}
+        embedding:   {type: array, items: {type: number}}
+    CollectionCreateRequest:
+      type: object
+      required: [name]
+      properties:
+        name:        {type: string, pattern: '^[a-z0-9_-]{3,32}$'}
+        description: {type: string}
+    QueryRequest:
+      type: object
+      required: [vector, top_k]
+      properties:
+        vector: {type: array, items: {type: number}}
+        top_k:  {type: integer, minimum: 1, maximum: 100}
+    QueryResponse:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            type: object
+            properties:
+              chunk_id:    {type: string}
+              score:       {type: number}
+              document_id: {type: string}
+              content:     {type: string}
+    Error:
+      type: object
+      required: [error_code, message]
+      properties:
+        error_code: {type: string}
+        message:    {type: string}
+  responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Conflict:
+      description: Conflict
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

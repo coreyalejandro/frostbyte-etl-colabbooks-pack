@@ -2,7 +2,10 @@
 Frostbyte ETL Pipeline — 1hr MVP.
 Intake -> parse (stub) -> store metadata + vectors.
 Single-tenant, local Docker. Per docs/PRD.md and docs/TECH_DECISIONS.md.
+Multi-modal support: images, audio, video (Enhancement #9).
 """
+import base64
+import json
 import logging
 import os
 import uuid
@@ -11,6 +14,7 @@ from datetime import datetime
 
 import boto3
 import httpx
+import redis.asyncio as redis
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
@@ -20,6 +24,9 @@ from qdrant_client.models import Distance, PointStruct, VectorParams
 from . import db
 from .config import PlatformConfig
 from .intake.routes import router as intake_router
+from .multimodal import detect_modality
+from .routes.collections import router as collections_router
+from .routes.tenant_schemas import router as tenant_schemas_router
 
 # Config from env
 MINIO_ENDPOINT = os.getenv("MINIO_ENDPOINT", "http://localhost:9000")
@@ -94,6 +101,8 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="Frostbyte ETL", version="0.1.0", lifespan=lifespan)
 app.include_router(intake_router)
+app.include_router(collections_router)
+app.include_router(tenant_schemas_router)
 
 
 def _check_service(name: str, url: str) -> bool:
@@ -173,16 +182,67 @@ async def health():
     return {"status": "healthy", "timestamp": datetime.utcnow().isoformat() + "Z"}
 
 
+REDIS_URL = os.getenv("FROSTBYTE_REDIS_URL", os.getenv("REDIS_URL", "redis://localhost:6379/0"))
+
+
 @app.post("/api/v1/intake", response_model=IntakeResponse)
 async def intake(
     file: UploadFile = File(...),
     tenant_id: str = Form(default=TENANT_DEFAULT),
 ):
-    """Ingest a document: store in MinIO, parse stub, store metadata + vector stub."""
-    doc_id = str(uuid.uuid4())
-    key = f"{tenant_id}/{doc_id}/{file.filename or 'document'}"
-
+    """Ingest a document: store in MinIO. Multimodal (image/audio/video) -> background worker."""
+    filename = file.filename or "document"
     contents = await file.read()
+    modality = detect_modality(filename)
+
+    # Multimodal: push to worker, return processing status
+    if modality in ("image", "audio", "video"):
+        try:
+            doc_id = await db.insert_document(
+                tenant_id=tenant_id,
+                filename=filename,
+                status="processing",
+                modality=modality,
+            )
+            key = f"{tenant_id}/{doc_id}/{filename}"
+            s3 = get_s3()
+            s3.put_object(Bucket=BUCKET, Key=key, Body=contents)
+            r = redis.from_url(REDIS_URL)
+            await r.rpush(
+                "multimodal:jobs",
+                json.dumps({
+                    "job_id": str(uuid.uuid4()),
+                    "document_id": str(doc_id),
+                    "tenant_id": tenant_id,
+                    "filename": filename,
+                    "content": base64.b64encode(contents).decode("ascii"),
+                }),
+            )
+            await r.aclose()
+            now = datetime.utcnow().isoformat() + "Z"
+            _docs[str(doc_id)] = {
+                "id": str(doc_id),
+                "tenant_id": tenant_id,
+                "bucket": BUCKET,
+                "object_key": key,
+                "status": "processing",
+                "created_at": now,
+            }
+            return IntakeResponse(
+                document_id=str(doc_id),
+                status="processing",
+                bucket=BUCKET,
+                object_key=key,
+                created_at=now,
+            )
+        except Exception as e:
+            if "does not exist" in str(e).lower() or "relation" in str(e).lower():
+                raise HTTPException(status_code=503, detail="Documents table not ready; run migration 007")
+            raise
+
+    # Text path: existing flow
+    doc_id = str(uuid.uuid4())
+    key = f"{tenant_id}/{doc_id}/{filename}"
     s3 = get_s3()
     s3.put_object(Bucket=BUCKET, Key=key, Body=contents)
 
@@ -234,6 +294,12 @@ async def intake(
 
 @app.get("/api/v1/documents/{document_id}")
 async def get_document(document_id: str):
-    if document_id not in _docs:
-        raise HTTPException(status_code=404, detail="Document not found")
-    return _docs[document_id]
+    if document_id in _docs:
+        return _docs[document_id]
+    try:
+        doc = await db.fetch_document(uuid.UUID(document_id))
+        if doc:
+            return doc
+    except ValueError:
+        pass
+    raise HTTPException(status_code=404, detail="Document not found")

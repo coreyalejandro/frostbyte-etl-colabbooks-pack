@@ -1,10 +1,18 @@
 # Agent Handoff: Frostbyte ETL Planning Pack
 
-**Date:** 2026-02-11
-**Status:** Roadmap Complete — All 8 Phases Delivered
+**Date:** 2026-02-12
+**Status:** Pipeline Standing — 1hr Build + 3 Enhancements
 
 ## What Was Just Completed
 
+- **Enhancement #9 — Multi-Modal Document Support** — Implemented full multimodal pipeline: modality detection (`pipeline/multimodal/detector.py`), image processor (OCR + CLIP), audio (Whisper), video (ffmpeg + frames + OCR + CLIP); migration `007_add_multimodal_support.sql` (documents, chunks, image_embeddings, video_frames with pgvector); `embedding.py`, `vector_store.py`; `scripts/run_multimodal_worker.py` consumes Redis `multimodal:jobs`; intake extended (POST /api/v1/intake dispatches image/audio/video to worker); POST /api/v1/collections/{name}/query accepts `query_file` for image/audio/video; `.env.example` multimodal vars; `Dockerfile` with tesseract-ocr, ffmpeg. Run worker: `python scripts/run_multimodal_worker.py` (from project root, pipeline installed). **Note:** Migration 007 requires pgvector extension in PostgreSQL; use `ankane/pgvector` or equivalent.
+- **All‑In‑One Zero‑Shot PRDs for Enhancements 5, 7, 8** — `specs/E05-GRAPH-RAG-PRD.md`, `specs/E07-SSO-SAML-OIDC-PRD.md`, `specs/E08-SIGNED-EXPORT-BUNDLES-PRD.md` created. Each contains COSTAR system prompt, Zero‑Shot prompt, PRD, and deterministic implementation plan. E05: Graph RAG — Neo4j, spaCy entity extraction, hybrid vector+graph query endpoint, background graph ingest. E07: SSO/OIDC — Auth0 integration, login/callback flow, session cookie, protected routes. E08: Signed export bundles — GPG signing, tar.gz + manifest.json, Redis export worker, `frostbyte-verify` CLI.
+- **All‑In‑One Zero‑Shot PRDs for Enhancements 2, 3, 6** — `specs/E02-TERRAFORM-PROVIDER-PRD.md`, `specs/E03-BATCH-API-PRD.md`, `specs/E06-ADMIN-DASHBOARD-PRD.md` created. Each contains COSTAR system prompt, Zero‑Shot prompt, PRD, and deterministic implementation plan. E02: Terraform provider (frostbyte_tenant resource + data source). E03: Batch API with SSE streaming, Redis queue, `pipeline/pipeline/routes/batch.py` and `worker/batch_worker.py`. E06: React+TypeScript+Vite admin dashboard with tenants, documents, jobs, settings.
+- **Enhancement #1 — OpenAPI/Swagger Spec** — `specs/openapi.yaml` created with all six mandatory endpoints (POST /documents, GET /documents/{id}, GET /documents/{id}/chunks, POST /collections, POST /collections/{name}/query, GET /health). Validates with `npx @apidevtools/swagger-cli validate specs/openapi.yaml`.
+- **Enhancement #4 — Configurable Schema Extensions** — Migration `006_tenant_schemas.sql` creates `tenant_schemas` table; `pipeline/pipeline/schemas/tenant_schema.py` (Pydantic models); `pipeline/pipeline/routes/tenant_schemas.py` (PUT/GET/PATCH `/tenants/{tenant_id}/schema`); `schema_validation.py` for JSON Schema validation. Added `jsonschema` dep. Run migration: `./scripts/run_migrations.sh` (includes 006).
+- **Enhancement #10 — Automated Compliance Test Suite** — `pipeline/tests/compliance/`: GDPR, HIPAA, FedRAMP templates; `conftest.py` (client, db fixtures); `test_tenant_schema.py` for schema endpoints; `docker-compose.test.yml`. Run: `python -m pytest pipeline/tests/compliance -v`. Many tests skip until endpoints (DELETE documents, export, metrics, API keys) exist.
+- **Pipeline stood up per BUILD_1HR.md** — Docker Compose (MinIO, PostgreSQL:5433, Redis, Qdrant); migrations 001, 002, 005 via `./scripts/run_migrations.sh`; pipeline installed (`pip install -e .`); API running at http://localhost:8000; intake tested (POST /api/v1/intake); document metadata, Qdrant `tenant_default` collection, MinIO bucket verified.
+- **Port 5433 for Postgres** — `docker-compose.yml` and `scripts/run_migrations.sh` updated to avoid conflict with host Postgres on 5432. API start command in BUILD_1HR includes `FROSTBYTE_CONTROL_DB_URL` with port 5433.
 - **Parsing pipeline implementation** — `pipeline/parsing/`: CanonicalStructuredDocument models; Unstructured partition + chunk_by_title; parse_file() → canonical JSON; MinIO write to normalized/{tenant_id}/{doc_id}/structured.json; DOCUMENT_PARSED, DOCUMENT_PARSE_FAILED audit events; policy job enqueue to tenant:{tenant_id}:queue:policy. Worker: `scripts/run_parse_worker.py` BRPOPs from tenant parse queues, downloads from MinIO, parses, writes, audits. Idempotency: skip if canonical exists. Added docling, unstructured[all-docs] deps. Intake enqueue now includes mime_type.
 - **Intake gateway (prior)** — JWT auth (bypass FROSTBYTE_AUTH_BYPASS=1), rate limit (100/min), ClamAV, Redis parse enqueue, PostgreSQL receipt persistence.
 - **Intake gateway implementation** — `pipeline/intake/`: BatchManifest, IntakeReceipt models; MIME sniffing (python-magic), checksum, size validation; POST /api/v1/ingest/{tenant_id}/batch (202 Accepted), GET batch, GET receipt; BATCH_RECEIVED, DOCUMENT_INGESTED, DOCUMENT_REJECTED, DOCUMENT_QUARANTINED audit events; MinIO write to raw/{tenant_id}/{file_id}/{sha256}.
@@ -117,9 +125,10 @@ notebooks/             # 5 variant notebooks (05 = Hetzner multi-tenant)
 
 ## Recommended Next Steps
 
-1. **Policy engine** — Next per implementation order: `docs/POLICY_ENGINE_PLAN.md` (PII detection, classification, injection defense; consume from tenant:{tenant_id}:queue:policy)
-2. **Build + E2E** — `docker compose up -d`, `./scripts/run_migrations.sh`, `cd pipeline && pip install -e . && uvicorn pipeline.main:app --port 8000`. In another terminal: `python scripts/run_parse_worker.py`. Submit batch via POST /api/v1/ingest/{tenant_id}/batch; worker parses, writes canonical JSON, enqueues policy.
-3. **Phase 1 UAT** (optional) — `01-UAT.md` shows 8 tests pending
+1. **Implement enhancement PRDs** — Execute `specs/E02-TERRAFORM-PROVIDER-PRD.md`, `specs/E03-BATCH-API-PRD.md`, `specs/E06-ADMIN-DASHBOARD-PRD.md`, `specs/E05-GRAPH-RAG-PRD.md`, `specs/E07-SSO-SAML-OIDC-PRD.md`, `specs/E08-SIGNED-EXPORT-BUNDLES-PRD.md` per their deterministic implementation plans.
+2. **Policy engine** — Next per implementation order: `docs/POLICY_ENGINE_PLAN.md` (PII detection, classification, injection defense; consume from tenant:{tenant_id}:queue:policy)
+3. **Build + E2E** — `docker compose up -d`, `./scripts/run_migrations.sh`, `cd pipeline && pip install -e . && uvicorn pipeline.main:app --port 8000`. In another terminal: `python scripts/run_parse_worker.py`. Submit batch via POST /api/v1/ingest/{tenant_id}/batch; worker parses, writes canonical JSON, enqueues policy.
+4. **Phase 1 UAT** (optional) — `01-UAT.md` shows 8 tests pending
 
 ## Prompt for Next Conversation
 

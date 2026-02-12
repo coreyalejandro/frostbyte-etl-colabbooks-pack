@@ -71,6 +71,52 @@ async def load_tenant_config(tenant_id: str) -> dict[str, Any]:
     }
 
 
+async def fetch_document(document_id: uuid.UUID) -> dict | None:
+    """Fetch document by id. Returns None if not found."""
+    try:
+        pool = _get_pool()
+        row = await pool.fetchrow(
+            "SELECT id, tenant_id, filename, status, modality, created_at FROM documents WHERE id = $1",
+            document_id,
+        )
+    except RuntimeError:
+        return None
+    if not row:
+        return None
+    return {
+        "id": str(row["id"]),
+        "tenant_id": row["tenant_id"],
+        "filename": row["filename"],
+        "status": row["status"],
+        "modality": row["modality"],
+        "created_at": row["created_at"].isoformat() + "Z" if row["created_at"] else None,
+    }
+
+
+async def insert_document(
+    *,
+    tenant_id: str,
+    filename: str,
+    status: str = "processing",
+    modality: str = "text",
+) -> uuid.UUID:
+    """Insert a document record for multimodal pipeline. Returns document id."""
+    pool = _get_pool()
+    doc_id = uuid.uuid4()
+    await pool.execute(
+        """
+        INSERT INTO documents (id, tenant_id, filename, status, modality)
+        VALUES ($1, $2, $3, $4, $5)
+        """,
+        doc_id,
+        tenant_id,
+        filename,
+        status,
+        modality,
+    )
+    return doc_id
+
+
 async def emit_audit_event(
     *,
     event_id: uuid.UUID,

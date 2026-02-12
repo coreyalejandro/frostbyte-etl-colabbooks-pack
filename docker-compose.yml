@@ -22,7 +22,7 @@ services:
   postgres:
     image: postgres:16-alpine
     ports:
-      - "5432:5432"
+      - "5433:5432"  # 5433 to avoid conflict with host Postgres on 5432
     environment:
       POSTGRES_USER: frostbyte
       POSTGRES_PASSWORD: frostbyte

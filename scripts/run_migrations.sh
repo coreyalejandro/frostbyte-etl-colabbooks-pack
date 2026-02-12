@@ -8,8 +8,8 @@ ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 MIGRATIONS_DIR="$ROOT/migrations"
 
 # Default: local PostgreSQL
-export PGHOST="${PGHOST:-localhost}"
-export PGPORT="${PGPORT:-5432}"
+export PGHOST="${PGHOST:-127.0.0.1}"
+export PGPORT="${PGPORT:-5433}"
 export PGUSER="${PGUSER:-frostbyte}"
 export PGPASSWORD="${PGPASSWORD:-frostbyte}"
 export PGDATABASE="${PGDATABASE:-frostbyte}"
@@ -29,7 +29,7 @@ fi
 echo "Running migrations from $MIGRATIONS_DIR"
 echo "Target: $PGUSER@$PGHOST:$PGPORT/$PGDATABASE"
 
-for f in 001_tenant_registry.sql 002_audit_events.sql 005_intake_receipts.sql; do
+for f in 001_tenant_registry.sql 002_audit_events.sql 005_intake_receipts.sql 006_tenant_schemas.sql 007_add_multimodal_support.sql; do
   path="$MIGRATIONS_DIR/$f"
   if [[ -f "$path" ]]; then
     echo "  Applying $f"
