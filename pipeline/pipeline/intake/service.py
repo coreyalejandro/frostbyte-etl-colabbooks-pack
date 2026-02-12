@@ -164,6 +164,7 @@ async def process_batch(
             sha256=sha256,
             storage_path=storage_path,
             tenant_id=tenant_id,
+            mime_type=sniffed,
         )
 
     return BatchReceiptResponse(

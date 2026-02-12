@@ -5,7 +5,9 @@
 
 ## What Was Just Completed
 
-- **Intake gateway implementation** — `pipeline/intake/`: BatchManifest, IntakeReceipt models; MIME sniffing (python-magic), checksum, size validation; POST /api/v1/ingest/{tenant_id}/batch (202 Accepted), GET batch, GET receipt; BATCH_RECEIVED, DOCUMENT_INGESTED, DOCUMENT_REJECTED, DOCUMENT_QUARANTINED audit events; MinIO write to raw/{tenant_id}/{file_id}/{sha256}. Malware scan stubbed. Added python-magic dep.
+- **Parsing pipeline implementation** — `pipeline/parsing/`: CanonicalStructuredDocument models; Unstructured partition + chunk_by_title; parse_file() → canonical JSON; MinIO write to normalized/{tenant_id}/{doc_id}/structured.json; DOCUMENT_PARSED, DOCUMENT_PARSE_FAILED audit events; policy job enqueue to tenant:{tenant_id}:queue:policy. Worker: `scripts/run_parse_worker.py` BRPOPs from tenant parse queues, downloads from MinIO, parses, writes, audits. Idempotency: skip if canonical exists. Added docling, unstructured[all-docs] deps. Intake enqueue now includes mime_type.
+- **Intake gateway (prior)** — JWT auth (bypass FROSTBYTE_AUTH_BYPASS=1), rate limit (100/min), ClamAV, Redis parse enqueue, PostgreSQL receipt persistence.
+- **Intake gateway implementation** — `pipeline/intake/`: BatchManifest, IntakeReceipt models; MIME sniffing (python-magic), checksum, size validation; POST /api/v1/ingest/{tenant_id}/batch (202 Accepted), GET batch, GET receipt; BATCH_RECEIVED, DOCUMENT_INGESTED, DOCUMENT_REJECTED, DOCUMENT_QUARANTINED audit events; MinIO write to raw/{tenant_id}/{file_id}/{sha256}.
 - **Storage layer implementation** — `pipeline/storage/`: MinIO, PostgreSQL, Qdrant, Redis provisioners; credential generation + SOPS; combined `provision_tenant_storage` with rollback; `get_collection_name`, `verify_tenant_access`. Unit tests in `pipeline/tests/test_storage.py`. Added `redis` dep.
 - **E2E verification** — `scripts/verify_e2e.sh` (runs when Docker is healthy); `docs/DOCKER_TROUBLESHOOTING.md` for 500 error remediation.
 - **Foundation layer implementation** — migrations 001, 002; PlatformConfig; load_tenant_config; emit_audit_event; decrypt_tenant_secrets; create_tenant with audit emission; migration runner `scripts/run_migrations.sh`; BUILD_1HR Step 0; .env.example FROSTBYTE_* vars
@@ -115,8 +117,8 @@ notebooks/             # 5 variant notebooks (05 = Hetzner multi-tenant)
 
 ## Recommended Next Steps
 
-1. **Parsing pipeline** — Next per implementation order: `docs/PARSING_PIPELINE_PLAN.md` (Docling + Unstructured, canonical JSON schema, lineage)
-2. **Build in 1hr:** Follow `BUILD_1HR.md` — `docker compose up -d`, run `./scripts/run_migrations.sh`, `cd pipeline && pip install -e . && uvicorn pipeline.main:app --port 8000`. Note: Docker daemon returned 500 on this machine; retry when Docker is healthy.
+1. **Policy engine** — Next per implementation order: `docs/POLICY_ENGINE_PLAN.md` (PII detection, classification, injection defense; consume from tenant:{tenant_id}:queue:policy)
+2. **Build + E2E** — `docker compose up -d`, `./scripts/run_migrations.sh`, `cd pipeline && pip install -e . && uvicorn pipeline.main:app --port 8000`. In another terminal: `python scripts/run_parse_worker.py`. Submit batch via POST /api/v1/ingest/{tenant_id}/batch; worker parses, writes canonical JSON, enqueues policy.
 3. **Phase 1 UAT** (optional) — `01-UAT.md` shows 8 tests pending
 
 ## Prompt for Next Conversation

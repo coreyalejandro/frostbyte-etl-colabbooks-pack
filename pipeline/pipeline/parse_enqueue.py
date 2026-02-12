@@ -22,6 +22,7 @@ async def enqueue_parse(
     sha256: str,
     storage_path: str,
     tenant_id: str,
+    mime_type: str | None = None,
 ) -> None:
     """Push parse job to Redis list. Celery workers can BRPOP or similar."""
     import asyncio
@@ -32,6 +33,7 @@ async def enqueue_parse(
         "sha256": sha256,
         "storage_path": storage_path,
         "tenant_id": tenant_id,
+        "mime_type": mime_type,
     }
 
     def _push():

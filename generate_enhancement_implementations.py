@@ -29,13 +29,11 @@ EXIT CODES:
 
 import argparse
 import json
-import os
 import sys
-import hashlib
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Any, Optional
-from dataclasses import dataclass, asdict
+from typing import Dict, List, Any
+from dataclasses import dataclass
 from enum import Enum
 
 
@@ -456,7 +454,7 @@ class ImplementationGenerator:
             "# Frostbyte Cross-Cutting Enhancements Implementation Guide",
             "",
             f"**Generated:** {datetime.utcnow().isoformat()}Z",
-            f"**Version:** 1.0.0",
+            "**Version:** 1.0.0",
             f"**Total Enhancements:** {len(ENHANCEMENTS)}",
             "",
             "## Executive Summary",
@@ -565,19 +563,19 @@ class ImplementationGenerator:
     def _generate_enhancement_section(self, enh: Enhancement) -> List[str]:
         """Generate detailed section for a single enhancement."""
         lines = [
-            f"",
-            f"---",
-            f"",
+            "",
+            "---",
+            "",
             f"## E{enh.id:02d}: {enh.name}",
-            f"",
+            "",
             f"**Type:** {enh.enhancement_type.value}  ",
             f"**Value:** {enh.value.value}  ",
             f"**Effort:** {enh.effort.value}  ",
             f"**Phase:** {enh.phase}  ",
             f"**Estimated Duration:** {self._estimate_duration(enh.effort)}",
-            f"",
+            "",
             f"**Rationale:** {enh.rationale}",
-            f"",
+            "",
         ]
         
         if enh.dependencies:
@@ -596,13 +594,13 @@ class ImplementationGenerator:
             "",
             "```bash",
             "# Verify repository structure",
-            f"test -d $FROSTBYTE_REPO_ROOT/packages || exit 1",
+            "test -d $FROSTBYTE_REPO_ROOT/packages || exit 1",
             "",
             "# Verify database connection",
-            f"psql $DATABASE_URL -c 'SELECT 1' || exit 1",
+            "psql $DATABASE_URL -c 'SELECT 1' || exit 1",
             "",
             "# Verify Node.js version",
-            f"node --version | grep -E '^v(18|20|22)' || exit 1",
+            "node --version | grep -E '^v(18|20|22)' || exit 1",
             "```",
             "",
             "### Implementation Steps",
@@ -647,7 +645,7 @@ class ImplementationGenerator:
             "If implementation fails, execute:",
             "",
             "```bash",
-            f"cd $FROSTBYTE_REPO_ROOT",
+            "cd $FROSTBYTE_REPO_ROOT",
             f"git stash push -m 'E{enh.id:02d}-rollback-{datetime.utcnow().strftime('%Y%m%d')}'",
             f"git checkout HEAD -- $(echo '{' '.join([d.split()[0] for d in enh.deliverables])}')",
             f"echo 'E{enh.id:02d} rolled back successfully'",
