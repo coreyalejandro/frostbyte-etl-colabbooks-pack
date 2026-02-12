@@ -3,6 +3,7 @@ Frostbyte ETL Pipeline — 1hr MVP.
 Intake -> parse (stub) -> store metadata + vectors.
 Single-tenant, local Docker. Per docs/PRD.md and docs/TECH_DECISIONS.md.
 """
+import logging
 import os
 import uuid
 from contextlib import asynccontextmanager
@@ -12,9 +13,13 @@ import boto3
 import httpx
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.responses import HTMLResponse
+from pydantic import BaseModel
 from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, PointStruct, VectorParams
-from pydantic import BaseModel
+
+from . import db
+from .config import PlatformConfig
+from .intake.routes import router as intake_router
 
 # Config from env
 MINIO_ENDPOINT = os.getenv("MINIO_ENDPOINT", "http://localhost:9000")
@@ -74,11 +79,21 @@ _docs: dict[str, dict] = {}
 async def lifespan(app: FastAPI):
     get_s3()
     get_qdrant()
+    # Init control-plane DB if configured (foundation layer)
+    try:
+        cfg = PlatformConfig.from_env()
+        await db.init_db(cfg.control_db_url)
+    except Exception as e:
+        logging.getLogger("uvicorn.error").warning("Control-plane DB init skipped: %s", e)
     yield
-    # teardown
+    try:
+        await db.close_db()
+    except Exception:
+        pass
 
 
 app = FastAPI(title="Frostbyte ETL", version="0.1.0", lifespan=lifespan)
+app.include_router(intake_router)
 
 
 def _check_service(name: str, url: str) -> bool:

@@ -20,6 +20,23 @@ curl
 
 ---
 
+## Step 0: Run Migrations (Foundation Layer)
+
+If you want tenant registry and audit events (per `docs/FOUNDATION_LAYER_PLAN.md`):
+
+```bash
+# After PostgreSQL is running (Step 1)
+./scripts/run_migrations.sh
+```
+
+Or manually with psql:
+```bash
+psql -U frostbyte -d frostbyte -f migrations/001_tenant_registry.sql
+psql -U frostbyte -d frostbyte -f migrations/002_audit_events.sql
+```
+
+---
+
 ## Step 1: Start Infrastructure (5 min)
 
 ```bash

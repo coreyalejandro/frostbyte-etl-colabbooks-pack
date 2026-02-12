@@ -5,6 +5,11 @@
 
 ## What Was Just Completed
 
+- **Intake gateway implementation** — `pipeline/intake/`: BatchManifest, IntakeReceipt models; MIME sniffing (python-magic), checksum, size validation; POST /api/v1/ingest/{tenant_id}/batch (202 Accepted), GET batch, GET receipt; BATCH_RECEIVED, DOCUMENT_INGESTED, DOCUMENT_REJECTED, DOCUMENT_QUARANTINED audit events; MinIO write to raw/{tenant_id}/{file_id}/{sha256}. Malware scan stubbed. Added python-magic dep.
+- **Storage layer implementation** — `pipeline/storage/`: MinIO, PostgreSQL, Qdrant, Redis provisioners; credential generation + SOPS; combined `provision_tenant_storage` with rollback; `get_collection_name`, `verify_tenant_access`. Unit tests in `pipeline/tests/test_storage.py`. Added `redis` dep.
+- **E2E verification** — `scripts/verify_e2e.sh` (runs when Docker is healthy); `docs/DOCKER_TROUBLESHOOTING.md` for 500 error remediation.
+- **Foundation layer implementation** — migrations 001, 002; PlatformConfig; load_tenant_config; emit_audit_event; decrypt_tenant_secrets; create_tenant with audit emission; migration runner `scripts/run_migrations.sh`; BUILD_1HR Step 0; .env.example FROSTBYTE_* vars
+- **Planning consistency** — STATE.md and ROADMAP.md Phase 2 checkboxes updated to reflect 100% completion
 - **Phase 8 (Team Readiness Documentation)** — **complete** (3/3 plans)
   - **Plan 08-01** — `docs/ENGINEER_ONBOARDING.md`: Architecture walkthrough, dev setup, first-task guide
   - **Plan 08-02** — `docs/VENDOR_OPERATIONS_GUIDE.md`: Batch submission, acceptance reports, troubleshooting (Dana)
@@ -104,15 +109,15 @@
 docs/                  # PRD, TECH_DECISIONS, NOTION_EXPORT, api/openapi.yaml
 packages/api|core/     # API server, schema extension service
 schemas/               # tenant-custom-schema.json
-migrations/            # SQL migrations
+migrations/            # 001_tenant_registry, 002_audit_events, 004_add_custom_metadata
 notebooks/             # 5 variant notebooks (05 = Hetzner multi-tenant)
 ```
 
 ## Recommended Next Steps
 
-1. **Implementation** — All planning phases complete. Engineers can now execute plans in `docs/` (FOUNDATION_LAYER_PLAN, STORAGE_LAYER_PLAN, INTAKE_GATEWAY_PLAN, etc.).
-2. **Build in 1hr (immediate):** Follow `BUILD_1HR.md` — `docker compose up -d`, `cd pipeline && pip install -e . && uvicorn pipeline.main:app --port 8000`
-3. **Phase 1 UAT** (optional) — `01-UAT.md` shows 8 tests pending; manual validation if desired
+1. **Parsing pipeline** — Next per implementation order: `docs/PARSING_PIPELINE_PLAN.md` (Docling + Unstructured, canonical JSON schema, lineage)
+2. **Build in 1hr:** Follow `BUILD_1HR.md` — `docker compose up -d`, run `./scripts/run_migrations.sh`, `cd pipeline && pip install -e . && uvicorn pipeline.main:app --port 8000`. Note: Docker daemon returned 500 on this machine; retry when Docker is healthy.
+3. **Phase 1 UAT** (optional) — `01-UAT.md` shows 8 tests pending
 
 ## Prompt for Next Conversation
 
@@ -146,6 +151,7 @@ Implement [component] per docs/[PLAN].md. Reference HANDOFF.md for project state
 
 ## Known Issues / Considerations
 
+- Docker daemon returned 500 Internal Server Error when pulling images — user must fix Docker (see `docs/DOCKER_TROUBLESHOOTING.md`). Run `./scripts/verify_e2e.sh` once Docker is healthy to verify end-to-end.
 - `openmemory.md` is empty — no stored project memories yet
 - 01-UAT.md has 8 pending tests (manual UAT); 01-VERIFICATION.md shows 13/13 passed (automated verification)
 - Phase 2 plan order: 02-01 (Hetzner) then 02-02 (storage/encryption); research supports both
@@ -154,7 +160,7 @@ Implement [component] per docs/[PLAN].md. Reference HANDOFF.md for project state
 
 - **Project:** Frostbyte ETL Zero-Shot Implementation Pack
 - **Branch:** master
-- **Last Commit:** [to be updated after commit]
+- **Last Commit:** (pending) — foundation layer implementation
 - **Progress:** 100% (All 8 phases complete)
 - **Phase 8 Plans:** 3/3 complete
 

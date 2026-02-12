@@ -14,7 +14,7 @@ This roadmap delivers the v1.0 Zero-Shot Implementation Pack: a complete, determ
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Product Definition and Tech Decisions** - PRD and locked-in technology choices that every subsequent document references
-- [ ] **Phase 2: Tenant Isolation Architecture** - Per-tenant isolation specifications (Hetzner, storage, encryption, network)
+- [x] **Phase 2: Tenant Isolation Architecture** - Per-tenant isolation specifications (Hetzner, storage, encryption, network)
 - [x] **Phase 3: Audit Stream and Document Safety** - Cross-cutting security and compliance designs that inform all implementation plans
 - [x] **Phase 4: Foundation and Storage Layer Plans** - Implementation plans for the tenant data model, config framework, and per-tenant storage provisioning
 - [x] **Phase 5: Intake and Parsing Pipeline Plans** - Implementation plans for the intake gateway and document parsing pipeline
@@ -58,8 +58,8 @@ Plans:
 
 Plans:
 
-- [ ] 02-01-PLAN.md -- Hetzner provisioning specification and network boundaries (ISOL-01, ISOL-04)
-- [ ] 02-02-PLAN.md -- Per-tenant storage namespace and encryption key management design (ISOL-02, ISOL-03)
+- [x] 02-01-PLAN.md -- Hetzner provisioning specification and network boundaries (ISOL-01, ISOL-04)
+- [x] 02-02-PLAN.md -- Per-tenant storage namespace and encryption key management design (ISOL-02, ISOL-03)
 
 ### Phase 3: Audit Stream and Document Safety
 
