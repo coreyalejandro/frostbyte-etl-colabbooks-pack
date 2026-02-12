@@ -20,7 +20,7 @@ services:
       retries: 3
 
   postgres:
-    image: postgres:16-alpine
+    image: pgvector/pgvector:pg16  # pgvector extension required by migration 007
     ports:
       - "5433:5432"  # 5433 to avoid conflict with host Postgres on 5432
     environment:

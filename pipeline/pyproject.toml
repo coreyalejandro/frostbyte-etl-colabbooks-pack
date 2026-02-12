@@ -25,6 +25,7 @@ dependencies = [
     "ffmpeg-python>=0.2.0",
     "Pillow>=10.0",
     "pgvector>=0.2.0",
+    "sse-starlette>=2.0",
 ]
 
 [project.optional-dependencies]

@@ -15,14 +15,17 @@ from datetime import datetime
 import boto3
 import httpx
 import redis.asyncio as redis
-from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
+from sse_starlette.sse import EventSourceResponse
 from pydantic import BaseModel
 from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, PointStruct, VectorParams
 
 from . import db
 from .config import PlatformConfig
+from .events import publish_async, publish_unimplemented_stages
 from .intake.routes import router as intake_router
 from .multimodal import detect_modality
 from .routes.auth_routes import router as auth_router
@@ -101,6 +104,16 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="Frostbyte ETL", version="0.1.0", lifespan=lifespan)
+
+# CORS — allow admin dashboard (dev: localhost:5174, prod: configure via env)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=os.getenv("CORS_ORIGINS", "http://localhost:5174").split(","),
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 app.include_router(auth_router)
 app.include_router(intake_router)
 app.include_router(collections_router)
@@ -187,6 +200,39 @@ async def health():
 REDIS_URL = os.getenv("FROSTBYTE_REDIS_URL", os.getenv("REDIS_URL", "redis://localhost:6379/0"))
 
 
+@app.get("/api/v1/pipeline/stream")
+async def pipeline_stream(request: Request):
+    """SSE endpoint: streams real-time pipeline events from Redis pub/sub."""
+
+    async def _event_generator():
+        # Welcome message with stage status
+        welcome = json.dumps({
+            "stage": "SYSTEM",
+            "message": "Pipeline log stream connected. Live stages: INTAKE, PARSE. Other stages pending implementation.",
+            "level": "info",
+            "timestamp": datetime.utcnow().strftime("%H:%M:%S"),
+        })
+        yield {"data": welcome}
+
+        # Subscribe to pipeline events channel
+        sub = redis.from_url(REDIS_URL)
+        ps = sub.pubsub()
+        await ps.subscribe("pipeline:events")
+        try:
+            while True:
+                if await request.is_disconnected():
+                    break
+                msg = await ps.get_message(ignore_subscribe_messages=True, timeout=1.0)
+                if msg and msg["type"] == "message":
+                    yield {"data": msg["data"].decode() if isinstance(msg["data"], bytes) else msg["data"]}
+        finally:
+            await ps.unsubscribe("pipeline:events")
+            await ps.aclose()
+            await sub.aclose()
+
+    return EventSourceResponse(_event_generator())
+
+
 @app.post("/api/v1/intake", response_model=IntakeResponse)
 async def intake(
     file: UploadFile = File(...),
@@ -196,6 +242,7 @@ async def intake(
     filename = file.filename or "document"
     contents = await file.read()
     modality = detect_modality(filename)
+    await publish_async("INTAKE", f"File received: {filename} ({modality}, {len(contents)} bytes)", "info", tenant_id=tenant_id)
 
     # Multimodal: push to worker, return processing status
     if modality in ("image", "audio", "video"):
@@ -209,6 +256,7 @@ async def intake(
             key = f"{tenant_id}/{doc_id}/{filename}"
             s3 = get_s3()
             s3.put_object(Bucket=BUCKET, Key=key, Body=contents)
+            await publish_async("INTAKE", f"Stored to MinIO: {key}", "success", document_id=str(doc_id), tenant_id=tenant_id)
             r = redis.from_url(REDIS_URL)
             await r.rpush(
                 "multimodal:jobs",
@@ -221,6 +269,7 @@ async def intake(
                 }),
             )
             await r.aclose()
+            await publish_async("INTAKE", f"Multimodal job queued: {modality} worker will process {filename}", "info", document_id=str(doc_id), tenant_id=tenant_id)
             now = datetime.utcnow().isoformat() + "Z"
             _docs[str(doc_id)] = {
                 "id": str(doc_id),
@@ -238,6 +287,7 @@ async def intake(
                 created_at=now,
             )
         except Exception as e:
+            await publish_async("INTAKE", f"Error: {e}", "error", tenant_id=tenant_id)
             if "does not exist" in str(e).lower() or "relation" in str(e).lower():
                 raise HTTPException(status_code=503, detail="Documents table not ready; run migration 007")
             raise
@@ -247,12 +297,15 @@ async def intake(
     key = f"{tenant_id}/{doc_id}/{filename}"
     s3 = get_s3()
     s3.put_object(Bucket=BUCKET, Key=key, Body=contents)
+    await publish_async("INTAKE", f"Stored to MinIO: {key}", "success", document_id=doc_id, tenant_id=tenant_id)
 
     # Parse stub: treat as plain text
     text = contents.decode("utf-8", errors="replace")[:10_000]
+    await publish_async("PARSE", f"Inline parse: extracted {len(text)} chars from {filename}", "info", document_id=doc_id, tenant_id=tenant_id)
 
     # Embed stub: 768 zero vector (per TECH_DECISIONS 768d lock)
     vector = [0.0] * 768
+    await publish_async("EMBED", f"Generated 768d stub embedding for {filename}", "info", document_id=doc_id, tenant_id=tenant_id)
 
     # Store vector in Qdrant
     qdrant = get_qdrant()
@@ -274,6 +327,7 @@ async def intake(
             )
         ],
     )
+    await publish_async("VECTOR", f"Upserted to Qdrant collection {coll}", "success", document_id=doc_id, tenant_id=tenant_id)
 
     # Store metadata (in-memory for 1hr; replace with PostgreSQL)
     _docs[doc_id] = {
@@ -284,6 +338,10 @@ async def intake(
         "status": "ingested",
         "created_at": datetime.utcnow().isoformat() + "Z",
     }
+    await publish_async("METADATA", f"Document {doc_id[:8]}... indexed in memory store", "success", document_id=doc_id, tenant_id=tenant_id)
+
+    # Emit status for unimplemented stages
+    await publish_unimplemented_stages()
 
     return IntakeResponse(
         document_id=doc_id,

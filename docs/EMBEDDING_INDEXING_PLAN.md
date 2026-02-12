@@ -25,6 +25,7 @@ The embedding and indexing phase generates 768-dimensional vectors for all polic
 **Model:** `openai/text-embedding-3-small` with `dimensions: 768`
 
 **Request pattern:**
+
 ```json
 {
   "model": "openai/text-embedding-3-small",
@@ -86,6 +87,7 @@ If mismatch: halt, alert ops, do not write. This is a configuration error.
 **Collection:** `tenant_{tenant_id}` (per STORAGE_LAYER_PLAN)
 
 **Point structure:**
+
 - `id`: chunk_id
 - `vector`: 768-dimensional embedding
 - `payload`: doc_id, tenant_id, classification, page, chunk_id
@@ -97,6 +99,7 @@ If mismatch: halt, alert ops, do not write. This is a configuration error.
 ## 6. Write Integrity Verification
 
 After all three writes:
+
 1. Compute SHA-256 of written data (vector bytes, DB row, object store path)
 2. Compare with pre-write computed hash
 3. If mismatch: rollback (delete from Qdrant, delete from RDB), mark job failed, retry entire batch

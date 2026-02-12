@@ -23,6 +23,8 @@ import boto3
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("parse_worker")
 
+from pipeline.events import publish as publish_event
+
 BUCKET = os.getenv("BUCKET", "frostbyte-docs")
 MINIO_ENDPOINT = os.getenv("MINIO_ENDPOINT", "http://localhost:9000")
 MINIO_ACCESS = os.getenv("MINIO_ACCESS_KEY", "minioadmin")
@@ -146,9 +148,11 @@ def _process_job(payload: dict):
 async def _run_job(payload: dict) -> bool:
     """Run job in executor (Unstructured may block). Returns True if success."""
     loop = asyncio.get_event_loop()
+    publish_event("PARSE", f"Processing: {payload.get('file_id', 'unknown')}", "info", tenant_id=payload.get("tenant_id"))
     try:
         doc = await loop.run_in_executor(None, _process_job, payload)
         if doc is None:
+            publish_event("PARSE", f"Skipped (already parsed): {payload.get('file_id', 'unknown')}", "info", tenant_id=payload.get("tenant_id"))
             return True  # Skipped (idempotent)
         await _emit_audit(
             tenant_id=payload["tenant_id"],
@@ -164,6 +168,7 @@ async def _run_job(payload: dict) -> bool:
                 "component": "parse-worker",
             },
         )
+        publish_event("PARSE", f"Extracted {doc.stats.chunk_count} chunks, {doc.stats.page_count} pages from {payload.get('file_id', 'unknown')}", "success", document_id=doc.doc_id, tenant_id=payload.get("tenant_id"))
         logger.info("Parsed %s -> %s", payload["file_id"], doc.doc_id)
         return True
     except Exception as e:
@@ -179,6 +184,7 @@ async def _run_job(payload: dict) -> bool:
                 "component": "parse-worker",
             },
         )
+        publish_event("PARSE", f"Failed: {msg[:120]}", "error", tenant_id=payload.get("tenant_id"))
         logger.error("Parse failed %s: %s", payload["file_id"], msg)
         return False
 

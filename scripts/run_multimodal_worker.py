@@ -19,6 +19,14 @@ from pgvector.asyncpg import register_vector
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("multimodal_worker")
 
+# Add pipeline to path
+import sys
+from pathlib import Path
+_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(_ROOT))
+
+from pipeline.events import publish_async as publish_event
+
 REDIS_URL = os.getenv("FROSTBYTE_REDIS_URL", os.getenv("REDIS_URL", "redis://localhost:6379/0"))
 DATABASE_URL = os.getenv("FROSTBYTE_CONTROL_DB_URL", os.getenv("POSTGRES_URL", "postgresql://frostbyte:frostbyte@localhost:5432/frostbyte")).replace("+asyncpg", "")
 
@@ -46,11 +54,13 @@ async def run_worker() -> None:
             from pipeline.vector_store import store_embedding
 
             modality = detect_modality(filename)
+            await publish_event("INTAKE", f"Multimodal worker processing: {filename} ({modality})", "info", document_id=document_id, tenant_id=tenant_id)
             conn = await asyncpg.connect(DATABASE_URL)
             await register_vector(conn)
 
             try:
                 if modality == "image":
+                    await publish_event("PARSE", f"Running OCR + CLIP on image: {filename}", "info", document_id=document_id, tenant_id=tenant_id)
                     result_data = await process_image(content, filename)
                     text_chunk_id = str(uuid.uuid4())
                     text_embedding = await get_text_embedding(result_data["ocr_text"])
@@ -92,6 +102,7 @@ async def run_worker() -> None:
                     )
 
                 elif modality == "audio":
+                    await publish_event("PARSE", f"Running Whisper transcription on audio: {filename}", "info", document_id=document_id, tenant_id=tenant_id)
                     result_data = await process_audio(content, filename)
                     transcript = result_data["transcript"]
                     embedding = await get_text_embedding(transcript)
@@ -115,6 +126,7 @@ async def run_worker() -> None:
                     )
 
                 elif modality == "video":
+                    await publish_event("PARSE", f"Extracting audio + frames from video: {filename}", "info", document_id=document_id, tenant_id=tenant_id)
                     result_data = await process_video(content, filename)
                     transcript = result_data["transcript"]
                     embedding = await get_text_embedding(transcript)
@@ -196,9 +208,13 @@ async def run_worker() -> None:
                     "UPDATE documents SET status = 'completed', updated_at = now() WHERE id = $1",
                     uuid.UUID(document_id),
                 )
+                await publish_event("EMBED", f"Stored embeddings to Qdrant for {filename}", "success", document_id=document_id, tenant_id=tenant_id)
+                await publish_event("VECTOR", f"Document indexed in collection tenant_{tenant_id}", "success", document_id=document_id, tenant_id=tenant_id)
+                await publish_event("METADATA", f"Document {document_id[:8]}... status updated to completed", "success", document_id=document_id, tenant_id=tenant_id)
                 logger.info("Multimodal job %s completed for document %s", job_id, document_id)
             except Exception as e:
                 logger.exception("Multimodal job %s failed: %s", job_id, e)
+                await publish_event("INTAKE", f"Multimodal job failed for {filename}: {str(e)[:100]}", "error", document_id=document_id, tenant_id=tenant_id)
                 await conn.execute(
                     "UPDATE documents SET status = 'failed', updated_at = now() WHERE id = $1",
                     uuid.UUID(document_id),

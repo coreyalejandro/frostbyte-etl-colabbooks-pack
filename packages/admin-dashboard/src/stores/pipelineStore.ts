@@ -9,6 +9,7 @@ export type DocStatus = 'PENDING' | 'PARSING' | 'EMBED' | 'VERIFY' | 'STORED' | 
 export interface PipelineNode {
   id: string
   label: string
+  desc: string
   active: boolean
 }
 
@@ -70,13 +71,13 @@ interface PipelineState {
 }
 
 const NODES: PipelineNode[] = [
-  { id: 'intake', label: 'INTAKE', active: true },
-  { id: 'parse', label: 'PARSE', active: true },
-  { id: 'evidence', label: 'EVIDENCE', active: true },
-  { id: 'embed', label: 'EMBED', active: true },
-  { id: 'vector', label: 'VECTOR', active: true },
-  { id: 'metadata', label: 'METADATA', active: true },
-  { id: 'verify', label: 'VERIFY', active: true },
+  { id: 'intake', label: 'INTAKE', desc: 'upload', active: true },
+  { id: 'parse', label: 'PARSE', desc: 'extract text', active: true },
+  { id: 'evidence', label: 'EVIDENCE', desc: 'verify', active: true },
+  { id: 'embed', label: 'EMBED', desc: 'vectorize', active: true },
+  { id: 'vector', label: 'VECTOR', desc: 'store', active: true },
+  { id: 'metadata', label: 'METADATA', desc: 'index', active: true },
+  { id: 'verify', label: 'VERIFY', desc: 'validate', active: true },
 ]
 
 const MOCK_TENANTS: TenantChamber[] = [

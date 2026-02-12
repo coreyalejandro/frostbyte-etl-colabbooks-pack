@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { usePipelineStore } from '../../stores/pipelineStore'
 import Inspector from '../../components/Inspector'
 import Panel from '../../components/Panel'
+import PipelineLogStream from './PipelineLogStream'
 
 export default function PipelineSchematic() {
   const { nodes } = usePipelineStore()
@@ -21,11 +22,14 @@ export default function PipelineSchematic() {
             <span key={node.id} className="flex items-center gap-2">
               <button
                 onClick={() => setInspectorNode(node.id)}
-                className={`px-2 py-1 border ${
+                className={`px-2 py-1 border flex flex-col items-center min-w-[5rem] ${
                   node.active ? 'border-accent bg-surface text-accent' : 'border-border bg-surface text-text-primary'
                 }`}
               >
-                [{node.label}]
+                <span>[{node.label}]</span>
+                <span className="text-[10px] text-text-tertiary mt-0.5 lowercase tracking-wide">
+                  {node.desc}
+                </span>
               </button>
               {i < nodes.length - 1 && (
                 <span className={node.active ? 'text-accent' : 'text-border'}>
@@ -35,9 +39,7 @@ export default function PipelineSchematic() {
             </span>
           ))}
         </div>
-        <div className="mt-2 text-xs text-text-tertiary">
-          └──► [VERIFY]
-        </div>
+        <PipelineLogStream />
       </Panel>
 
       {inspectorNode && (
