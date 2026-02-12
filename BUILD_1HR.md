@@ -59,6 +59,14 @@ docker compose ps
 
 **Visual dashboard:** After starting the API, open **http://localhost:8000** in your browser for a status page with a linear flow diagram.
 
+**Admin dashboard (React):** Run the admin UI for tenant management, documents, and health:
+
+```bash
+cd packages/admin-dashboard && npm install && npm run dev
+```
+
+Then open **http://localhost:5174/admin**. Sign in with your admin API key (set `FROSTBYTE_ADMIN_API_KEY` on the pipeline server, e.g. `openssl rand -hex 32`).
+
 ---
 
 ## Step 2: Create Bucket (optional)

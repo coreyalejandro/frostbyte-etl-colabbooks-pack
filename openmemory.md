@@ -32,6 +32,7 @@ Multi-tenant document ETL pipeline: intake → parse → policy → embed → st
 - `pipeline/intake/` — Batch manifest validation; MIME/checksum/size; POST batch, GET batch, GET receipt; audit events; MinIO raw storage
 - `pipeline/multimodal/` — Modality detection, image (OCR+CLIP), audio (Whisper), video (ffmpeg+frames) processors
 - `pipeline/routes/collections.py` — POST /api/v1/collections/{name}/query with optional query_file (image/audio/video)
+- `packages/admin-dashboard/` — React + TypeScript + Vite admin UI; Monochrome Machine design system (metal palette #0A0C0E–#E8EAED, amber #EAB308 accent only); IBM Plex Mono; top-bar nav [DASH] [TENANTS] [DOCS] [VERIFY] [CONTROL] [AUDIT]; milled panels (1px border, inset shadow, zero radius); Pipeline Schematic (ASCII DAG), Tenant Chambers, Document Queue ([↑][↓]), Verification Control Room (3 gates), Pipeline Control Panel, Audit Gallery, Inspector modal; Zustand+Immer; no Heroicons (ASCII/Unicode only)
 - `scripts/run_multimodal_worker.py` — Redis multimodal:jobs consumer; inserts chunks, image_embeddings, video_frames; stores vectors in Qdrant
 - `migrations/007_add_multimodal_support.sql` — documents, chunks (modality), image_embeddings (512d), video_frames; requires pgvector
 

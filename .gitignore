@@ -40,6 +40,14 @@ venv/
 # Jupyter
 .ipynb_checkpoints/
 
+# Node / JS
+node_modules/
+dist/
+build/
+*.tgz
+.npm
+package-lock.json
+
 # OS / IDE
 .DS_Store
 .vscode/

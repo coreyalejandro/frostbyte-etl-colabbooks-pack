@@ -1,0 +1,36 @@
+/* Frostbyte ETL Dashboard — Monochrome Machine
+ * Metal Dark palette. IBM Plex Mono. Zero SaaS. */
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-base: #0a0c0e;
+    --bg-surface: #1c1f22;
+    --bg-interactive: #2c3035;
+    --border: #3c4045;
+    --text-primary: #e8eaed;
+    --text-secondary: #9aa0a6;
+    --text-tertiary: #5f6368;
+    --accent: #eab308;
+  }
+
+  * {
+    border-color: var(--border);
+  }
+
+  html {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+  }
+
+  body {
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+    font-weight: 400;
+  }
+}
