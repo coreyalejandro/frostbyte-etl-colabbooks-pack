@@ -77,7 +77,7 @@ export default function AuditGallery() {
                       [VERIFY]
                     </button>
                     {verifyResult && idx === verifiedIdx && (
-                      <span className={verifyResult === 'FAIL' ? 'text-accent ml-2' : 'text-text-primary ml-2'}>
+                      <span className={verifyResult === 'FAIL' ? 'text-red-400 ml-2' : 'text-text-primary ml-2'}>
                         {verifyResult}
                       </span>
                     )}

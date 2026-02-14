@@ -66,7 +66,7 @@ export default function DocumentQueue() {
                   </td>
                   <td
                     className={`border border-border px-3 py-2 font-mono ${
-                      d.status === 'FAILED' ? 'text-accent' : 'text-text-primary'
+                      d.status === 'FAILED' ? 'text-red-400' : 'text-text-primary'
                     }`}
                   >
                     {d.status}

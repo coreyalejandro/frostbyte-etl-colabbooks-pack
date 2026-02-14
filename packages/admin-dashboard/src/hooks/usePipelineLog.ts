@@ -29,8 +29,14 @@ export function usePipelineLog() {
   const [reconnectAttempt, setReconnectAttempt] = useState(0)
   const retryDelay = useRef(RECONNECT_BASE_MS)
   const esRef = useRef<EventSource | null>(null)
+  const [checkTrigger, setCheckTrigger] = useState(0)
 
   const clear = useCallback(() => setLogs([]), [])
+
+  // Function to manually trigger connection check
+  const checkConnection = useCallback(() => {
+    setCheckTrigger(prev => prev + 1)
+  }, [])
 
   useEffect(() => {
     let cancelled = false
@@ -91,7 +97,7 @@ export function usePipelineLog() {
       esRef.current?.close()
       esRef.current = null
     }
-  }, [])
+  }, [checkTrigger]) // Re-run when checkTrigger changes
 
-  return { logs, connected, clear, lastError, reconnectAttempt }
+  return { logs, connected, clear, lastError, reconnectAttempt, checkConnection }
 }

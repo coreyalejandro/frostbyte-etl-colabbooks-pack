@@ -6,6 +6,28 @@ Multi-tenant document ETL: **document in → structure out → stored in DB and 
 
 ---
 
+## Quick Start (Auto-Start)
+
+The easiest way to get started - everything starts automatically with retry logic and health checks:
+
+```bash
+# Start infrastructure (if not running)
+docker-compose up -d
+
+# Start Pipeline API with auto-retry and health checks
+make pipeline
+```
+
+Then open: **http://localhost:5174/admin/** (or wherever your frontend is running)
+
+> 💡 **Dashboard shows "DISCONNECTED"?** Click the **"Auto-Start Pipeline"** button, or run `make pipeline` in a terminal.
+
+### VS Code Users
+
+Press `Cmd+Shift+P` → "Tasks: Run Task" → "Start Pipeline API"
+
+---
+
 ## Run an end-to-end document test
 
 **The only end-to-end document test that counts is the one you run yourself.** The repo and docs are set up so the designated tester (e.g. Mr. Frostbyte) can perform that test; automated scripts are for convenience only and do not replace it.

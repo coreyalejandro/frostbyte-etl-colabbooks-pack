@@ -1,11 +1,12 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { usePipelineLog, type LogEntry } from '../../hooks/usePipelineLog'
+import { AutoStartButton } from '../../components/AutoStartButton'
 
 const LEVEL_COLOR: Record<string, string> = {
-  info: 'text-text-secondary',
-  success: 'text-accent',
-  warn: 'text-amber-400',
-  error: 'text-red-400',
+  info: 'text-text-secondary',    // Gray = neutral info
+  success: 'text-accent',         // Amber = success/completed
+  warn: 'text-amber-400',         // Amber-400 = warnings (not failures)
+  error: 'text-red-400',          // Red = errors/failures
 }
 
 const STAGE_WIDTH = 10 // fixed width for stage tag alignment
@@ -25,8 +26,9 @@ function LogLine({ entry }: { entry: LogEntry }) {
 }
 
 export default function PipelineLogStream() {
-  const { logs, connected, clear, lastError, reconnectAttempt } = usePipelineLog()
+  const { logs, connected, clear, lastError, reconnectAttempt, checkConnection } = usePipelineLog()
   const scrollRef = useRef<HTMLDivElement>(null)
+  const [showManual, setShowManual] = useState(false)
 
   // Auto-scroll to bottom when new entries arrive
   useEffect(() => {
@@ -36,6 +38,13 @@ export default function PipelineLogStream() {
     }
   }, [logs.length])
 
+  const handleStarted = () => {
+    // Trigger a reconnection check
+    setTimeout(() => {
+      checkConnection()
+    }, 1000)
+  }
+
   return (
     <div
       className="bg-surface border border-border mt-2"
@@ -43,23 +52,48 @@ export default function PipelineLogStream() {
     >
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-2 border-b border-border">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <h3 className="text-xs font-medium uppercase tracking-wider text-text-secondary">
             PIPELINE LOG
           </h3>
-          <span
-            className={`inline-block w-2 h-2 rounded-full ${
-              connected ? 'bg-accent' : 'bg-red-400'
-            }`}
+          
+          {/* Connection Status Badge */}
+          <div 
+            className={`
+              inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-[10px] font-semibold uppercase tracking-wider
+              transition-all duration-200
+              ${connected 
+                ? 'bg-green-400/20 text-green-400 border border-green-400/30' 
+                : 'bg-red-400/20 text-red-400 border border-red-400/30'
+              }
+            `}
             title={connected ? 'Stream connected' : 'Stream disconnected'}
-          />
-          <span className="text-[10px] text-text-tertiary">
-            {connected ? 'LIVE' : 'DISCONNECTED'}
-          </span>
+          >
+            {/* Status Icon */}
+            <span className={`
+              inline-flex items-center justify-center w-4 h-4 rounded-full text-[8px]
+              ${connected 
+                ? 'bg-green-400 text-black animate-pulse' 
+                : 'bg-red-400 text-black'
+              }
+            `}>
+              {connected ? '●' : '✕'}
+            </span>
+            {connected ? 'LIVE' : 'OFFLINE'}
+          </div>
+          
+          {/* Retry indicator when disconnected */}
+          {!connected && reconnectAttempt > 0 && (
+            <span className="text-[10px] text-text-tertiary">
+              Retry #{reconnectAttempt}
+            </span>
+          )}
         </div>
+        
         <button
           onClick={clear}
-          className="text-[10px] uppercase tracking-wider text-text-tertiary hover:text-text-secondary border border-border px-2 py-0.5"
+          disabled={logs.length === 0}
+          className="text-[10px] uppercase tracking-wider text-text-tertiary hover:text-text-secondary border border-border px-2 py-0.5 disabled:opacity-30 disabled:cursor-not-allowed transition-opacity"
         >
           CLEAR
         </button>
@@ -76,12 +110,46 @@ export default function PipelineLogStream() {
             {connected ? (
               'Waiting for pipeline events... Upload a document to see activity.'
             ) : lastError ? (
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <p className="text-red-400">{lastError.message}</p>
-                <p className="text-text-tertiary">
-                  Retry attempt: {reconnectAttempt} | 
-                  Check: 1) docker-compose up -d 2) uvicorn running on port 8000
-                </p>
+                
+                {!showManual ? (
+                  <div className="flex flex-col gap-3">
+                    <AutoStartButton onStarted={handleStarted} />
+                    <button
+                      onClick={() => setShowManual(true)}
+                      className="text-xs text-text-tertiary hover:text-text-secondary underline"
+                    >
+                      Show manual instructions
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-2 text-xs">
+                    <p className="text-text-tertiary">
+                      Retry attempt: {reconnectAttempt}
+                    </p>
+                    <div className="bg-surface-elevated p-3 rounded space-y-2">
+                      <p className="font-medium text-text-secondary">Manual start:</p>
+                      <code className="block font-mono text-accent">
+                        make pipeline
+                      </code>
+                      <p className="text-text-tertiary mt-2">Or:</p>
+                      <code className="block font-mono text-accent">
+                        ./scripts/pipeline-manager.sh start
+                      </code>
+                      <p className="text-text-tertiary mt-2">Infrastructure check:</p>
+                      <code className="block font-mono text-accent">
+                        docker-compose ps
+                      </code>
+                    </div>
+                    <button
+                      onClick={() => setShowManual(false)}
+                      className="text-accent hover:underline"
+                    >
+                      ← Back to auto-start
+                    </button>
+                  </div>
+                )}
               </div>
             ) : (
               'Connecting to pipeline stream...'

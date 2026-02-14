@@ -6,7 +6,8 @@
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-15s\033[0m %s\n", $$1, $$2}'
 
-start: ## Start all services (development mode)
+# Complete Docker stack (infrastructure + apps)
+start: ## Start all services with Docker (complete stack)
 	@./scripts/start-frostbyte.sh start
 
 prod: ## Start all services (production mode with rebuild)
@@ -18,6 +19,26 @@ stop: ## Stop all services
 restart: ## Restart all services
 	@./scripts/start-frostbyte.sh restart
 
+# Pipeline Manager (local dev - infrastructure already running)
+pipeline: ## Start Pipeline API (with auto-retry and health checks)
+	@./scripts/pipeline-manager.sh start
+
+pipeline-auto: ## Auto-start Pipeline API if not running (silent)
+	@./scripts/pipeline-manager.sh auto
+
+pipeline-stop: ## Stop Pipeline API
+	@./scripts/pipeline-manager.sh stop
+
+pipeline-restart: ## Restart Pipeline API
+	@./scripts/pipeline-manager.sh restart
+
+pipeline-logs: ## View Pipeline API logs
+	@./scripts/pipeline-manager.sh logs
+
+pipeline-status: ## Check Pipeline API status
+	@./scripts/pipeline-manager.sh status
+
+# Legacy Docker compose commands
 status: ## Show service status and health
 	@./scripts/start-frostbyte.sh status
 
@@ -39,10 +60,16 @@ reset: ## DANGER: Stop and destroy all data
 check: ## Run connection diagnostics
 	@./scripts/check-pipeline-connection.sh
 
+# Development helpers
 dev: ## Start infrastructure only (run pipeline API locally for hot reload)
 	@docker-compose up -d redis postgres minio qdrant
 	@echo "Infrastructure started. Run pipeline API locally with:"
-	@echo "  cd pipeline && uvicorn pipeline.main:app --reload --port 8000"
+	@echo "  make pipeline    # or: cd pipeline && uvicorn pipeline.main:app --reload --port 8000"
+
+dev-full: ## Start infrastructure and Pipeline API (full local dev)
+	@docker-compose up -d redis postgres minio qdrant
+	@sleep 3
+	@./scripts/pipeline-manager.sh start
 
 shell-api: ## Open shell in pipeline API container
 	@docker exec -it frostbyte-pipeline-api /bin/bash

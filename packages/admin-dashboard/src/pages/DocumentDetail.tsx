@@ -28,13 +28,13 @@ export default function DocumentDetail() {
         style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03)' }}
       >
         {isLoading && <p className="text-text-tertiary">LOADING…</p>}
-        {error && <p className="text-accent">FAILED: Document not found.</p>}
+        {error && <p className="text-red-400">FAILED: Document not found.</p>}
         {doc && (
           <dl className="grid grid-cols-2 gap-2">
             <dt className="text-xs text-text-secondary uppercase tracking-wider">ID</dt>
             <dd className="text-text-primary">{doc.id}</dd>
             <dt className="text-xs text-text-secondary uppercase tracking-wider">STATUS</dt>
-            <dd className={doc.status === 'failed' ? 'text-accent' : 'text-text-primary'}>
+            <dd className={doc.status === 'failed' ? 'text-red-400' : 'text-text-primary'}>
               {doc.status ?? '—'}
             </dd>
             <dt className="text-xs text-text-secondary uppercase tracking-wider">TENANT</dt>

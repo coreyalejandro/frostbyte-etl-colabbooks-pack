@@ -53,29 +53,67 @@ export default function ModelActivityMonitor({
   return (
     <Panel title="MODEL ACTIVITY MONITOR">
       {/* Controls */}
-      <div className="flex flex-wrap items-center gap-2 mb-4 pb-3 border-b border-border">
-        {/* Stream Toggle */}
+      <div className="flex flex-wrap items-center gap-3 mb-4 pb-3 border-b border-border">
+        {/* Stream Toggle - Redesigned */}
         <button
           onClick={() => setUseStream(!useStream)}
-          className={`px-3 py-1 text-xs font-medium uppercase tracking-wider border ${
-            useStream
-              ? 'border-accent bg-surface text-accent'
-              : 'border-border bg-interactive text-text-primary hover:bg-surface'
-          }`}
+          className={`
+            relative inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-semibold
+            transition-all duration-200 ease-in-out
+            ${useStream
+              ? 'bg-accent/20 text-accent border-2 border-accent shadow-[0_0_8px_rgba(234,179,8,0.3)]'
+              : 'bg-surface-elevated text-text-secondary border-2 border-border hover:border-text-secondary hover:text-text-primary'
+            }
+          `}
           aria-label={useStream ? 'Disable live stream' : 'Enable live stream'}
+          aria-pressed={useStream}
         >
-          {useStream ? '[LIVE STREAM ON]' : '[LIVE STREAM OFF]'}
+          {/* Status Icon */}
+          <span className={`
+            inline-flex items-center justify-center w-5 h-5 rounded-full text-[10px]
+            transition-all duration-200
+            ${useStream 
+              ? 'bg-accent text-black animate-pulse' 
+              : 'bg-border text-text-tertiary'
+            }
+          `}>
+            {useStream ? '●' : '○'}
+          </span>
+          
+          {/* Label */}
+          <span className="uppercase tracking-wider">
+            {useStream ? 'LIVE' : 'PAUSED'}
+          </span>
+          
+          {/* Connection dot when live */}
+          {useStream && (
+            <span 
+              className={`
+                w-2 h-2 rounded-full ml-1
+                ${isConnected 
+                  ? 'bg-green-500 animate-pulse' 
+                  : 'bg-red-500'
+                }
+              `}
+              title={isConnected ? 'Stream connected' : 'Stream disconnected'}
+            />
+          )}
         </button>
 
-        {/* Connection Indicator */}
+        {/* Connection Status Badge */}
         {useStream && (
           <span 
-            className="flex items-center gap-1 text-xs text-text-secondary"
+            className={`
+              px-2 py-0.5 rounded text-[10px] font-medium uppercase tracking-wider
+              ${isConnected 
+                ? 'bg-green-400/20 text-green-400 border border-green-400/30' 
+                : 'bg-red-400/20 text-red-400 border border-red-400/30'
+              }
+            `}
             role="status"
             aria-live="polite"
           >
-            <span className={isConnected ? 'text-accent' : 'text-inactive'}>●</span>
-            {isConnected ? 'CONNECTED' : 'DISCONNECTED'}
+            {isConnected ? 'STREAMING' : 'ERROR'}
           </span>
         )}
 
@@ -162,10 +200,10 @@ export default function ModelActivityMonitor({
 function ModelEventCard({ event, onClick }: { event: ModelEvent; onClick?: () => void }) {
   const getStatusColor = (status: ModelEventStatus) => {
     switch (status) {
-      case 'completed': return 'text-accent border-accent/30'
-      case 'failed': return 'text-red-400 border-red-400/30'
-      case 'processing': return 'text-blue-400 border-blue-400/30'
-      case 'started': return 'text-text-secondary border-border'
+      case 'completed': return 'text-accent border-accent/30'      // Amber = success
+      case 'failed': return 'text-red-400 border-red-400/30'       // Red = error
+      case 'processing': return 'text-blue-400 border-blue-400/30' // Blue = in-progress
+      case 'started': return 'text-text-secondary border-border'   // Gray = pending
       default: return 'text-text-secondary border-border'
     }
   }

@@ -54,7 +54,7 @@ export default function Login() {
             />
           </div>
           {error && (
-            <p className="text-sm text-accent">FAILED: {error}</p>
+            <p className="text-sm text-red-400">FAILED: {error}</p>
           )}
           <button
             type="submit"

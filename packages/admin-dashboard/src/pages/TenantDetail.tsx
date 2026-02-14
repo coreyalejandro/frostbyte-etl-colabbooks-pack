@@ -60,7 +60,7 @@ export default function TenantDetail() {
 
       <Panel title="SCHEMA">
         {isLoading && <p className="text-text-tertiary">LOADING SCHEMA…</p>}
-        {error && <p className="text-accent">FAILED: Tenant schema not found.</p>}
+        {error && <p className="text-red-400">FAILED: Tenant schema not found.</p>}
         {schema && (
           <pre className="text-sm bg-base border border-border p-4 overflow-auto max-h-96 text-text-primary">
             {JSON.stringify(schema, null, 2)}

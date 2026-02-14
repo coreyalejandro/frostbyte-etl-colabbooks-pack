@@ -10,7 +10,7 @@ export default function VerificationControlRoom() {
         <ul className="space-y-2 text-sm font-mono">
           {gate1.map((g, i) => (
             <li key={i} className="flex justify-between">
-              <span className={g.result === 'FAIL' ? 'text-accent' : 'text-text-primary'}>
+              <span className={g.result === 'FAIL' ? 'text-red-400' : 'text-text-primary'}>
                 {g.result}
               </span>
               <span className="text-text-tertiary">{g.hash ?? '—'}</span>
