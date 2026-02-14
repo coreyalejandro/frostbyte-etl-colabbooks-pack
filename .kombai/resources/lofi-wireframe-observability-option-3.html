@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wireframe 3: Model Decision Tracer</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Comic Sans MS', cursive;
+      background: #fff;
+      color: #000;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    .wireframe-container {
+      max-width: 1600px;
+      margin: 0 auto;
+      border: 3px solid #000;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .header {
+      background: #fff;
+      border: 2px solid #000;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+    h2 {
+      font-size: 18px;
+      margin: 20px 0 10px 0;
+      border-bottom: 2px solid #666;
+      padding-bottom: 5px;
+    }
+    .section {
+      background: #fff;
+      border: 2px solid #000;
+      padding: 20px;
+      margin-bottom: 15px;
+      position: relative;
+    }
+    .badge {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      background: #4CAF50;
+      color: white;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 10px;
+      font-family: Arial, sans-serif;
+      font-weight: bold;
+      z-index: 10;
+    }
+    .badge-new {
+      background: #FF9800;
+    }
+    .split-view {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .split-view.thirds {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+    .pane {
+      border: 2px solid #666;
+      background: #f5f5f5;
+      padding: 15px;
+    }
+    .code-block {
+      background: #fff;
+      border: 2px solid #000;
+      padding: 12px;
+      font-family: monospace;
+      font-size: 11px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    button {
+      background: #fff;
+      border: 2px solid #000;
+      padding: 8px 16px;
+      font-family: 'Comic Sans MS', cursive;
+      cursor: pointer;
+      margin-right: 10px;
+      margin-top: 10px;
+    }
+    button:hover {
+      background: #f5f5f5;
+    }
+    .metric-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      border-bottom: 1px dashed #ccc;
+    }
+    .metric-row:last-child {
+      border-bottom: none;
+    }
+    .selector-panel {
+      background: #f5f5f5;
+      border: 2px solid #666;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #666;
+      padding: 8px;
+      text-align: left;
+      font-size: 12px;
+    }
+    th {
+      background: #ccc;
+      font-weight: bold;
+    }
+    .highlight {
+      background: #f5f5f5;
+      border-left: 3px solid #000;
+      padding-left: 10px;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="wireframe-container">
+    <!-- HEADER -->
+    <div class="header">
+      <h1>🔬 MODEL DECISION TRACER</h1>
+      <p style="color: #666; font-size: 14px;">Inspect model inputs, outputs, and decision reasoning - Complete transparency for audit and debugging</p>
+    </div>
+
+    <!-- DOCUMENT/OPERATION SELECTOR -->
+    <div class="selector-panel">
+      <!-- REUSABLE: Selector pattern -->
+      <span class="badge" title="Reusable selector pattern">[REUSE] Selector</span>
+      
+      <h3 style="font-size: 16px; margin-bottom: 12px;">SELECT OPERATION TO INSPECT</h3>
+      
+      <div style="display: flex; gap: 15px; align-items: end; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 200px;">
+          <label style="display: block; font-weight: bold; margin-bottom: 4px; font-size: 13px;">DOCUMENT:</label>
+          <select style="width: 100%; padding: 8px; border: 2px solid #000; background: #fff; font-family: inherit;">
+            <option>doc-0001 (contract.pdf)</option>
+            <option>doc-0002 (appendix.md)</option>
+            <option>doc-0003 (policy.docx)</option>
+          </select>
+        </div>
+        
+        <div style="flex: 1; min-width: 200px;">
+          <label style="display: block; font-weight: bold; margin-bottom: 4px; font-size: 13px;">STAGE:</label>
+          <select style="width: 100%; padding: 8px; border: 2px solid #000; background: #fff; font-family: inherit;">
+            <option>PARSE (Docling v2.70)</option>
+            <option>EMBED (Nomic Embed v1.5)</option>
+            <option>POLICY CHECK (Policy Worker v1.2)</option>
+            <option>VERIFY (Retrieval Validator)</option>
+          </select>
+        </div>
+        
+        <div style="flex: 1; min-width: 200px;">
+          <label style="display: block; font-weight: bold; margin-bottom: 4px; font-size: 13px;">CHUNK/OPERATION:</label>
+          <select style="width: 100%; padding: 8px; border: 2px solid #000; background: #fff; font-family: inherit;">
+            <option>Chunk 1 of 15</option>
+            <option>Chunk 2 of 15</option>
+            <option>Chunk 3 of 15 (selected)</option>
+            <option>Chunk 4 of 15</option>
+            <option>...</option>
+          </select>
+        </div>
+        
+        <button style="margin-top: 0;">[LOAD TRACE]</button>
+      </div>
+    </div>
+
+    <!-- OPERATION METADATA -->
+    <div class="section">
+      <span class="badge badge-new" title="To be created at src/features/observability/DecisionTracer.tsx">[NEW] DecisionTracer</span>
+      
+      <h2>📋 OPERATION METADATA</h2>
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 20px; margin-top: 15px;">
+        <div>
+          <strong>Model:</strong><br>
+          <span style="font-size: 14px;">Nomic Embed v1.5</span>
+        </div>
+        <div>
+          <strong>Timestamp:</strong><br>
+          <span style="font-size: 14px;">2026-02-14 14:03:44.445</span>
+        </div>
+        <div>
+          <strong>Latency:</strong><br>
+          <span style="font-size: 14px;">131ms</span>
+        </div>
+        <div>
+          <strong>Cost:</strong><br>
+          <span style="font-size: 14px;">$0.00018</span>
+        </div>
+      </div>
+      
+      <div style="margin-top: 15px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
+        <div>
+          <strong>Tenant:</strong><br>
+          <span style="font-size: 14px;">PROD-01</span>
+        </div>
+        <div>
+          <strong>Document ID:</strong><br>
+          <span style="font-size: 14px;">doc-0001</span>
+        </div>
+        <div>
+          <strong>Chunk ID:</strong><br>
+          <span style="font-size: 14px;">chunk-3</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- INPUT/OUTPUT INSPECTOR -->
+    <div class="section">
+      <span class="badge badge-new" title="To be created at src/features/observability/IOInspector.tsx">[NEW] IOInspector</span>
+      
+      <h2>⚡ MODEL INPUT → OUTPUT TRACE</h2>
+      
+      <div class="split-view" style="margin-top: 15px;">
+        
+        <!-- INPUT PANE -->
+        <div class="pane">
+          <h3 style="font-size: 15px; margin-bottom: 10px; color: #000;">📥 INPUT TO MODEL</h3>
+          
+          <div style="margin-bottom: 15px;">
+            <div class="metric-row">
+              <span>Input Type:</span>
+              <span><strong>Text String</strong></span>
+            </div>
+            <div class="metric-row">
+              <span>Token Count:</span>
+              <span><strong>487 tokens</strong></span>
+            </div>
+            <div class="metric-row">
+              <span>Character Count:</span>
+              <span><strong>2,145 chars</strong></span>
+            </div>
+          </div>
+          
+          <strong style="display: block; margin-bottom: 8px;">RAW INPUT TEXT:</strong>
+          <div class="code-block" style="max-height: 400px; overflow-y: auto;">
+"Section 3.2: Payment Terms
+
+The Client agrees to pay the Contractor 
+for services rendered according to the 
+following schedule:
+
+- Initial deposit: 30% upon signing
+- Milestone 1: 25% upon completion of design phase
+- Milestone 2: 25% upon completion of development
+- Final payment: 20% upon project delivery
+
+All payments must be made within 15 business 
+days of invoice receipt. Late payments will 
+incur a 1.5% monthly interest charge.
+
+Currency: USD
+Payment Method: Wire transfer or ACH
+Invoice Frequency: Per milestone completion"
+          </div>
+          
+          <button>[COPY INPUT]</button>
+          <button>[VIEW RAW JSON]</button>
+        </div>
+
+        <!-- OUTPUT PANE -->
+        <div class="pane">
+          <h3 style="font-size: 15px; margin-bottom: 10px; color: #000;">📤 OUTPUT FROM MODEL</h3>
+          
+          <div style="margin-bottom: 15px;">
+            <div class="metric-row">
+              <span>Output Type:</span>
+              <span><strong>Embedding Vector</strong></span>
+            </div>
+            <div class="metric-row">
+              <span>Dimensions:</span>
+              <span><strong>768</strong></span>
+            </div>
+            <div class="metric-row">
+              <span>Vector Norm:</span>
+              <span><strong>0.9987</strong></span>
+            </div>
+          </div>
+          
+          <strong style="display: block; margin-bottom: 8px;">EMBEDDING VECTOR (768 dimensions):</strong>
+          <div class="code-block" style="max-height: 400px; overflow-y: auto;">
+[
+  0.02341, -0.01832, 0.04521, -0.00892, 0.03124,
+  -0.02156, 0.01987, 0.00234, -0.03421, 0.02887,
+  0.01234, -0.00987, 0.02145, -0.01456, 0.03987,
+  ... (753 more values) ...
+  0.01892, -0.02341, 0.00987, -0.01234, 0.02456,
+  -0.03125, 0.01678, 0.00234, -0.02987, 0.01456
+]
+          </div>
+          
+          <button>[COPY VECTOR]</button>
+          <button>[VIEW RAW JSON]</button>
+          <button>[VISUALIZE VECTOR]</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODEL REASONING (if available) -->
+    <div class="section">
+      <h2>🧠 MODEL DECISION REASONING</h2>
+      
+      <div class="highlight" style="margin-top: 15px;">
+        <p style="font-size: 13px; margin-bottom: 8px;"><strong>⚠ NOTE:</strong> Nomic Embed is a black-box embedding model and does not provide explicit decision reasoning. The following shows what data was processed and resulting vector characteristics.</p>
+      </div>
+      
+      <div style="margin-top: 15px;">
+        <h3 style="font-size: 14px; margin-bottom: 8px;">DETECTED SEMANTIC THEMES:</h3>
+        <ul style="margin-left: 20px; line-height: 1.8; font-size: 13px;">
+          <li><strong>Financial Terms</strong> - Payment schedule, percentages, currency</li>
+          <li><strong>Timeline/Deadlines</strong> - "15 business days", "upon completion"</li>
+          <li><strong>Legal Language</strong> - "Client agrees", "must be made", "will incur"</li>
+          <li><strong>Numerical Data</strong> - 30%, 25%, 20%, 1.5%, etc.</li>
+        </ul>
+      </div>
+      
+      <div style="margin-top: 15px;">
+        <h3 style="font-size: 14px; margin-bottom: 8px;">VECTOR QUALITY METRICS:</h3>
+        <div class="metric-row">
+          <span>Vector Norm:</span>
+          <span><strong>0.9987</strong> (normalized, expected ~1.0)</span>
+        </div>
+        <div class="metric-row">
+          <span>Nearest Neighbor Distance:</span>
+          <span><strong>0.0234</strong> (similar to other payment-related chunks)</span>
+        </div>
+        <div class="metric-row">
+          <span>Cosine Similarity to Centroid:</span>
+          <span><strong>0.8821</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SIMILAR OPERATIONS -->
+    <div class="section">
+      <h2>🔍 SIMILAR OPERATIONS (Nearest Neighbors)</h2>
+      
+      <p style="color: #666; font-size: 13px; margin-bottom: 10px;">
+        Find other chunks with similar embeddings to understand model consistency
+      </p>
+      
+      <table>
+        <thead>
+          <tr>
+            <th>DOCUMENT</th>
+            <th>CHUNK</th>
+            <th>COSINE SIMILARITY</th>
+            <th>TIMESTAMP</th>
+            <th>ACTIONS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>doc-0001</td>
+            <td>chunk-8 (Section 5.4: Late Fees)</td>
+            <td><strong>0.9823</strong></td>
+            <td>2026-02-14 14:03:46</td>
+            <td><button style="font-size: 10px; padding: 4px 8px; margin: 0;">[COMPARE]</button></td>
+          </tr>
+          <tr>
+            <td>doc-0045</td>
+            <td>chunk-2 (Payment Structure)</td>
+            <td><strong>0.9712</strong></td>
+            <td>2026-02-12 09:22:15</td>
+            <td><button style="font-size: 10px; padding: 4px 8px; margin: 0;">[COMPARE]</button></td>
+          </tr>
+          <tr>
+            <td>doc-0002</td>
+            <td>chunk-12 (Billing Terms)</td>
+            <td><strong>0.9654</strong></td>
+            <td>2026-02-14 14:03:50</td>
+            <td><button style="font-size: 10px; padding: 4px 8px; margin: 0;">[COMPARE]</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- AUDIT TRAIL LINK -->
+    <div class="section">
+      <h2>📜 FULL AUDIT TRAIL</h2>
+      
+      <p style="margin-bottom: 15px;">This operation is part of document doc-0001's complete processing chain.</p>
+      
+      <div style="display: flex; gap: 10px;">
+        <button>[VIEW FULL DOCUMENT TIMELINE]</button>
+        <button>[VIEW ALL CHUNKS FOR THIS DOC]</button>
+        <button>[EXPORT AUDIT RECORD]</button>
+        <button>[FLAG FOR REVIEW]</button>
+      </div>
+      
+      <div class="highlight" style="margin-top: 15px;">
+        <strong>🔒 COMPLIANCE:</strong> All model I/O data is logged to immutable audit database with cryptographic fingerprints. This record cannot be modified or deleted.
+      </div>
+    </div>
+
+    <!-- COMPARISON VIEW (for debugging) -->
+    <div class="section">
+      <span class="badge badge-new" title="To be created at src/features/observability/ModelComparison.tsx">[NEW] ModelComparison</span>
+      
+      <h2>⚖ MODEL COMPARISON</h2>
+      
+      <p style="color: #666; font-size: 13px; margin-bottom: 10px;">
+        Compare outputs from different model versions for the same input (useful for A/B testing and validation)
+      </p>
+      
+      <div class="split-view thirds" style="margin-top: 15px;">
+        
+        <div class="pane">
+          <h3 style="font-size: 14px; margin-bottom: 8px;">NOMIC EMBED v1.5</h3>
+          <div class="metric-row">
+            <span>Latency:</span>
+            <span>131ms</span>
+          </div>
+          <div class="metric-row">
+            <span>Cost:</span>
+            <span>$0.00018</span>
+          </div>
+          <div class="metric-row">
+            <span>Vector Norm:</span>
+            <span>0.9987</span>
+          </div>
+          <button style="width: 100%; font-size: 11px;">[CURRENT]</button>
+        </div>
+        
+        <div class="pane">
+          <h3 style="font-size: 14px; margin-bottom: 8px;">NOMIC EMBED v1.6-beta</h3>
+          <div class="metric-row">
+            <span>Latency:</span>
+            <span>118ms ✓</span>
+          </div>
+          <div class="metric-row">
+            <span>Cost:</span>
+            <span>$0.00019</span>
+          </div>
+          <div class="metric-row">
+            <span>Vector Norm:</span>
+            <span>0.9991 ✓</span>
+          </div>
+          <button style="width: 100%; font-size: 11px;">[RUN TEST]</button>
+        </div>
+        
+        <div class="pane">
+          <h3 style="font-size: 14px; margin-bottom: 8px;">OPENAI EMBED-3</h3>
+          <div class="metric-row">
+            <span>Latency:</span>
+            <span>245ms</span>
+          </div>
+          <div class="metric-row">
+            <span>Cost:</span>
+            <span>$0.00045</span>
+          </div>
+          <div class="metric-row">
+            <span>Vector Norm:</span>
+            <span>1.0000</span>
+          </div>
+          <button style="width: 100%; font-size: 11px;">[RUN TEST]</button>
+        </div>
+      </div>
+      
+      <div style="margin-top: 15px; text-align: center;">
+        <button>[COMPARE VECTOR SIMILARITY]</button>
+        <button>[RUN BATCH COMPARISON]</button>
+      </div>
+    </div>
+
+    <!-- FOOTER NOTE -->
+    <div style="margin-top: 30px; padding: 20px; background: #fff; border: 2px solid #000;">
+      <h3>🎯 DECISION TRACER FEATURES</h3>
+      <ul style="margin-left: 20px; margin-top: 10px; line-height: 1.8;">
+        <li><strong>Complete Input/Output Inspection</strong> - See exactly what went into model and came out</li>
+        <li><strong>Model Reasoning</strong> - Understand why model made specific decisions (when available)</li>
+        <li><strong>Vector Quality Metrics</strong> - Validate embedding quality and consistency</li>
+        <li><strong>Nearest Neighbor Analysis</strong> - Find similar operations to check consistency</li>
+        <li><strong>Audit Trail Integration</strong> - Link to full document processing chain</li>
+        <li><strong>Model Comparison</strong> - Compare outputs from different model versions</li>
+        <li><strong>Immutable Logging</strong> - All data cryptographically secured for compliance</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

@@ -25,7 +25,7 @@ function LogLine({ entry }: { entry: LogEntry }) {
 }
 
 export default function PipelineLogStream() {
-  const { logs, connected, clear } = usePipelineLog()
+  const { logs, connected, clear, lastError, reconnectAttempt } = usePipelineLog()
   const scrollRef = useRef<HTMLDivElement>(null)
 
   // Auto-scroll to bottom when new entries arrive
@@ -73,9 +73,19 @@ export default function PipelineLogStream() {
       >
         {logs.length === 0 ? (
           <div className="text-text-tertiary italic">
-            {connected
-              ? 'Waiting for pipeline events... Upload a document to see activity.'
-              : 'Connecting to pipeline stream...'}
+            {connected ? (
+              'Waiting for pipeline events... Upload a document to see activity.'
+            ) : lastError ? (
+              <div className="space-y-2">
+                <p className="text-red-400">{lastError.message}</p>
+                <p className="text-text-tertiary">
+                  Retry attempt: {reconnectAttempt} | 
+                  Check: 1) docker-compose up -d 2) uvicorn running on port 8000
+                </p>
+              </div>
+            ) : (
+              'Connecting to pipeline stream...'
+            )}
           </div>
         ) : (
           logs.map((entry, i) => <LogLine key={i} entry={entry} />)

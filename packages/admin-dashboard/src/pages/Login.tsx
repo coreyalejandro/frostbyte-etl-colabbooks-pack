@@ -31,7 +31,7 @@ export default function Login() {
         <h2 className="text-lg font-medium uppercase tracking-wider text-text-secondary mb-2">
           FROSTBYTE ADMIN
         </h2>
-        <p className="text-text-secondary text-sm mb-6">
+        <p id="api-key-help" className="text-text-secondary text-sm mb-6">
           Sign in with your admin API key. Set <code className="bg-interactive px-1">FROSTBYTE_ADMIN_API_KEY</code> on the pipeline server.
         </p>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -41,13 +41,16 @@ export default function Login() {
             </label>
             <input
               id="api_key"
-              type="password"
+              type="text"
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
               placeholder="ENTER ADMIN API KEY"
-              className="w-full bg-base border border-border px-3 py-2 text-text-primary placeholder-text-tertiary focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-0"
+              className="w-full bg-base border border-border px-3 py-2 text-text-primary placeholder-text-tertiary focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-0 font-mono"
+              style={{ WebkitTextSecurity: 'disc' } as React.CSSProperties}
               autoComplete="off"
               autoFocus
+              aria-label="Admin API Key"
+              aria-describedby="api-key-help"
             />
           </div>
           {error && (

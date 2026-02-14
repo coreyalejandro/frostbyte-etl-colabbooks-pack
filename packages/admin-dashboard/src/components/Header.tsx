@@ -16,10 +16,18 @@ export default function Header() {
         <Sidebar />
       </div>
       <div className="flex items-center gap-2">
-        <span className={online ? 'text-accent' : 'text-inactive'} title={online ? 'Online' : 'Offline'}>●</span>
+        <span 
+          className={online ? 'text-accent' : 'text-inactive'} 
+          title={online ? 'Pipeline Online' : 'Pipeline Offline'}
+          aria-label={online ? 'Pipeline status: Online' : 'Pipeline status: Offline'}
+          role="status"
+        >
+          ●
+        </span>
         <button
           onClick={logout}
           className="px-3 py-1 text-xs font-medium uppercase tracking-wider border border-border bg-interactive text-text-primary hover:bg-surface"
+          aria-label="Logout from admin dashboard"
         >
           [LOGOUT]
         </button>

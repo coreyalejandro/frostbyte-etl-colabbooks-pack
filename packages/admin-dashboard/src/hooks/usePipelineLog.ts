@@ -13,6 +13,11 @@ const MAX_ENTRIES = 200
 const RECONNECT_BASE_MS = 1000
 const RECONNECT_MAX_MS = 16000
 
+interface ConnectionError {
+  message: string
+  timestamp: Date
+}
+
 /**
  * SSE hook that streams pipeline log events from /api/v1/pipeline/stream.
  * Maintains a capped buffer, auto-reconnects on error with exponential backoff.
@@ -20,6 +25,8 @@ const RECONNECT_MAX_MS = 16000
 export function usePipelineLog() {
   const [logs, setLogs] = useState<LogEntry[]>([])
   const [connected, setConnected] = useState(false)
+  const [lastError, setLastError] = useState<ConnectionError | null>(null)
+  const [reconnectAttempt, setReconnectAttempt] = useState(0)
   const retryDelay = useRef(RECONNECT_BASE_MS)
   const esRef = useRef<EventSource | null>(null)
 
@@ -31,11 +38,16 @@ export function usePipelineLog() {
 
     function connect() {
       if (cancelled) return
+      
+      console.log('[PipelineLog] Connecting to SSE...')
       const es = new EventSource('/api/v1/pipeline/stream')
       esRef.current = es
 
       es.onopen = () => {
+        console.log('[PipelineLog] SSE connection opened')
         setConnected(true)
+        setLastError(null)
+        setReconnectAttempt(0)
         retryDelay.current = RECONNECT_BASE_MS
       }
 
@@ -46,18 +58,25 @@ export function usePipelineLog() {
             const next = [...prev, entry]
             return next.length > MAX_ENTRIES ? next.slice(-MAX_ENTRIES) : next
           })
-        } catch {
-          // ignore malformed events
+        } catch (err) {
+          console.error('[PipelineLog] Failed to parse event:', err)
         }
       }
 
-      es.onerror = () => {
+      es.onerror = (error) => {
+        console.error('[PipelineLog] SSE error:', error)
         es.close()
         esRef.current = null
         setConnected(false)
+        
+        const errorMsg = 'Connection failed. Ensure pipeline API is running on port 8000.'
+        setLastError({ message: errorMsg, timestamp: new Date() })
+        
         if (!cancelled) {
+          setReconnectAttempt(prev => prev + 1)
           timer = setTimeout(() => {
             retryDelay.current = Math.min(retryDelay.current * 2, RECONNECT_MAX_MS)
+            console.log(`[PipelineLog] Reconnecting in ${retryDelay.current}ms...`)
             connect()
           }, retryDelay.current)
         }
@@ -74,5 +93,5 @@ export function usePipelineLog() {
     }
   }, [])
 
-  return { logs, connected, clear }
+  return { logs, connected, clear, lastError, reconnectAttempt }
 }

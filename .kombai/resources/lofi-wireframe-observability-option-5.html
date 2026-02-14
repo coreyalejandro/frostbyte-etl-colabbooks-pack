@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wireframe 5: Unified Observability Command Center</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Comic Sans MS', cursive;
+      background: #fff;
+      color: #000;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    .wireframe-container {
+      max-width: 1800px;
+      margin: 0 auto;
+      border: 3px solid #000;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .header {
+      background: #fff;
+      border: 2px solid #000;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+    h2 {
+      font-size: 16px;
+      margin: 15px 0 10px 0;
+      border-bottom: 2px solid #666;
+      padding-bottom: 5px;
+    }
+    h3 {
+      font-size: 13px;
+      margin: 10px 0 6px 0;
+      text-transform: uppercase;
+    }
+    .section {
+      background: #fff;
+      border: 2px solid #000;
+      padding: 15px;
+      margin-bottom: 15px;
+      position: relative;
+    }
+    .badge {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      background: #4CAF50;
+      color: white;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 10px;
+      font-family: Arial, sans-serif;
+      font-weight: bold;
+      z-index: 10;
+    }
+    .badge-new {
+      background: #FF9800;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 15px;
+    }
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    .card {
+      border: 2px solid #666;
+      padding: 10px;
+      background: #f5f5f5;
+    }
+    .metric-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 0;
+      border-bottom: 1px dashed #ccc;
+      font-size: 11px;
+    }
+    .metric-row:last-child {
+      border-bottom: none;
+    }
+    .status-dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 2px solid #000;
+      margin-right: 6px;
+    }
+    .status-active { background: #666; }
+    .status-idle { background: #ccc; }
+    .status-error { background: #333; }
+    button {
+      background: #fff;
+      border: 2px solid #000;
+      padding: 6px 12px;
+      font-family: 'Comic Sans MS', cursive;
+      cursor: pointer;
+      margin-right: 8px;
+      margin-top: 8px;
+      font-size: 11px;
+    }
+    button:hover {
+      background: #f5f5f5;
+    }
+    .live-feed {
+      max-height: 200px;
+      overflow-y: auto;
+      font-family: monospace;
+      font-size: 10px;
+      background: #fff;
+      border: 2px solid #000;
+      padding: 8px;
+    }
+    .feed-item {
+      padding: 3px 0;
+      border-bottom: 1px dashed #ccc;
+    }
+    .mini-chart {
+      height: 80px;
+      border: 2px solid #666;
+      background: #fff;
+      display: flex;
+      align-items: flex-end;
+      padding: 5px;
+      gap: 3px;
+    }
+    .mini-chart-bar {
+      flex: 1;
+      background: #ccc;
+      min-height: 10px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      font-size: 11px;
+    }
+    th, td {
+      border: 1px solid #666;
+      padding: 6px;
+      text-align: left;
+    }
+    th {
+      background: #ccc;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="wireframe-container">
+    <!-- HEADER -->
+    <div class="header">
+      <h1>🎯 UNIFIED OBSERVABILITY COMMAND CENTER</h1>
+      <p style="color: #666; font-size: 14px;">All-in-one dashboard for extreme model observability - "Eyes on machines, always watching"</p>
+      <div style="margin-top: 10px;">
+        <button>[REFRESH DATA]</button>
+        <button>[CONFIGURE LAYOUT]</button>
+        <button>[EXPORT REPORT]</button>
+        <button>[SET ALERTS]</button>
+        <span style="margin-left: 20px; font-size: 13px;">
+          🔴 LIVE - Auto-refresh: <strong>5s</strong> | Last update: <strong>14:03:45</strong>
+        </span>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 15px;">
+      
+      <!-- LEFT COLUMN - Main Observability Panels -->
+      <div>
+        
+        <!-- MODEL HEALTH OVERVIEW -->
+        <div class="section">
+          <span class="badge badge-new" title="To be created at src/features/observability/UnifiedDashboard.tsx">[NEW] UnifiedDashboard</span>
+          
+          <h2>🔍 MODEL HEALTH OVERVIEW</h2>
+          
+          <div class="grid-3" style="margin-top: 12px;">
+            <div class="card">
+              <h3><span class="status-dot status-active"></span>EMBED</h3>
+              <p style="font-weight: bold; margin: 6px 0; font-size: 13px;">Nomic v1.5</p>
+              <div class="metric-row">
+                <span>Status:</span>
+                <span><strong>PROCESSING</strong></span>
+              </div>
+              <div class="metric-row">
+                <span>Latency:</span>
+                <span>124ms</span>
+              </div>
+              <div class="metric-row">
+                <span>Error:</span>
+                <span>0.01%</span>
+              </div>
+              <button style="width: 100%; padding: 4px; font-size: 10px;">[INSPECT]</button>
+            </div>
+            
+            <div class="card">
+              <h3><span class="status-dot status-active"></span>PARSE</h3>
+              <p style="font-weight: bold; margin: 6px 0; font-size: 13px;">Docling v2.70</p>
+              <div class="metric-row">
+                <span>Status:</span>
+                <span><strong>PROCESSING</strong></span>
+              </div>
+              <div class="metric-row">
+                <span>Latency:</span>
+                <span>342ms</span>
+              </div>
+              <div class="metric-row">
+                <span>Error:</span>
+                <span>0.02%</span>
+              </div>
+              <button style="width: 100%; padding: 4px; font-size: 10px;">[INSPECT]</button>
+            </div>
+            
+            <div class="card">
+              <h3><span class="status-dot status-idle"></span>POLICY</h3>
+              <p style="font-weight: bold; margin: 6px 0; font-size: 13px;">Custom v1.2</p>
+              <div class="metric-row">
+                <span>Status:</span>
+                <span><strong>IDLE</strong></span>
+              </div>
+              <div class="metric-row">
+                <span>Latency:</span>
+                <span>56ms</span>
+              </div>
+              <div class="metric-row">
+                <span>Error:</span>
+                <span>0.00%</span>
+              </div>
+              <button style="width: 100%; padding: 4px; font-size: 10px;">[INSPECT]</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- LIVE ACTIVITY STREAM -->
+        <div class="section">
+          <h2>📡 LIVE MODEL ACTIVITY STREAM</h2>
+          
+          <div class="live-feed" style="margin-top: 10px;">
+            <div class="feed-item">14:03:45.234 | [NOMIC] | doc-0001 ch-3 → Embed [768d] in 118ms</div>
+            <div class="feed-item">14:03:45.112 | [DOCLING] | doc-0002 p-12 → 487 tokens, 2 tables</div>
+            <div class="feed-item">14:03:44.998 | [NOMIC] | doc-0001 ch-2 → Embed [768d] in 124ms</div>
+            <div class="feed-item">14:03:44.756 | [POLICY] | doc-0001 → PASS - All gates ✓</div>
+            <div class="feed-item">14:03:44.623 | [DOCLING] | doc-0002 p-11 → 523 tokens, 1 table</div>
+            <div class="feed-item">14:03:44.445 | [NOMIC] | doc-0001 ch-1 → Embed [768d] in 131ms</div>
+            <div class="feed-item">14:03:44.234 | [DOCLING] | doc-0002 p-10 → 612 tokens, 1 image</div>
+            <div class="feed-item">14:03:43.987 | [POLICY] | doc-0002 → PASS - All gates ✓</div>
+          </div>
+          
+          <div style="margin-top: 8px;">
+            <button style="padding: 4px 10px; font-size: 10px;">[PAUSE]</button>
+            <button style="padding: 4px 10px; font-size: 10px;">[FILTER]</button>
+            <button style="padding: 4px 10px; font-size: 10px;">[CLEAR]</button>
+          </div>
+        </div>
+
+        <!-- PERFORMANCE CHARTS -->
+        <div class="section">
+          <h2>📊 REAL-TIME PERFORMANCE METRICS</h2>
+          
+          <div class="grid-3" style="margin-top: 12px;">
+            <div>
+              <h3 style="font-size: 11px;">LATENCY (MS) - LAST 1HR</h3>
+              <div class="mini-chart">
+                <div class="mini-chart-bar" style="height: 45%;"></div>
+                <div class="mini-chart-bar" style="height: 52%;"></div>
+                <div class="mini-chart-bar" style="height: 48%;"></div>
+                <div class="mini-chart-bar" style="height: 55%;"></div>
+                <div class="mini-chart-bar" style="height: 50%;"></div>
+                <div class="mini-chart-bar" style="height: 47%;"></div>
+                <div class="mini-chart-bar" style="height: 51%;"></div>
+                <div class="mini-chart-bar" style="height: 49%;"></div>
+              </div>
+              <p style="font-size: 10px; margin-top: 4px; color: #666;">Avg: 124ms | P95: 198ms</p>
+            </div>
+            
+            <div>
+              <h3 style="font-size: 11px;">THROUGHPUT - LAST 1HR</h3>
+              <div class="mini-chart">
+                <div class="mini-chart-bar" style="height: 65%;"></div>
+                <div class="mini-chart-bar" style="height: 70%;"></div>
+                <div class="mini-chart-bar" style="height: 68%;"></div>
+                <div class="mini-chart-bar" style="height: 72%;"></div>
+                <div class="mini-chart-bar" style="height: 75%;"></div>
+                <div class="mini-chart-bar" style="height: 71%;"></div>
+                <div class="mini-chart-bar" style="height: 69%;"></div>
+                <div class="mini-chart-bar" style="height: 73%;"></div>
+              </div>
+              <p style="font-size: 10px; margin-top: 4px; color: #666;">Avg: 1,247 ops/hr</p>
+            </div>
+            
+            <div>
+              <h3 style="font-size: 11px;">ERROR RATE - LAST 1HR</h3>
+              <div class="mini-chart">
+                <div class="mini-chart-bar" style="height: 5%;"></div>
+                <div class="mini-chart-bar" style="height: 3%;"></div>
+                <div class="mini-chart-bar" style="height: 4%;"></div>
+                <div class="mini-chart-bar" style="height: 2%;"></div>
+                <div class="mini-chart-bar" style="height: 3%;"></div>
+                <div class="mini-chart-bar" style="height: 4%;"></div>
+                <div class="mini-chart-bar" style="height: 2%;"></div>
+                <div class="mini-chart-bar" style="height: 3%;"></div>
+              </div>
+              <p style="font-size: 10px; margin-top: 4px; color: #666;">Avg: 0.01% (healthy)</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- DOCUMENT PROCESSING QUEUE -->
+        <div class="section">
+          <h2>📄 DOCUMENT PROCESSING QUEUE</h2>
+          
+          <table>
+            <thead>
+              <tr>
+                <th>DOC ID</th>
+                <th>NAME</th>
+                <th>STAGE</th>
+                <th>MODEL</th>
+                <th>PROGRESS</th>
+                <th>ACTIONS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>doc-0001</td>
+                <td>contract.pdf</td>
+                <td>EMBED</td>
+                <td>Nomic v1.5</td>
+                <td>chunk 3/15</td>
+                <td><button style="font-size: 9px; padding: 3px 6px; margin: 0;">[TRACE]</button></td>
+              </tr>
+              <tr>
+                <td>doc-0002</td>
+                <td>appendix.md</td>
+                <td>PARSE</td>
+                <td>Docling v2.70</td>
+                <td>page 12/48</td>
+                <td><button style="font-size: 9px; padding: 3px 6px; margin: 0;">[TRACE]</button></td>
+              </tr>
+              <tr style="background: #f5f5f5;">
+                <td>doc-0003</td>
+                <td>policy.docx</td>
+                <td>FAILED</td>
+                <td>-</td>
+                <td>Error</td>
+                <td><button style="font-size: 9px; padding: 3px 6px; margin: 0;">[DEBUG]</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN - Supporting Panels -->
+      <div>
+        
+        <!-- SYSTEM ALERTS -->
+        <div class="section">
+          <h2>🚨 SYSTEM ALERTS</h2>
+          
+          <div style="margin-top: 12px;">
+            <div class="card" style="background: #fff; margin-bottom: 10px;">
+              <p style="font-size: 12px; font-weight: bold; color: #000;">✓ All systems normal</p>
+              <p style="font-size: 10px; color: #666; margin-top: 4px;">Last check: 14:03:45</p>
+            </div>
+            
+            <div style="font-size: 11px; line-height: 1.6;">
+              <strong>Active Monitors:</strong><br>
+              • Latency &lt; 500ms<br>
+              • Error rate &lt; 1%<br>
+              • Cost &lt; $10/hr<br>
+              • Safety gates passing
+            </div>
+            
+            <button style="width: 100%; margin-top: 10px; font-size: 10px;">[CONFIGURE ALERTS]</button>
+          </div>
+        </div>
+
+        <!-- COST TRACKING -->
+        <div class="section">
+          <h2>💰 COST TRACKING</h2>
+          
+          <div style="margin-top: 12px;">
+            <div class="metric-row" style="font-size: 12px;">
+              <span><strong>Last Hour:</strong></span>
+              <span><strong>$0.76</strong></span>
+            </div>
+            <div class="metric-row" style="font-size: 12px;">
+              <span><strong>Today:</strong></span>
+              <span><strong>$12.34</strong></span>
+            </div>
+            <div class="metric-row" style="font-size: 12px;">
+              <span><strong>This Month:</strong></span>
+              <span><strong>$287.92</strong></span>
+            </div>
+            
+            <div style="margin-top: 12px; font-size: 11px;">
+              <strong>Cost Breakdown:</strong><br>
+              Embed: $0.23/hr<br>
+              Parse: $0.45/hr<br>
+              Policy: $0.08/hr
+            </div>
+            
+            <button style="width: 100%; margin-top: 10px; font-size: 10px;">[DETAILED REPORT]</button>
+          </div>
+        </div>
+
+        <!-- SAFETY GATES STATUS -->
+        <div class="section">
+          <h2>🔒 SAFETY GATES STATUS</h2>
+          
+          <div style="margin-top: 12px;">
+            <div class="card" style="margin-bottom: 8px;">
+              <strong style="font-size: 11px;">GATE 1: EVIDENCE</strong>
+              <div class="metric-row">
+                <span>Status:</span>
+                <span style="color: #000;"><strong>PASS</strong></span>
+              </div>
+              <div class="metric-row">
+                <span>Last Check:</span>
+                <span>2min ago</span>
+              </div>
+            </div>
+            
+            <div class="card" style="margin-bottom: 8px;">
+              <strong style="font-size: 11px;">GATE 2: RETRIEVAL</strong>
+              <div class="metric-row">
+                <span>Recall:</span>
+                <span>0.94</span>
+              </div>
+              <div class="metric-row">
+                <span>Grounding:</span>
+                <span>0.98</span>
+              </div>
+            </div>
+            
+            <div class="card">
+              <strong style="font-size: 11px;">GATE 3: RED-TEAM</strong>
+              <div class="metric-row">
+                <span>Score:</span>
+                <span>0.91</span>
+              </div>
+              <div class="metric-row">
+                <span>Last Test:</span>
+                <span>1hr ago</span>
+              </div>
+            </div>
+            
+            <button style="width: 100%; margin-top: 10px; font-size: 10px;">[RUN FULL TEST]</button>
+          </div>
+        </div>
+
+        <!-- TENANT ISOLATION -->
+        <div class="section">
+          <h2>🏢 TENANT ISOLATION</h2>
+          
+          <div style="margin-top: 12px;">
+            <div style="font-size: 11px; margin-bottom: 8px;">
+              <strong>Active Tenant:</strong> PROD-01
+            </div>
+            
+            <div class="metric-row">
+              <span>Documents:</span>
+              <span>1,247</span>
+            </div>
+            <div class="metric-row">
+              <span>Vectors:</span>
+              <span>48.2K</span>
+            </div>
+            <div class="metric-row">
+              <span>Verification:</span>
+              <span>0.98</span>
+            </div>
+            
+            <div style="margin-top: 10px; font-size: 10px; color: #666;">
+              ✓ Tenant data isolated<br>
+              ✓ Cross-tenant access blocked<br>
+              ✓ Audit trail complete
+            </div>
+          </div>
+        </div>
+
+        <!-- DEPLOYMENT INFO -->
+        <div class="section">
+          <h2>🚀 CURRENT DEPLOYMENT</h2>
+          
+          <div style="margin-top: 12px; font-size: 11px; line-height: 1.8;">
+            <strong>Embed:</strong> Nomic v1.5<br>
+            <span style="color: #666; font-size: 10px;">Deployed 2026-02-10 14:30</span><br><br>
+            
+            <strong>Parse:</strong> Docling v2.70<br>
+            <span style="color: #666; font-size: 10px;">Deployed 2026-02-08 09:15</span><br><br>
+            
+            <strong>Policy:</strong> Custom v1.2<br>
+            <span style="color: #666; font-size: 10px;">Deployed 2026-02-01 11:00</span>
+          </div>
+          
+          <button style="width: 100%; margin-top: 10px; font-size: 10px;">[VERSION HISTORY]</button>
+          <button style="width: 100%; margin-top: 8px; font-size: 10px;">[ROLLBACK]</button>
+        </div>
+
+        <!-- QUICK ACTIONS -->
+        <div class="section">
+          <h2>⚡ QUICK ACTIONS</h2>
+          
+          <div style="margin-top: 12px; display: grid; gap: 8px;">
+            <button style="width: 100%; margin: 0; font-size: 10px;">[TRACE DOCUMENT]</button>
+            <button style="width: 100%; margin: 0; font-size: 10px;">[INSPECT MODEL I/O]</button>
+            <button style="width: 100%; margin: 0; font-size: 10px;">[VIEW AUDIT LOG]</button>
+            <button style="width: 100%; margin: 0; font-size: 10px;">[EXPORT REPORT]</button>
+            <button style="width: 100%; margin: 0; font-size: 10px;">[EMERGENCY STOP]</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER NOTE -->
+    <div style="margin-top: 20px; padding: 15px; background: #fff; border: 2px solid #000;">
+      <h3>🎯 UNIFIED COMMAND CENTER FEATURES</h3>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px; font-size: 12px; line-height: 1.6;">
+        <div>
+          <strong>• All-in-One Dashboard</strong> - Complete observability in single view<br>
+          <strong>• Real-Time Updates</strong> - Live SSE stream with 5s refresh<br>
+          <strong>• Model Health Monitoring</strong> - Status, latency, errors at a glance<br>
+          <strong>• Live Activity Feed</strong> - See every model operation as it happens
+        </div>
+        <div>
+          <strong>• Performance Charts</strong> - Latency, throughput, error trends<br>
+          <strong>• Cost Tracking</strong> - Real-time cost monitoring per model<br>
+          <strong>• Safety Gate Status</strong> - Continuous compliance monitoring<br>
+          <strong>• Quick Actions</strong> - Fast access to trace, inspect, audit
+        </div>
+      </div>
+      <p style="margin-top: 12px; font-style: italic; color: #666; font-size: 12px;">
+        "Like UPS command central - eyes on all machines, all the time, with complete transparency"
+      </p>
+    </div>
+  </div>
+</body>
+</html>

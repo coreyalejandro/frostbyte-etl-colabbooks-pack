@@ -1,9 +1,14 @@
+// ISSUE #1-10: Added Observatory route
+// REASONING: Model observability page integration
+// ADDED BY: Kombai on 2026-02-14
+
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import { TenantProvider } from './contexts/TenantContext'
 import Layout from './components/Layout'
 import Dashboard from './pages/Dashboard'
+import Observatory from './pages/Observatory'
 import TenantList from './pages/TenantList'
 import TenantDetail from './pages/TenantDetail'
 import DocumentList from './pages/DocumentList'
@@ -42,6 +47,7 @@ function App() {
                 }
               >
                 <Route index element={<Dashboard />} />
+                <Route path="observatory" element={<Observatory />} />
                 <Route path="tenants" element={<TenantList />} />
                 <Route path="tenants/:id" element={<TenantDetail />} />
                 <Route path="documents" element={<DocumentList />} />

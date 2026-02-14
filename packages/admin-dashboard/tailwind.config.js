@@ -14,7 +14,7 @@ export default {
         inactive: '#5f6368',
         'text-secondary': '#9aa0a6',
         'text-primary': '#e8eaed',
-        accent: '#eab308',
+        accent: '#fbbf24', // Changed from #eab308 to meet WCAG AA 4.5:1 contrast ratio on dark backgrounds
       },
       fontFamily: {
         mono: ['IBM Plex Mono', 'monospace'],

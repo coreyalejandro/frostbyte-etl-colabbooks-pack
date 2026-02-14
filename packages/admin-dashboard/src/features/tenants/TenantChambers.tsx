@@ -18,19 +18,30 @@ export default function TenantChambers() {
               setSelectedTenantId(t.id)
               navigate(`/tenants/${t.id}`)
             }}
-            className="text-left border border-border p-4 bg-surface hover:border-inactive"
+            className="text-left border border-border p-3 bg-surface hover:border-inactive min-w-0 overflow-hidden"
           >
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-xs font-medium uppercase tracking-wider text-text-secondary">
+            <div className="flex items-start justify-between gap-2 mb-2">
+              <span className="text-xs font-medium uppercase tracking-wider text-text-secondary truncate">
                 TENANT-{t.id.replace('PROD-', '')}
               </span>
-              <span className={t.active ? 'text-accent' : 'text-inactive'}>
+              <span className={`text-xs shrink-0 ${t.active ? 'text-accent' : 'text-inactive'}`}>
                 [{t.active ? 'ACTIVE' : 'INACTIVE'}]
               </span>
             </div>
-            <p className="text-sm text-text-primary font-mono">
-              DOC: {t.docs.toLocaleString()} | VEC: {t.vec} | VER: {t.ver.toFixed(2)}
-            </p>
+            <div className="space-y-1 text-xs text-text-primary font-mono">
+              <div className="flex justify-between">
+                <span>DOC:</span>
+                <span>{t.docs.toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>VEC:</span>
+                <span>{t.vec}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>VER:</span>
+                <span>{t.ver.toFixed(2)}</span>
+              </div>
+            </div>
           </button>
         ))}
       </div>

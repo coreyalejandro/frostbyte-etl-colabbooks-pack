@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wireframe 1: Model Activity Monitor Dashboard</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Comic Sans MS', cursive;
+      background: #fff;
+      color: #000;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    .wireframe-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      border: 3px solid #000;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .header {
+      background: #fff;
+      border: 2px solid #000;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+    h2 {
+      font-size: 18px;
+      margin: 20px 0 10px 0;
+      border-bottom: 2px solid #666;
+      padding-bottom: 5px;
+    }
+    h3 {
+      font-size: 14px;
+      margin: 15px 0 8px 0;
+      text-transform: uppercase;
+      color: #333;
+    }
+    .section {
+      background: #fff;
+      border: 2px solid #000;
+      padding: 15px;
+      margin-bottom: 15px;
+      position: relative;
+    }
+    .grid {
+      display: grid;
+      gap: 15px;
+    }
+    .grid-2 { grid-template-columns: 1fr 1fr; }
+    .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .card {
+      border: 2px solid #666;
+      padding: 12px;
+      background: #fff;
+      position: relative;
+    }
+    .status-dot {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 2px solid #000;
+      margin-right: 8px;
+    }
+    .status-active { background: #ccc; }
+    .status-idle { background: #f5f5f5; }
+    .status-error { background: #999; }
+    .badge {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      background: #4CAF50;
+      color: white;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 10px;
+      font-family: Arial, sans-serif;
+      font-weight: bold;
+      z-index: 10;
+    }
+    .badge-new {
+      background: #FF9800;
+    }
+    .timeline {
+      border-left: 3px solid #000;
+      padding-left: 15px;
+      margin-left: 10px;
+    }
+    .timeline-item {
+      margin-bottom: 15px;
+      position: relative;
+    }
+    .timeline-item:before {
+      content: '';
+      width: 12px;
+      height: 12px;
+      background: #fff;
+      border: 2px solid #000;
+      border-radius: 50%;
+      position: absolute;
+      left: -24px;
+      top: 3px;
+    }
+    .metric {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #ccc;
+    }
+    .metric:last-child {
+      border-bottom: none;
+    }
+    button {
+      background: #fff;
+      border: 2px solid #000;
+      padding: 8px 16px;
+      font-family: 'Comic Sans MS', cursive;
+      cursor: pointer;
+      margin-right: 10px;
+      margin-top: 10px;
+    }
+    button:hover {
+      background: #f5f5f5;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #666;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background: #ccc;
+      font-weight: bold;
+    }
+    .live-feed {
+      max-height: 300px;
+      overflow-y: auto;
+      font-family: monospace;
+      font-size: 11px;
+      background: #fff;
+      border: 2px solid #000;
+      padding: 10px;
+    }
+    .feed-item {
+      padding: 4px 0;
+      border-bottom: 1px dashed #ccc;
+    }
+    .feed-item:last-child {
+      border-bottom: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="wireframe-container">
+    <!-- HEADER -->
+    <div class="header">
+      <h1>⚙ MODEL ACTIVITY MONITOR</h1>
+      <p style="color: #666; font-size: 14px;">Real-time visibility into all AI/ML models in the pipeline - EXTREME OBSERVABILITY</p>
+    </div>
+
+    <!-- MODEL HEALTH DASHBOARD -->
+    <div class="section">
+      <!-- REUSABLE: Panel from src/components/Panel.tsx -->
+      <span class="badge" title="src/components/Panel.tsx">[REUSE] Panel</span>
+      
+      <h2>🔍 LIVE MODEL STATUS</h2>
+      
+      <div class="grid grid-3" style="margin-top: 15px;">
+        
+        <!-- EMBEDDING MODEL CARD -->
+        <div class="card">
+          <!-- NEW COMPONENT: ModelStatusCard (to be created at src/components/ModelStatusCard.tsx) -->
+          <span class="badge badge-new" title="To be created at src/components/ModelStatusCard.tsx">[NEW] ModelStatusCard</span>
+          
+          <h3><span class="status-dot status-active"></span>EMBEDDING MODEL</h3>
+          <p style="font-weight: bold; margin: 8px 0;">Nomic Embed v1.5</p>
+          <div style="font-size: 12px; color: #333;">
+            <div class="metric">
+              <span>Status:</span>
+              <span style="font-weight: bold;">PROCESSING</span>
+            </div>
+            <div class="metric">
+              <span>Current Doc:</span>
+              <span>doc-0001 (chunk 3/15)</span>
+            </div>
+            <div class="metric">
+              <span>Latency:</span>
+              <span style="color: #000;">124ms avg</span>
+            </div>
+            <div class="metric">
+              <span>Tokens/min:</span>
+              <span>1,247</span>
+            </div>
+            <div class="metric">
+              <span>Cost (last hr):</span>
+              <span>$0.23</span>
+            </div>
+            <div class="metric">
+              <span>Error Rate:</span>
+              <span style="color: #000;">0.01%</span>
+            </div>
+          </div>
+          <button>[INSPECT I/O]</button>
+          <button>[VIEW TRACE]</button>
+        </div>
+
+        <!-- PARSE MODEL CARD -->
+        <div class="card">
+          <span class="badge badge-new" title="To be created at src/components/ModelStatusCard.tsx">[NEW] ModelStatusCard</span>
+          
+          <h3><span class="status-dot status-active"></span>PARSE MODEL</h3>
+          <p style="font-weight: bold; margin: 8px 0;">Docling v2.70</p>
+          <div style="font-size: 12px; color: #333;">
+            <div class="metric">
+              <span>Status:</span>
+              <span style="font-weight: bold;">PROCESSING</span>
+            </div>
+            <div class="metric">
+              <span>Current Doc:</span>
+              <span>doc-0002 (page 12/48)</span>
+            </div>
+            <div class="metric">
+              <span>Latency:</span>
+              <span style="color: #000;">342ms avg</span>
+            </div>
+            <div class="metric">
+              <span>Pages/min:</span>
+              <span>178</span>
+            </div>
+            <div class="metric">
+              <span>Cost (last hr):</span>
+              <span>$0.45</span>
+            </div>
+            <div class="metric">
+              <span>Error Rate:</span>
+              <span style="color: #000;">0.02%</span>
+            </div>
+          </div>
+          <button>[INSPECT I/O]</button>
+          <button>[VIEW TRACE]</button>
+        </div>
+
+        <!-- POLICY MODEL CARD -->
+        <div class="card">
+          <span class="badge badge-new" title="To be created at src/components/ModelStatusCard.tsx">[NEW] ModelStatusCard</span>
+          
+          <h3><span class="status-dot status-idle"></span>POLICY WORKER</h3>
+          <p style="font-weight: bold; margin: 8px 0;">Custom Policy v1.2</p>
+          <div style="font-size: 12px; color: #333;">
+            <div class="metric">
+              <span>Status:</span>
+              <span style="font-weight: bold;">IDLE</span>
+            </div>
+            <div class="metric">
+              <span>Last Processed:</span>
+              <span>2min ago</span>
+            </div>
+            <div class="metric">
+              <span>Latency:</span>
+              <span style="color: #000;">56ms avg</span>
+            </div>
+            <div class="metric">
+              <span>Checks/min:</span>
+              <span>0 (idle)</span>
+            </div>
+            <div class="metric">
+              <span>Cost (last hr):</span>
+              <span>$0.08</span>
+            </div>
+            <div class="metric">
+              <span>Error Rate:</span>
+              <span style="color: #000;">0.00%</span>
+            </div>
+          </div>
+          <button>[INSPECT I/O]</button>
+          <button>[VIEW TRACE]</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIVE ACTIVITY FEED -->
+    <div class="section">
+      <!-- NEW COMPONENT: ModelActivityFeed (to be created at src/features/observability/ModelActivityFeed.tsx) -->
+      <span class="badge badge-new" title="To be created at src/features/observability/ModelActivityFeed.tsx">[NEW] ModelActivityFeed</span>
+      
+      <h2>📡 LIVE MODEL ACTIVITY FEED (SSE Stream)</h2>
+      <p style="color: #666; font-size: 13px; margin-bottom: 10px;">
+        🔴 LIVE - Real-time stream of all model operations - "eyes on machines"
+      </p>
+      
+      <div style="margin-bottom: 10px;">
+        <button>[PAUSE]</button>
+        <button>[FILTER BY MODEL]</button>
+        <button>[FILTER BY DOCUMENT]</button>
+        <button>[FILTER BY TENANT]</button>
+        <button>[EXPORT LOG]</button>
+      </div>
+
+      <div class="live-feed">
+        <div class="feed-item">
+          <span style="color: #666;">2026-02-14 14:03:45.234</span> | 
+          <span style="font-weight: bold;">[NOMIC-EMBED]</span> | 
+          <span>doc-0001</span> | 
+          <span>chunk-3</span> | 
+          <span style="color: #000;">→ Generated embedding vector [768 dims] in 118ms</span>
+        </div>
+        <div class="feed-item">
+          <span style="color: #666;">2026-02-14 14:03:45.112</span> | 
+          <span style="font-weight: bold;">[DOCLING-PARSE]</span> | 
+          <span>doc-0002</span> | 
+          <span>page-12</span> | 
+          <span style="color: #000;">→ Extracted 487 tokens, detected 2 tables, 1 image</span>
+        </div>
+        <div class="feed-item">
+          <span style="color: #666;">2026-02-14 14:03:44.998</span> | 
+          <span style="font-weight: bold;">[NOMIC-EMBED]</span> | 
+          <span>doc-0001</span> | 
+          <span>chunk-2</span> | 
+          <span style="color: #000;">→ Generated embedding vector [768 dims] in 124ms</span>
+        </div>
+        <div class="feed-item">
+          <span style="color: #666;">2026-02-14 14:03:44.756</span> | 
+          <span style="font-weight: bold;">[POLICY-WORKER]</span> | 
+          <span>doc-0001</span> | 
+          <span>tenant-01</span> | 
+          <span style="color: #000;">✓ PASS - All safety gates cleared</span>
+        </div>
+        <div class="feed-item">
+          <span style="color: #666;">2026-02-14 14:03:44.623</span> | 
+          <span style="font-weight: bold;">[DOCLING-PARSE]</span> | 
+          <span>doc-0002</span> | 
+          <span>page-11</span> | 
+          <span style="color: #000;">→ Extracted 523 tokens, detected 1 table</span>
+        </div>
+        <div class="feed-item">
+          <span style="color: #666;">2026-02-14 14:03:44.445</span> | 
+          <span style="font-weight: bold;">[NOMIC-EMBED]</span> | 
+          <span>doc-0001</span> | 
+          <span>chunk-1</span> | 
+          <span style="color: #000;">→ Generated embedding vector [768 dims] in 131ms</span>
+        </div>
+        <div class="feed-item">
+          <span style="color: #666;">2026-02-14 14:03:44.234</span> | 
+          <span style="font-weight: bold;">[DOCLING-PARSE]</span> | 
+          <span>doc-0002</span> | 
+          <span>page-10</span> | 
+          <span style="color: #000;">→ Extracted 612 tokens, detected 0 tables, 1 image</span>
+        </div>
+        <div class="feed-item" style="color: #999;">
+          [Older entries...] <button style="font-size: 10px; padding: 4px 8px;">[LOAD MORE]</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODEL PERFORMANCE METRICS -->
+    <div class="section">
+      <span class="badge badge-new" title="To be created at src/features/observability/ModelMetricsPanel.tsx">[NEW] ModelMetricsPanel</span>
+      
+      <h2>📊 MODEL PERFORMANCE METRICS (Last Hour)</h2>
+      
+      <table>
+        <thead>
+          <tr>
+            <th>MODEL</th>
+            <th>VERSION</th>
+            <th>OPERATIONS</th>
+            <th>AVG LATENCY</th>
+            <th>P95 LATENCY</th>
+            <th>ERROR RATE</th>
+            <th>COST</th>
+            <th>ACTIONS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Nomic Embed</strong></td>
+            <td>v1.5</td>
+            <td>1,247</td>
+            <td style="color: #000;">124ms</td>
+            <td>198ms</td>
+            <td style="color: #000;">0.01%</td>
+            <td>$0.23</td>
+            <td>
+              <button style="font-size: 11px; padding: 4px 8px;">[TRACE]</button>
+              <button style="font-size: 11px; padding: 4px 8px;">[ALERT]</button>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Docling Parse</strong></td>
+            <td>v2.70</td>
+            <td>892</td>
+            <td style="color: #000;">342ms</td>
+            <td>521ms</td>
+            <td style="color: #000;">0.02%</td>
+            <td>$0.45</td>
+            <td>
+              <button style="font-size: 11px; padding: 4px 8px;">[TRACE]</button>
+              <button style="font-size: 11px; padding: 4px 8px;">[ALERT]</button>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Policy Worker</strong></td>
+            <td>v1.2</td>
+            <td>234</td>
+            <td style="color: #000;">56ms</td>
+            <td>89ms</td>
+            <td style="color: #000;">0.00%</td>
+            <td>$0.08</td>
+            <td>
+              <button style="font-size: 11px; padding: 4px 8px;">[TRACE]</button>
+              <button style="font-size: 11px; padding: 4px 8px;">[ALERT]</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- MODEL-TO-DOCUMENT LINEAGE -->
+    <div class="section">
+      <span class="badge badge-new" title="To be created at src/features/observability/ModelDocumentLineage.tsx">[NEW] ModelDocumentLineage</span>
+      
+      <h2>🔗 DOCUMENT-TO-MODEL LINEAGE</h2>
+      <p style="color: #666; font-size: 13px; margin-bottom: 10px;">
+        Track which models processed which documents - full audit trail
+      </p>
+      
+      <div style="margin-bottom: 10px;">
+        <label style="font-weight: bold; margin-right: 10px;">SELECT DOCUMENT:</label>
+        <!-- REUSABLE: Select/Dropdown pattern -->
+        <span class="badge" title="Reusable dropdown pattern">[REUSE] Dropdown</span>
+        <select style="padding: 8px; border: 2px solid #000; background: #fff; font-family: inherit;">
+          <option>doc-0001 (contract.pdf)</option>
+          <option>doc-0002 (appendix.md)</option>
+          <option>doc-0003 (policy.docx)</option>
+        </select>
+        <button>[VIEW FULL TRACE]</button>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <strong style="font-size: 14px;">2026-02-14 14:03:22</strong> - UPLOAD<br>
+          <span style="color: #666; font-size: 13px;">Document received, assigned ID doc-0001, tenant PROD-01</span>
+        </div>
+        <div class="timeline-item">
+          <strong style="font-size: 14px;">2026-02-14 14:03:25</strong> - PARSE<br>
+          <span style="color: #666; font-size: 13px;">
+            <strong>Model: Docling v2.70</strong> | Extracted 15 chunks, 7,234 tokens total | Latency: 2.8s
+          </span><br>
+          <button style="font-size: 11px; padding: 4px 8px; margin-top: 4px;">[INSPECT INPUT/OUTPUT]</button>
+        </div>
+        <div class="timeline-item">
+          <strong style="font-size: 14px;">2026-02-14 14:03:28</strong> - EMBED<br>
+          <span style="color: #666; font-size: 13px;">
+            <strong>Model: Nomic Embed v1.5</strong> | Generated 15 embedding vectors (768 dims each) | Latency: 1.9s
+          </span><br>
+          <button style="font-size: 11px; padding: 4px 8px; margin-top: 4px;">[INSPECT INPUT/OUTPUT]</button>
+        </div>
+        <div class="timeline-item">
+          <strong style="font-size: 14px;">2026-02-14 14:03:30</strong> - POLICY CHECK<br>
+          <span style="color: #666; font-size: 13px;">
+            <strong>Model: Policy Worker v1.2</strong> | Result: PASS - All safety gates cleared | Latency: 0.4s
+          </span><br>
+          <button style="font-size: 11px; padding: 4px 8px; margin-top: 4px;">[INSPECT INPUT/OUTPUT]</button>
+        </div>
+        <div class="timeline-item">
+          <strong style="font-size: 14px;">2026-02-14 14:03:31</strong> - STORED<br>
+          <span style="color: #666; font-size: 13px;">
+            Vectors stored in Qdrant, metadata in PostgreSQL, file in MinIO | Verification: 0.99
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER NOTE -->
+    <div style="margin-top: 30px; padding: 20px; background: #fff; border: 2px solid #000;">
+      <h3>🎯 EXTREME OBSERVABILITY FEATURES</h3>
+      <ul style="margin-left: 20px; margin-top: 10px; line-height: 1.8;">
+        <li><strong>Real-time Model Activity Feed</strong> - See exactly what each model is doing right now</li>
+        <li><strong>Model Health Metrics</strong> - Latency, throughput, cost, error rates at a glance</li>
+        <li><strong>Input/Output Inspection</strong> - Click to see what went into model and what came out</li>
+        <li><strong>Document-to-Model Lineage</strong> - Full audit trail from upload to storage</li>
+        <li><strong>Model Version Tracking</strong> - Know exactly which version is deployed</li>
+        <li><strong>Cost Transparency</strong> - Token usage and costs visible per model, per document</li>
+        <li><strong>Safety Gate Visibility</strong> - Policy checks integrated into timeline</li>
+      </ul>
+      <p style="margin-top: 15px; font-style: italic; color: #666;">
+        "Every step they take, every move they make, we'll be watching" - Complete model observability
+      </p>
+    </div>
+  </div>
+</body>
+</html>

@@ -17,35 +17,42 @@ Multi-tenant document ETL: **document in → structure out → stored in DB and 
 1. **Prerequisites:** Docker Desktop running, Python 3.12+, `docker compose` and `curl` available.
 
 2. **Start infrastructure:**
+
    ```bash
    docker compose up -d
    docker compose ps   # wait until all services show healthy (~30s)
    ```
 
 3. **Run migrations** (Postgres is on port **5433** to avoid conflict with host):
+
    ```bash
    ./scripts/run_migrations.sh
    ```
 
 4. **Install and start the pipeline API:**
+
    ```bash
    cd pipeline && pip install -e .
    FROSTBYTE_CONTROL_DB_URL="postgresql://frostbyte:frostbyte@127.0.0.1:5433/frostbyte" \
    FROSTBYTE_AUTH_BYPASS=1 \
    uvicorn pipeline.main:app --reload --host 0.0.0.0 --port 8000
    ```
+
    Leave this running; in another terminal continue.
 
 5. **Ingest a test document:**
+
    ```bash
    echo "Test document for Frostbyte ETL." > /tmp/test.txt
    curl -X POST http://localhost:8000/api/v1/intake \
      -F "file=@/tmp/test.txt" \
      -F "tenant_id=default"
    ```
+
    Expected: `{"document_id":"...", "status":"ingested", ...}`
 
 6. **Verify:** Open **http://localhost:8000** in a browser (dashboard). Use the `document_id` from the response with:
+
    ```bash
    curl -s http://localhost:8000/api/v1/documents/<document_id>
    ```

@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wireframe 4: Model Provenance & Version Timeline</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Comic Sans MS', cursive;
+      background: #fff;
+      color: #000;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    .wireframe-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      border: 3px solid #000;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .header {
+      background: #fff;
+      border: 2px solid #000;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+    h2 {
+      font-size: 18px;
+      margin: 20px 0 10px 0;
+      border-bottom: 2px solid #666;
+      padding-bottom: 5px;
+    }
+    .section {
+      background: #fff;
+      border: 2px solid #000;
+      padding: 20px;
+      margin-bottom: 15px;
+      position: relative;
+    }
+    .badge {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      background: #4CAF50;
+      color: white;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 10px;
+      font-family: Arial, sans-serif;
+      font-weight: bold;
+      z-index: 10;
+    }
+    .badge-new {
+      background: #FF9800;
+    }
+    .timeline {
+      position: relative;
+      padding-left: 40px;
+      margin-top: 20px;
+    }
+    .timeline:before {
+      content: '';
+      position: absolute;
+      left: 15px;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: #000;
+    }
+    .timeline-event {
+      position: relative;
+      margin-bottom: 30px;
+      background: #f5f5f5;
+      border: 2px solid #666;
+      padding: 15px;
+    }
+    .timeline-event:before {
+      content: '';
+      position: absolute;
+      left: -32px;
+      top: 20px;
+      width: 16px;
+      height: 16px;
+      background: #fff;
+      border: 3px solid #000;
+      border-radius: 50%;
+    }
+    .timeline-event.current:before {
+      background: #666;
+    }
+    .timeline-event.rollback:before {
+      background: #ccc;
+    }
+    button {
+      background: #fff;
+      border: 2px solid #000;
+      padding: 8px 16px;
+      font-family: 'Comic Sans MS', cursive;
+      cursor: pointer;
+      margin-right: 10px;
+      margin-top: 10px;
+    }
+    button:hover {
+      background: #f5f5f5;
+    }
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-top: 15px;
+    }
+    .metric-card {
+      border: 2px solid #666;
+      padding: 12px;
+      background: #fff;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #666;
+      padding: 8px;
+      text-align: left;
+      font-size: 12px;
+    }
+    th {
+      background: #ccc;
+      font-weight: bold;
+    }
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wireframe-container">
+    <!-- HEADER -->
+    <div class="header">
+      <h1>📜 MODEL PROVENANCE & VERSION TIMELINE</h1>
+      <p style="color: #666; font-size: 14px;">Complete deployment history, version tracking, and rollback capability - Full model governance</p>
+    </div>
+
+    <!-- CURRENT DEPLOYMENT STATUS -->
+    <div class="section">
+      <span class="badge badge-new" title="To be created at src/features/observability/ModelProvenance.tsx">[NEW] ModelProvenance</span>
+      
+      <h2>🎯 CURRENT DEPLOYMENT STATUS</h2>
+      
+      <div class="metric-grid">
+        <div class="metric-card">
+          <h3 style="font-size: 13px; margin-bottom: 8px; color: #666;">EMBEDDING MODEL</h3>
+          <p style="font-size: 16px; font-weight: bold; margin-bottom: 4px;">Nomic Embed v1.5</p>
+          <p style="font-size: 11px; color: #666;">Deployed: 2026-02-10 14:30</p>
+          <p style="font-size: 11px; color: #666;">By: admin@frostbyte.io</p>
+        </div>
+        
+        <div class="metric-card">
+          <h3 style="font-size: 13px; margin-bottom: 8px; color: #666;">PARSE MODEL</h3>
+          <p style="font-size: 16px; font-weight: bold; margin-bottom: 4px;">Docling v2.70</p>
+          <p style="font-size: 11px; color: #666;">Deployed: 2026-02-08 09:15</p>
+          <p style="font-size: 11px; color: #666;">By: admin@frostbyte.io</p>
+        </div>
+        
+        <div class="metric-card">
+          <h3 style="font-size: 13px; margin-bottom: 8px; color: #666;">POLICY WORKER</h3>
+          <p style="font-size: 16px; font-weight: bold; margin-bottom: 4px;">Custom Policy v1.2</p>
+          <p style="font-size: 11px; color: #666;">Deployed: 2026-02-01 11:00</p>
+          <p style="font-size: 11px; color: #666;">By: admin@frostbyte.io</p>
+        </div>
+        
+        <div class="metric-card">
+          <h3 style="font-size: 13px; margin-bottom: 8px; color: #666;">UPTIME</h3>
+          <p style="font-size: 16px; font-weight: bold; margin-bottom: 4px;">4 days 6 hrs</p>
+          <p style="font-size: 11px; color: #666;">Last change: 2026-02-10</p>
+          <p style="font-size: 11px; color: #666;">Stability: 99.98%</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- DEPLOYMENT TIMELINE -->
+    <div class="section">
+      <h2>⏱ DEPLOYMENT HISTORY TIMELINE</h2>
+      
+      <div style="margin-bottom: 15px;">
+        <button>[ALL MODELS]</button>
+        <button>[EMBEDDING ONLY]</button>
+        <button>[PARSE ONLY]</button>
+        <button>[POLICY ONLY]</button>
+        <button>[EXPORT HISTORY]</button>
+      </div>
+      
+      <div class="timeline">
+        
+        <!-- CURRENT DEPLOYMENT -->
+        <div class="timeline-event current">
+          <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+            <div>
+              <strong style="font-size: 15px;">2026-02-10 14:30:22</strong><br>
+              <span style="font-size: 13px; color: #666;">DEPLOYMENT - Embedding Model Upgrade</span>
+            </div>
+            <span style="background: #666; color: #fff; padding: 4px 10px; font-size: 11px; font-weight: bold;">CURRENT</span>
+          </div>
+          
+          <div style="background: #fff; border: 2px solid #000; padding: 12px; margin-bottom: 10px;">
+            <strong>Changed:</strong> Nomic Embed v1.4 → <strong>v1.5</strong><br>
+            <strong>Deployed By:</strong> admin@frostbyte.io<br>
+            <strong>Reason:</strong> Performance improvements, 12% faster embedding generation<br>
+            <strong>Approval:</strong> Change Request #234 (approved by CTO)<br>
+            <strong>Impact:</strong> 0 documents in flight, zero-downtime deployment<br>
+            <strong>Fingerprint:</strong> <code>sha256:a1b2c3d4e5f6...</code>
+          </div>
+          
+          <div style="display: flex; gap: 10px;">
+            <button style="font-size: 11px; padding: 6px 12px;">[VIEW CHANGE REQUEST]</button>
+            <button style="font-size: 11px; padding: 6px 12px;">[VIEW PERFORMANCE COMPARISON]</button>
+            <button style="font-size: 11px; padding: 6px 12px;">[AUDIT TRAIL]</button>
+          </div>
+        </div>
+
+        <!-- PREVIOUS DEPLOYMENT -->
+        <div class="timeline-event">
+          <div style="display: flex; justify-between; align-items: start; margin-bottom: 10px;">
+            <div>
+              <strong style="font-size: 15px;">2026-02-08 09:15:44</strong><br>
+              <span style="font-size: 13px; color: #666;">DEPLOYMENT - Parse Model Upgrade</span>
+            </div>
+          </div>
+          
+          <div style="background: #fff; border: 2px solid #000; padding: 12px; margin-bottom: 10px;">
+            <strong>Changed:</strong> Docling v2.68 → <strong>v2.70</strong><br>
+            <strong>Deployed By:</strong> admin@frostbyte.io<br>
+            <strong>Reason:</strong> Bug fix for table extraction, improved PDF handling<br>
+            <strong>Approval:</strong> Change Request #228 (approved by CTO)<br>
+            <strong>Impact:</strong> 2 documents in flight, handled gracefully<br>
+            <strong>Fingerprint:</strong> <code>sha256:e5f6g7h8i9j0...</code>
+          </div>
+          
+          <div style="display: flex; gap: 10px;">
+            <button style="font-size: 11px; padding: 6px 12px;">[VIEW CHANGE REQUEST]</button>
+            <button style="font-size: 11px; padding: 6px 12px;">[ROLLBACK TO THIS VERSION]</button>
+          </div>
+        </div>
+
+        <!-- ROLLBACK EVENT -->
+        <div class="timeline-event rollback">
+          <div style="display: flex; justify-between; align-items: start; margin-bottom: 10px;">
+            <div>
+              <strong style="font-size: 15px;">2026-02-05 16:42:11</strong><br>
+              <span style="font-size: 13px; color: #666;">ROLLBACK - Emergency Rollback</span>
+            </div>
+            <span style="background: #ccc; color: #000; padding: 4px 10px; font-size: 11px; font-weight: bold;">ROLLBACK</span>
+          </div>
+          
+          <div style="background: #fff; border: 2px solid #000; padding: 12px; margin-bottom: 10px;">
+            <strong>Rolled Back:</strong> Nomic Embed v1.5-beta → <strong>v1.4 (stable)</strong><br>
+            <strong>Triggered By:</strong> admin@frostbyte.io<br>
+            <strong>Reason:</strong> v1.5-beta causing 15% higher error rate<br>
+            <strong>Duration:</strong> Rollback completed in 47 seconds<br>
+            <strong>Impact:</strong> 8 documents reprocessed automatically<br>
+            <strong>Fingerprint:</strong> <code>sha256:k1l2m3n4o5p6...</code>
+          </div>
+          
+          <div style="display: flex; gap: 10px;">
+            <button style="font-size: 11px; padding: 6px 12px;">[VIEW INCIDENT REPORT]</button>
+            <button style="font-size: 11px; padding: 6px 12px;">[VIEW ERROR LOGS]</button>
+          </div>
+        </div>
+
+        <!-- OLDER DEPLOYMENT -->
+        <div class="timeline-event">
+          <div style="display: flex; justify-between; align-items: start; margin-bottom: 10px;">
+            <div>
+              <strong style="font-size: 15px;">2026-02-01 11:00:00</strong><br>
+              <span style="font-size: 13px; color: #666;">DEPLOYMENT - Policy Worker Update</span>
+            </div>
+          </div>
+          
+          <div style="background: #fff; border: 2px solid #000; padding: 12px; margin-bottom: 10px;">
+            <strong>Changed:</strong> Custom Policy v1.1 → <strong>v1.2</strong><br>
+            <strong>Deployed By:</strong> admin@frostbyte.io<br>
+            <strong>Reason:</strong> Enhanced PII detection rules<br>
+            <strong>Approval:</strong> Change Request #220 (approved by Security Lead)<br>
+            <strong>Impact:</strong> 0 documents in flight<br>
+            <strong>Fingerprint:</strong> <code>sha256:q6r7s8t9u0v1...</code>
+          </div>
+          
+          <div style="display: flex; gap: 10px;">
+            <button style="font-size: 11px; padding: 6px 12px;">[VIEW CHANGE REQUEST]</button>
+          </div>
+        </div>
+        
+        <div style="text-align: center; padding: 20px;">
+          <button>[LOAD OLDER EVENTS]</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- VERSION COMPARISON -->
+    <div class="section">
+      <span class="badge badge-new" title="To be created at src/features/observability/VersionComparison.tsx">[NEW] VersionComparison</span>
+      
+      <h2>⚖ VERSION PERFORMANCE COMPARISON</h2>
+      
+      <div style="margin-bottom: 15px;">
+        <label style="font-weight: bold; margin-right: 10px;">SELECT MODEL TO ANALYZE:</label>
+        <select style="padding: 8px; border: 2px solid #000; background: #fff; font-family: inherit; margin-right: 10px;">
+          <option selected>Nomic Embed (all versions)</option>
+          <option>Docling (all versions)</option>
+          <option>Policy Worker (all versions)</option>
+        </select>
+        <button>[GENERATE COMPARISON]</button>
+      </div>
+      
+      <table>
+        <thead>
+          <tr>
+            <th>VERSION</th>
+            <th>DEPLOYMENT DATE</th>
+            <th>AVG LATENCY</th>
+            <th>ERROR RATE</th>
+            <th>DOCS PROCESSED</th>
+            <th>TOTAL COST</th>
+            <th>STATUS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="background: #f5f5f5;">
+            <td><strong>v1.5</strong></td>
+            <td>2026-02-10 14:30</td>
+            <td style="color: #000;"><strong>124ms ✓</strong></td>
+            <td style="color: #000;"><strong>0.01% ✓</strong></td>
+            <td>1,247</td>
+            <td>$12.34</td>
+            <td><strong>CURRENT</strong></td>
+          </tr>
+          <tr>
+            <td>v1.5-beta</td>
+            <td>2026-02-05 14:15</td>
+            <td>118ms</td>
+            <td style="color: #666;"><strong>0.15% ✗</strong></td>
+            <td>234</td>
+            <td>$2.87</td>
+            <td><span style="color: #666;">ROLLED BACK</span></td>
+          </tr>
+          <tr>
+            <td>v1.4</td>
+            <td>2026-01-15 10:00</td>
+            <td>141ms</td>
+            <td>0.01%</td>
+            <td>8,923</td>
+            <td>$98.45</td>
+            <td>Superseded</td>
+          </tr>
+          <tr>
+            <td>v1.3</td>
+            <td>2025-12-10 09:00</td>
+            <td>156ms</td>
+            <td>0.02%</td>
+            <td>12,456</td>
+            <td>$145.23</td>
+            <td>Superseded</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ROLLBACK INTERFACE -->
+    <div class="section">
+      <span class="badge badge-new" title="To be created at src/features/observability/RollbackInterface.tsx">[NEW] RollbackInterface</span>
+      
+      <h2>🔄 ROLLBACK CAPABILITY</h2>
+      
+      <div class="comparison-grid">
+        
+        <!-- CURRENT VERSION -->
+        <div style="border: 2px solid #666; padding: 15px; background: #f5f5f5;">
+          <h3 style="font-size: 15px; margin-bottom: 12px;">CURRENT VERSION</h3>
+          
+          <div style="background: #fff; border: 2px solid #000; padding: 12px;">
+            <p><strong>Model:</strong> Nomic Embed v1.5</p>
+            <p><strong>Deployed:</strong> 2026-02-10 14:30 (4 days ago)</p>
+            <p><strong>Status:</strong> HEALTHY</p>
+            <p><strong>Performance:</strong> 124ms avg, 0.01% error</p>
+            <p><strong>Documents Processed:</strong> 1,247</p>
+          </div>
+        </div>
+        
+        <!-- ROLLBACK TARGET -->
+        <div style="border: 2px solid #666; padding: 15px; background: #f5f5f5;">
+          <h3 style="font-size: 15px; margin-bottom: 12px;">ROLLBACK TO</h3>
+          
+          <select style="width: 100%; padding: 8px; border: 2px solid #000; background: #fff; font-family: inherit; margin-bottom: 15px;">
+            <option>Select version to rollback to...</option>
+            <option>Nomic Embed v1.4 (2026-01-15)</option>
+            <option>Nomic Embed v1.3 (2025-12-10)</option>
+          </select>
+          
+          <div style="background: #fff; border: 2px solid #000; padding: 12px;">
+            <p><strong>Model:</strong> Nomic Embed v1.4</p>
+            <p><strong>Last Used:</strong> 2026-02-05 (rolled back from)</p>
+            <p><strong>Known Performance:</strong> 141ms avg, 0.01% error</p>
+            <p><strong>Total Documents:</strong> 8,923 (proven stable)</p>
+          </div>
+        </div>
+      </div>
+      
+      <div style="margin-top: 20px; background: #fff; border: 2px solid #000; padding: 15px;">
+        <h3 style="font-size: 14px; margin-bottom: 10px;">⚠ ROLLBACK IMPACT ANALYSIS</h3>
+        <ul style="margin-left: 20px; line-height: 1.8; font-size: 13px;">
+          <li><strong>Documents in Flight:</strong> 3 documents currently being processed</li>
+          <li><strong>Reprocessing Required:</strong> 0 documents (rollback is backward compatible)</li>
+          <li><strong>Downtime:</strong> ~30 seconds estimated (zero-downtime rollback available)</li>
+          <li><strong>Performance Impact:</strong> +17ms latency per operation (141ms vs 124ms)</li>
+          <li><strong>Cost Impact:</strong> Minimal (~2% increase in processing time)</li>
+        </ul>
+      </div>
+      
+      <div style="margin-top: 15px; display: flex; gap: 10px;">
+        <button>[PREVIEW ROLLBACK PLAN]</button>
+        <button>[EXECUTE ROLLBACK]</button>
+        <button style="background: #f5f5f5; color: #666;">[CANCEL]</button>
+      </div>
+    </div>
+
+    <!-- CHANGE REQUEST LOG -->
+    <div class="section">
+      <h2>📋 CHANGE REQUEST LOG</h2>
+      
+      <p style="color: #666; font-size: 13px; margin-bottom: 10px;">
+        All model deployments require approved change requests with technical justification
+      </p>
+      
+      <table>
+        <thead>
+          <tr>
+            <th>CR #</th>
+            <th>DATE</th>
+            <th>MODEL CHANGE</th>
+            <th>REQUESTOR</th>
+            <th>APPROVER</th>
+            <th>STATUS</th>
+            <th>ACTIONS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>CR-234</strong></td>
+            <td>2026-02-10</td>
+            <td>Nomic v1.4 → v1.5</td>
+            <td>admin@frostbyte.io</td>
+            <td>CTO</td>
+            <td style="color: #000;"><strong>DEPLOYED</strong></td>
+            <td><button style="font-size: 10px; padding: 4px 8px; margin: 0;">[VIEW]</button></td>
+          </tr>
+          <tr>
+            <td><strong>CR-228</strong></td>
+            <td>2026-02-08</td>
+            <td>Docling v2.68 → v2.70</td>
+            <td>admin@frostbyte.io</td>
+            <td>CTO</td>
+            <td style="color: #000;"><strong>DEPLOYED</strong></td>
+            <td><button style="font-size: 10px; padding: 4px 8px; margin: 0;">[VIEW]</button></td>
+          </tr>
+          <tr>
+            <td><strong>CR-225</strong></td>
+            <td>2026-02-05</td>
+            <td>Nomic v1.4 → v1.5-beta</td>
+            <td>admin@frostbyte.io</td>
+            <td>CTO</td>
+            <td style="color: #666;"><strong>ROLLED BACK</strong></td>
+            <td><button style="font-size: 10px; padding: 4px 8px; margin: 0;">[VIEW]</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- FOOTER NOTE -->
+    <div style="margin-top: 30px; padding: 20px; background: #fff; border: 2px solid #000;">
+      <h3>🎯 MODEL PROVENANCE FEATURES</h3>
+      <ul style="margin-left: 20px; margin-top: 10px; line-height: 1.8;">
+        <li><strong>Complete Deployment History</strong> - Every model change tracked with timestamp, actor, reason</li>
+        <li><strong>Version Performance Comparison</strong> - Compare latency, error rates, costs across versions</li>
+        <li><strong>One-Click Rollback</strong> - Emergency rollback with impact analysis and safety checks</li>
+        <li><strong>Change Request Integration</strong> - All deployments tied to approved change requests</li>
+        <li><strong>Cryptographic Fingerprints</strong> - Immutable SHA-256 hashes for each deployment</li>
+        <li><strong>Zero-Downtime Deployments</strong> - Graceful model switching without service interruption</li>
+        <li><strong>Full Audit Trail</strong> - Compliance-ready logs for regulatory requirements</li>
+      </ul>
+      <p style="margin-top: 15px; font-style: italic; color: #666;">
+        "Always know which model version is running, when it was deployed, and how to roll back safely"
+      </p>
+    </div>
+  </div>
+</body>
+</html>
