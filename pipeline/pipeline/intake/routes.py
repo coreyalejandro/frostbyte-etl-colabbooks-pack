@@ -14,6 +14,7 @@ from fastapi.responses import JSONResponse
 from .. import auth, ratelimit
 from ..clamav_client import scan_bytes
 from ..parse_enqueue import enqueue_parse
+from ..events import publish_async
 from . import receipt_store
 from . import service
 from .models import (
@@ -107,6 +108,14 @@ async def post_batch(
             },
         )
 
+    # Emit batch received event
+    await publish_async(
+        "INTAKE",
+        f"Batch received: {manifest_obj.batch_id} with {manifest_obj.file_count} files",
+        "info",
+        tenant_id=tenant_id,
+    )
+
     # Build files_by_id: match by order (files[i] -> manifest.files[i])
     files_by_id: dict[str, bytes] = {}
     for i, mf in enumerate(manifest_obj.files):
@@ -121,6 +130,12 @@ async def post_batch(
         s3 = get_s3()
         bucket = BUCKET or "frostbyte-docs"
         s3.put_object(Bucket=bucket, Key=key, Body=content)
+        await publish_async(
+            "INTAKE",
+            f"Stored to MinIO: {key}",
+            "success",
+            tenant_id=tenant_id,
+        )
 
     # Emit BATCH_RECEIVED
     await _emit_audit(
@@ -142,6 +157,14 @@ async def post_batch(
         enqueue_parse_fn=enqueue_parse,
         get_tenant_config_fn=_get_tenant_config,
         malware_scan_fn=_malware_scan,
+    )
+
+    # Emit completion event
+    await publish_async(
+        "INTAKE",
+        f"Batch {manifest_obj.batch_id} accepted: {result.accepted} files, {result.rejected} rejected",
+        "success" if result.rejected == 0 else "warn",
+        tenant_id=tenant_id,
     )
 
     _batches[manifest_obj.batch_id] = {

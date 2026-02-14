@@ -60,19 +60,38 @@ def parse_file(
     tenant_id: str,
     sha256: str,
     mime_type: str | None = None,
+    document_id: str | None = None,  # For event publishing
 ) -> CanonicalStructuredDocument:
     """
     Parse a document file into canonical structured JSON.
     Per PARSING_PIPELINE_PLAN Stages 2–3 (Unstructured partition + chunk, canonical assembly).
     """
+    from ..events import publish
+    
     path = Path(input_path)
     if not path.exists():
         raise ParseError("FILE_CORRUPTED", f"File not found: {path}")
+
+    # Emit parsing started event
+    publish(
+        "PARSE",
+        f"Starting parse of {path.name}",
+        "info",
+        document_id=document_id,
+        tenant_id=tenant_id,
+    )
 
     try:
         from unstructured.partition.auto import partition
         from unstructured.chunking.title import chunk_by_title
     except ImportError as e:
+        publish(
+            "PARSE",
+            f"Parser unavailable: {e}",
+            "error",
+            document_id=document_id,
+            tenant_id=tenant_id,
+        )
         raise ParseError("PARSER_ERROR", f"Unstructured not available: {e}") from e
 
     # Partition
@@ -83,10 +102,33 @@ def parse_file(
             infer_table_structure=True,
         )
     except Exception as e:
+        publish(
+            "PARSE",
+            f"Partition failed: {e}",
+            "error",
+            document_id=document_id,
+            tenant_id=tenant_id,
+        )
         raise ParseError("PARSER_ERROR", str(e)) from e
 
     if not elements:
+        publish(
+            "PARSE",
+            "No content extracted from document",
+            "warn",
+            document_id=document_id,
+            tenant_id=tenant_id,
+        )
         raise ParseError("PARSER_ERROR", "No content extracted")
+
+    element_count = len(elements)
+    publish(
+        "PARSE",
+        f"Partitioned {path.name} into {element_count} elements",
+        "info",
+        document_id=document_id,
+        tenant_id=tenant_id,
+    )
 
     # Chunk by title (per plan Section 4.1)
     try:
@@ -98,7 +140,23 @@ def parse_file(
             multipage_sections=True,
         )
     except Exception as e:
+        publish(
+            "PARSE",
+            f"Chunking failed: {e}",
+            "error",
+            document_id=document_id,
+            tenant_id=tenant_id,
+        )
         raise ParseError("PARSER_ERROR", str(e)) from e
+
+    chunk_count = len(unstructured_chunks)
+    publish(
+        "PARSE",
+        f"Chunked into {chunk_count} chunks",
+        "info",
+        document_id=document_id,
+        tenant_id=tenant_id,
+    )
 
     # Doc ID: doc_ + first 12 of sha256(file_id)
     doc_id = f"doc_{hashlib.sha256(file_id.encode()).hexdigest()[:12]}"
@@ -160,6 +218,15 @@ def parse_file(
         figure_count=sum(1 for c in chunks if c.element_type == "figure_caption"),
         chunk_count=len(chunks),
         total_characters=total_chars,
+    )
+
+    # Emit completion event
+    publish(
+        "PARSE",
+        f"Parse complete: {chunk_count} chunks, {total_chars} chars, {stats.table_count} tables",
+        "success",
+        document_id=document_id,
+        tenant_id=tenant_id,
     )
 
     return CanonicalStructuredDocument(
