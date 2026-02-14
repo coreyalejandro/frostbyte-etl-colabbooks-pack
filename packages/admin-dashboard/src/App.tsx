@@ -13,6 +13,7 @@ import JobDetail from './pages/JobDetail'
 import Verify from './pages/Verify'
 import Control from './pages/Control'
 import Audit from './pages/Audit'
+import Onboard from './pages/Onboard'
 import Settings from './pages/Settings'
 import Login from './pages/Login'
 
@@ -50,6 +51,7 @@ function App() {
                 <Route path="verify" element={<Verify />} />
                 <Route path="control" element={<Control />} />
                 <Route path="audit" element={<Audit />} />
+                <Route path="onboard" element={<Onboard />} />
                 <Route path="settings" element={<Settings />} />
               </Route>
             </Routes>

@@ -2,7 +2,9 @@
 
 **Purpose:** Get a runnable end-to-end pipeline (intake → parse → store) in ~60 minutes. Single-tenant, local Docker, offline mode. This is the minimal viable skeleton; full production pipeline follows the PRD and implementation plans.
 
-**References:** `docs/PRD.md`, `docs/TECH_DECISIONS.md`
+**The only end-to-end document test that counts is the one the designated tester runs himself.** This runbook supports that test; automated scripts do not replace it.
+
+**References:** `docs/product/PRD.md`, `docs/reference/TECH_DECISIONS.md`
 
 ---
 
@@ -22,7 +24,7 @@ curl
 
 ## Step 0: Run Migrations (Foundation Layer)
 
-If you want tenant registry and audit events (per `docs/FOUNDATION_LAYER_PLAN.md`):
+If you want tenant registry and audit events (per `docs/architecture/FOUNDATION_LAYER_PLAN.md`):
 
 ```bash
 # After PostgreSQL is running (Step 1)
@@ -156,7 +158,7 @@ POST /intake (file + tenant_id)
 
 ## Reproduce Zero-Shot PRD Planning
 
-See **`REPRODUCE_ZERO_SHOT.md`** for how to re-run the Phase 1 planning process that produced `docs/PRD.md` and `docs/TECH_DECISIONS.md`.
+See **`REPRODUCE_ZERO_SHOT.md`** for how to re-run the Phase 1 planning process that produced `docs/product/PRD.md` and `docs/reference/TECH_DECISIONS.md`.
 
 ---
 

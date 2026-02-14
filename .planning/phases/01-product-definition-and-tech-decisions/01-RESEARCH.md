@@ -522,7 +522,7 @@ What the planner can draw from vs. what must be written fresh.
 
 ### Primary (HIGH confidence)
 
-- Project artifacts: `docs/ETL_PIPELINE_PROPOSAL.md`, `docs/CUSTOMER_JOURNEY_MAP.md`, `docs/THREAT_MODEL_SAFETY.md`, `diagrams/*.mmd`, `templates/VENDOR_ACCEPTANCE_REPORT.md` -- read in full
+- Project artifacts: `docs/product/ETL_PIPELINE_PROPOSAL.md`, `docs/product/CUSTOMER_JOURNEY_MAP.md`, `docs/security/THREAT_MODEL_SAFETY.md`, `diagrams/*.mmd`, `templates/VENDOR_ACCEPTANCE_REPORT.md` -- read in full
 - Prior research: `.planning/research/STACK.md`, `.planning/research/FEATURES.md`, `.planning/research/ARCHITECTURE.md`, `.planning/research/PITFALLS.md` -- read in full
 - Project state: `.planning/PROJECT.md`, `.planning/ROADMAP.md`, `.planning/REQUIREMENTS.md`, `.planning/STATE.md` -- read in full
 

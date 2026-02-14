@@ -7,6 +7,7 @@ const nav: { label: string; href: string }[] = [
   { label: 'VERIFY', href: '/verify' },
   { label: 'CONTROL', href: '/control' },
   { label: 'AUDIT', href: '/audit' },
+  { label: 'ONBOARD', href: '/onboard' },
 ]
 
 export default function Sidebar() {

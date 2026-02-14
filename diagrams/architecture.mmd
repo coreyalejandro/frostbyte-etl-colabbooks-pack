@@ -1,3 +1,4 @@
+%% Canonical pipeline architecture. High-end Mermaid only; render for straight lines.
 flowchart TD
   A[Vendor Sources\nSFTP / HTTPS / API / Batch Drop] --> B[Intake Gateway\nAuthZ, manifest, checksums, scanning]
   B --> C[Normalization Layer\nDocling + Unstructured]

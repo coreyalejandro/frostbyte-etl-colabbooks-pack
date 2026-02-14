@@ -31,8 +31,9 @@ import time
 import uuid
 from pathlib import Path
 
+# Pipeline package root so "import pipeline" works when run from repo root
 ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "pipeline"))
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("embedding_worker")

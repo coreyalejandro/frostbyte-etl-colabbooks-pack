@@ -1,7 +1,7 @@
 # Plan 03-02 Summary: Document Safety Architecture
 
 **Completed:** 2026-02-11  
-**Output:** `docs/DOCUMENT_SAFETY.md`
+**Output:** `docs/security/DOCUMENT_SAFETY.md`
 
 ## Deliverables
 

@@ -8,11 +8,11 @@
 
 | Artifact | Path | Purpose |
 |----------|------|---------|
-| Storage isolation and encryption | `docs/TENANT_ISOLATION_STORAGE_ENCRYPTION.md` | Complete specification for ISOL-02 and ISOL-03 |
+| Storage isolation and encryption | `docs/architecture/TENANT_ISOLATION_STORAGE_ENCRYPTION.md` | Complete specification for ISOL-02 and ISOL-03 |
 
 ## What Was Produced
 
-`docs/TENANT_ISOLATION_STORAGE_ENCRYPTION.md` (~585 lines) covering:
+`docs/architecture/TENANT_ISOLATION_STORAGE_ENCRYPTION.md` (~585 lines) covering:
 
 **Task 1 — Storage namespaces:**
 1. Overview table (MinIO, PostgreSQL, Qdrant, Redis)
@@ -47,8 +47,8 @@
 
 ## Key Links
 
-- `docs/TENANT_ISOLATION_STORAGE_ENCRYPTION.md` → `docs/PRD.md` Section 3.4, 3.6
-- `docs/TENANT_ISOLATION_STORAGE_ENCRYPTION.md` → `docs/TECH_DECISIONS.md` (MinIO, PostgreSQL, Qdrant, Redis, SOPS, age)
+- `docs/architecture/TENANT_ISOLATION_STORAGE_ENCRYPTION.md` → `docs/product/PRD.md` Section 3.4, 3.6
+- `docs/architecture/TENANT_ISOLATION_STORAGE_ENCRYPTION.md` → `docs/reference/TECH_DECISIONS.md` (MinIO, PostgreSQL, Qdrant, Redis, SOPS, age)
 
 ## Phase 2 Status
 

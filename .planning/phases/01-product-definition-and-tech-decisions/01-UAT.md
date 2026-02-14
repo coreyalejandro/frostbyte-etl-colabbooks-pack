@@ -11,14 +11,14 @@ updated: 2026-02-09T00:00:00Z
 number: 1
 name: PRD Self-Containment
 expected: |
-  An engineer reading only docs/PRD.md can describe the full pipeline lifecycle (intake through serving), identify all four personas (Dana, Frode, Engineers, Auditors), and explain monitoring requirements without consulting any other document.
+  An engineer reading only docs/product/PRD.md can describe the full pipeline lifecycle (intake through serving), identify all four personas (Dana, Frode, Engineers, Auditors), and explain monitoring requirements without consulting any other document.
 awaiting: user response
 
 ## Tests
 
 ### 1. PRD Self-Containment
 
-expected: An engineer reading only docs/PRD.md can describe the full pipeline lifecycle (intake through serving), identify all four personas (Dana, Frode, Engineers, Auditors), and explain monitoring requirements without consulting any other document.
+expected: An engineer reading only docs/product/PRD.md can describe the full pipeline lifecycle (intake through serving), identify all four personas (Dana, Frode, Engineers, Auditors), and explain monitoring requirements without consulting any other document.
 result: [pending]
 
 ### 2. Pipeline Phase Data Flows
@@ -38,7 +38,7 @@ result: [pending]
 
 ### 5. Technology Decisions — No Ambiguity
 
-expected: docs/TECH_DECISIONS.md has 35 component decisions. Every component has exactly one technology choice with a version pin and rationale. No "choose between X and Y" or "consider" or "evaluate" language remains anywhere in the document.
+expected: docs/reference/TECH_DECISIONS.md has 35 component decisions. Every component has exactly one technology choice with a version pin and rationale. No "choose between X and Y" or "consider" or "evaluate" language remains anywhere in the document.
 result: [pending]
 
 ### 6. Dependency Manifests — Version Pinned

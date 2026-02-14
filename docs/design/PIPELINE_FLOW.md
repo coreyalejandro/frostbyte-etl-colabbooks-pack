@@ -1,24 +1,19 @@
-# Frostbyte Pipeline — Visual Flow (Text)
+# Frostbyte Pipeline — Visual Flow
 
-A linear, left-to-right view of how data moves. No spatial reasoning required.
+High-level view of how data moves. Diagrams are Mermaid (professional rendering). Full architecture: `diagrams/architecture.mmd`.
 
 ---
 
 ## 1. Overall flow (numbered steps)
 
-```
-  You                    Pipeline API              MinIO                Qdrant
-   |                          |                      |                     |
-   |  POST /intake (file)     |                      |                     |
-   | -----------------------> |                      |                     |
-   |                          |  store raw file      |                     |
-   |                          | -------------------> |  (object store)     |
-   |                          |                      |                     |
-   |                          |  store 768d vector   |                     |
-   |                          | ------------------------------------------>|  (vector store)
-   |                          |                      |                     |
-   |  { document_id, ... }    |                      |                     |
-   | <----------------------- |                      |                     |
+See also: `diagrams/architecture.mmd` for full pipeline architecture.
+
+```mermaid
+flowchart LR
+  You([You]) -->|POST /intake file| API[Pipeline API]
+  API -->|store raw file| MinIO[(MinIO)]
+  API -->|store 768d vector| Qdrant[(Qdrant)]
+  API -->|document_id, ...| You
 ```
 
 **In words:**
@@ -55,18 +50,14 @@ Open in a browser:
 
 ## 4. One document’s path
 
-```
-File "report.pdf"
-    |
-    v
-[Intake API]  -->  MinIO: default/{doc_id}/report.pdf
-    |
-    v
-[Parse stub]  -->  extracts text (plain text for 1hr MVP)
-    |
-    v
-[Embed stub]  -->  768 zeros (placeholder vector)
-    |
-    v
-[Store]       -->  Qdrant: tenant_default collection
+```mermaid
+flowchart TD
+  A["File report.pdf"] --> B[Intake API]
+  B --> C["MinIO: default/{doc_id}/report.pdf"]
+  C --> D[Parse stub]
+  D --> E["extracts text (plain text for 1hr MVP)"]
+  E --> F[Embed stub]
+  F --> G["768 zeros (placeholder vector)"]
+  G --> H[Store]
+  H --> I["Qdrant: tenant_default collection"]
 ```

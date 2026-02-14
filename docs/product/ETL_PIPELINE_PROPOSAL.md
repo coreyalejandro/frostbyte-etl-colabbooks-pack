@@ -32,7 +32,7 @@ Core contract:
 
 ## 2) Customer Persona + Context
 
-See `docs/CUSTOMER_JOURNEY_MAP.md` for the full journey.
+See `docs/product/CUSTOMER_JOURNEY_MAP.md` for the full journey.
 
 ## 3) Pipeline Phases (Major Components)
 
@@ -73,7 +73,7 @@ See `docs/CUSTOMER_JOURNEY_MAP.md` for the full journey.
 
 - PII/PHI detection & redaction policies (configurable)
 - Document classification (contract / invoice / SOP / etc.)
-- Prompt/document-injection defenses (see `docs/THREAT_MODEL_SAFETY.md`)
+- Prompt/document-injection defenses (see `docs/security/THREAT_MODEL_SAFETY.md`)
 - Deterministic chunking + stable chunk IDs
 
 ### Phase D — Storage (DB + Object + Vector)

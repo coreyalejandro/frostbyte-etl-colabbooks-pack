@@ -51,10 +51,10 @@ Both plans reference Phase 3 (AUDIT_ARCHITECTURE event types, DOCUMENT_SAFETY MI
 
 ## Sources
 
-- docs/PRD.md (Sections 2.1, 2.2, 5.4)
-- docs/TECH_DECISIONS.md (Components 3, 4, 10, 28, 29, 30, 32)
-- docs/DOCUMENT_SAFETY.md (Section 3)
-- docs/AUDIT_ARCHITECTURE.md (Section 1.2)
-- docs/FOUNDATION_LAYER_PLAN.md
-- docs/STORAGE_LAYER_PLAN.md (MinIO paths)
+- docs/product/PRD.md (Sections 2.1, 2.2, 5.4)
+- docs/reference/TECH_DECISIONS.md (Components 3, 4, 10, 28, 29, 30, 32)
+- docs/security/DOCUMENT_SAFETY.md (Section 3)
+- docs/architecture/AUDIT_ARCHITECTURE.md (Section 1.2)
+- docs/architecture/FOUNDATION_LAYER_PLAN.md
+- docs/architecture/STORAGE_LAYER_PLAN.md (MinIO paths)
 - .planning/research/ARCHITECTURE.md (intake/parse flow)

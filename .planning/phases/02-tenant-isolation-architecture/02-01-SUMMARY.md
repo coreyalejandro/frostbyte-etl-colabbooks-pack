@@ -8,11 +8,11 @@
 
 | Artifact | Path | Purpose |
 |----------|------|---------|
-| Hetzner provisioning and network boundaries | `docs/TENANT_ISOLATION_HETZNER.md` | Complete specification for ISOL-01 and ISOL-04 |
+| Hetzner provisioning and network boundaries | `docs/architecture/TENANT_ISOLATION_HETZNER.md` | Complete specification for ISOL-01 and ISOL-04 |
 
 ## What Was Produced
 
-`docs/TENANT_ISOLATION_HETZNER.md` (688 lines) covering:
+`docs/architecture/TENANT_ISOLATION_HETZNER.md` (688 lines) covering:
 
 1. **Provisioning sequence** — PRD Section 3.4 steps 1–11 mapped to concrete Hetzner API calls
 2. **Compute** — Server creation (`POST /servers`), polling, label filtering, server type table, hcloud SDK examples
@@ -44,9 +44,9 @@
 
 ## Key Links Established
 
-- `docs/TENANT_ISOLATION_HETZNER.md` → `docs/PRD.md` Section 3.4 (provisioning steps)
-- `docs/TENANT_ISOLATION_HETZNER.md` → `docs/PRD.md` Section 3.6 (deprovisioning steps)
-- `docs/TENANT_ISOLATION_HETZNER.md` → `docs/TECH_DECISIONS.md` (hcloud SDK, cx22, nbg1)
+- `docs/architecture/TENANT_ISOLATION_HETZNER.md` → `docs/product/PRD.md` Section 3.4 (provisioning steps)
+- `docs/architecture/TENANT_ISOLATION_HETZNER.md` → `docs/product/PRD.md` Section 3.6 (deprovisioning steps)
+- `docs/architecture/TENANT_ISOLATION_HETZNER.md` → `docs/reference/TECH_DECISIONS.md` (hcloud SDK, cx22, nbg1)
 
 ## Next Step
 

@@ -2,7 +2,7 @@
 
 **Executed:** 2026-02-11
 **Plan:** 06-02-PLAN.md
-**Output:** docs/EMBEDDING_INDEXING_PLAN.md
+**Output:** docs/design/EMBEDDING_INDEXING_PLAN.md
 
 ## Delivered
 

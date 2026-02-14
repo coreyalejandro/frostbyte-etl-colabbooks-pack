@@ -1,5 +1,5 @@
 """
-Storage layer provisioning per docs/STORAGE_LAYER_PLAN.md.
+Storage layer provisioning per docs/architecture/STORAGE_LAYER_PLAN.md.
 """
 from .provisioner import (
     ProvisioningError,

@@ -2,7 +2,7 @@
 
 **Executed:** 2026-02-11
 **Plan:** 05-01-PLAN.md
-**Output:** docs/INTAKE_GATEWAY_PLAN.md
+**Output:** docs/design/INTAKE_GATEWAY_PLAN.md
 
 ## Delivered
 
@@ -15,4 +15,4 @@
 
 ## Lines
 
-docs/INTAKE_GATEWAY_PLAN.md: ~420 lines (meets min 400)
+docs/design/INTAKE_GATEWAY_PLAN.md: ~420 lines (meets min 400)

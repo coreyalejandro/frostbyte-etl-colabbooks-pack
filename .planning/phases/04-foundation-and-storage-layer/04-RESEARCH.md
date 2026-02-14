@@ -98,10 +98,10 @@ Per TENANT_ISOLATION_STORAGE_ENCRYPTION Section 10:
 
 ## Sources
 
-- docs/PRD.md (Section 3, Appendix G)
-- docs/TENANT_ISOLATION_HETZNER.md
-- docs/TENANT_ISOLATION_STORAGE_ENCRYPTION.md
-- docs/AUDIT_ARCHITECTURE.md
+- docs/product/PRD.md (Section 3, Appendix G)
+- docs/architecture/TENANT_ISOLATION_HETZNER.md
+- docs/architecture/TENANT_ISOLATION_STORAGE_ENCRYPTION.md
+- docs/architecture/AUDIT_ARCHITECTURE.md
 - .planning/research/ARCHITECTURE.md
 - docker-compose.yml (existing)
 

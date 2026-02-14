@@ -28,9 +28,9 @@ import sys
 import uuid
 from pathlib import Path
 
-# Project root so we can import pipeline
+# Pipeline package root (pipeline/pipeline/ is the package) so "import pipeline" works when run from repo root
 ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "pipeline"))
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("policy_worker")

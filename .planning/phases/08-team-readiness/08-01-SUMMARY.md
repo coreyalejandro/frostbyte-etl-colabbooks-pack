@@ -2,7 +2,7 @@
 
 **Executed:** 2026-02-11
 **Plan:** 08-01-PLAN.md
-**Output:** docs/ENGINEER_ONBOARDING.md
+**Output:** docs/team/ENGINEER_ONBOARDING.md
 
 ## Delivered
 

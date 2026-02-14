@@ -2,7 +2,7 @@
 
 **Executed:** 2026-02-11
 **Plan:** 05-02-PLAN.md
-**Output:** docs/PARSING_PIPELINE_PLAN.md
+**Output:** docs/design/PARSING_PIPELINE_PLAN.md
 
 ## Delivered
 
@@ -15,4 +15,4 @@
 
 ## Lines
 
-docs/PARSING_PIPELINE_PLAN.md: ~480 lines (meets min 450)
+docs/design/PARSING_PIPELINE_PLAN.md: ~480 lines (meets min 450)

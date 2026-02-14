@@ -18,24 +18,21 @@ fi
 echo "Waiting for services (30s)..."
 sleep 30
 
-# 2. Migrations
+# 2. Migrations (use port 5433 to match docker-compose; see BUILD_1HR.md)
 echo "[2/6] Running migrations..."
-export PGHOST="${PGHOST:-localhost}"
-export PGPORT="${PGPORT:-5432}"
+export PGHOST="${PGHOST:-127.0.0.1}"
+export PGPORT="${PGPORT:-5433}"
 export PGUSER="${PGUSER:-frostbyte}"
 export PGPASSWORD="${PGPASSWORD:-frostbyte}"
 export PGDATABASE="${PGDATABASE:-frostbyte}"
+./scripts/run_migrations.sh 2>/dev/null || true
 
-for f in 001_tenant_registry.sql 002_audit_events.sql; do
-  if [[ -f "migrations/$f" ]]; then
-    psql -v ON_ERROR_STOP=1 -f "migrations/$f" 2>/dev/null || true
-  fi
-done
-
-# 3. Pipeline (background)
+# 3. Pipeline (background; FROSTBYTE_CONTROL_DB_URL and AUTH_BYPASS per BUILD_1HR.md)
 echo "[3/6] Starting pipeline API..."
 cd pipeline
 pip install -e . -q 2>/dev/null || true
+FROSTBYTE_CONTROL_DB_URL="postgresql://frostbyte:frostbyte@127.0.0.1:5433/frostbyte" \
+FROSTBYTE_AUTH_BYPASS=1 \
 uvicorn pipeline.main:app --host 0.0.0.0 --port 8000 &
 UVICORN_PID=$!
 cd "$ROOT"

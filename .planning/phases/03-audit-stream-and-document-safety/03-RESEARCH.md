@@ -39,6 +39,7 @@ Phase 3 produces two architecture documents: (1) Audit stream design covering ev
 | Append-only log file | Rotate, sign, and archive | Offline-mode friendly | Query complexity, no SQL |
 
 **Recommendation:** PostgreSQL append-only table with:
+
 1. `REVOKE UPDATE, DELETE ON audit_events FROM ...` for application roles
 2. Separate read-only role for auditors
 3. `previous_event_id` hash chain for tamper evidence
@@ -51,6 +52,7 @@ Phase 3 produces two architecture documents: (1) Audit stream design covering ev
 **When to use:** For document provenance chains. Not required for tenant lifecycle events (which are independent).
 
 **Chain structure:**
+
 ```
 DOCUMENT_INGESTED (previous_event_id: null)
   output_hash: sha256(raw_file)
@@ -74,6 +76,7 @@ POLICY_GATE_PASSED (previous_event_id: <parsed_id>)
 **When to use:** Phase C (Policy Gates), Gate 3. Must run BEFORE embedding. Per ARCHITECTURE.md and PITFALLS.md C2, malicious content must never reach the vector store.
 
 **Pattern categories (from PRD Appendix G):**
+
 - Direct instruction override: "Ignore previous instructions", "Forget everything above"
 - Role assumption: "You are now...", "Act as if..."
 - Delimiter injection: "```system", "<|im_start|>system"
@@ -82,6 +85,7 @@ POLICY_GATE_PASSED (previous_event_id: <parsed_id>)
 - Encoding evasion: Base64, ROT13
 
 **Heuristic factors:**
+
 - Number and severity of pattern matches
 - Unusual character distributions (high ratio of control/invisible chars)
 - Instruction-like sentence structures (imperative verbs, second person)
@@ -93,6 +97,7 @@ POLICY_GATE_PASSED (previous_event_id: <parsed_id>)
 **When to use:** At every pipeline stage—intake receipt, canonical JSON, policy-enriched chunks, embedding input, retrieval proof.
 
 **Structure:**
+
 ```json
 {
   "_envelope": {
@@ -114,10 +119,12 @@ POLICY_GATE_PASSED (previous_event_id: <parsed_id>)
 **When to use:** At intake gateway, before any parsing. Per FEATURES.md TS-1.3, MIME verification is required in addition to extension checks.
 
 **Allowlist (from PRD Appendix C):**
+
 - PDF, DOCX, XLSX, TXT, CSV, PNG, TIFF
 - Explicit deny: .doc, .xls, .ppt(x), .html, .eml, .msg, archives, executables
 
 **Verification sequence:**
+
 1. Check file extension against allowlist
 2. Run libmagic (or equivalent) to sniff actual content type
 3. Reject if sniffed MIME != declared MIME or if sniffed MIME not on allowlist
@@ -161,10 +168,10 @@ POLICY_GATE_PASSED (previous_event_id: <parsed_id>)
 
 ### Primary (HIGH confidence)
 
-- `docs/PRD.md` — Audit event schema (Section 2), Appendix A (event types), Appendix C (allowlist), Appendix G (injection patterns, config)
+- `docs/product/PRD.md` — Audit event schema (Section 2), Appendix A (event types), Appendix C (allowlist), Appendix G (injection patterns, config)
 - `.planning/research/ARCHITECTURE.md` — Audit stream design, policy gate patterns, injection defense flow
 - `.planning/research/PITFALLS.md` — C2 (injection), C4 (audit), C5 (deletion/tombstoning)
-- `docs/THREAT_MODEL_SAFETY.md` — Boundary controls, ingestion controls, auditability
+- `docs/security/THREAT_MODEL_SAFETY.md` — Boundary controls, ingestion controls, auditability
 - `.planning/research/FEATURES.md` — TS-1.3 (allowlist), TS-1.6 (receipts), TS-5.1 (immutable audit)
 
 ### Secondary (MEDIUM confidence)
@@ -176,6 +183,7 @@ POLICY_GATE_PASSED (previous_event_id: <parsed_id>)
 ## Metadata
 
 **Confidence breakdown:**
+
 - Audit schema and event types: HIGH — fully specified in PRD
 - Immutable storage: MEDIUM — PostgreSQL pattern is standard; exact DDL will be in plan
 - Injection patterns: HIGH — PRD Appendix G provides categories; plan will add concrete regexes

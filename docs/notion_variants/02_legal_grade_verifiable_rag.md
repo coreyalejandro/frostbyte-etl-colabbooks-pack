@@ -34,4 +34,4 @@ Require auditability across ingestion → normalization → embedding version �
 4) What is the evaluation plan for retrieval quality and injection resistance?
 
 ## Sources
-(see `docs/NOTION_EXPORT.md` or the notebook Sources section)
+(see `docs/product/NOTION_EXPORT.md` or the notebook Sources section)

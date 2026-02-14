@@ -38,13 +38,13 @@ Workers decouple stages: the API can accept uploads quickly and put work on a qu
 | `scripts/run_embedding_worker.py` | `tenant:{id}:queue:embedding` | Embed chunks (768d), write to Qdrant |
 | `scripts/run_multimodal_worker.py` | `multimodal:jobs` | Process image/audio/video (OCR, Whisper, CLIP), write chunks and vectors |
 
-**Prerequisites:** Docker stack up (`docker compose up -d`), migrations applied, Redis and MinIO and Qdrant reachable. For parse worker, Unstructured/Docling and MinIO are required. For embedding worker, `FROSTBYTE_EMBEDDING_ENDPOINT` can point to OpenRouter or a local Nomic endpoint; if unavailable, stub zero vectors are used.
+**Prerequisites:** Docker stack up (`docker compose up -d`), migrations applied, Redis and MinIO and Qdrant reachable. For parse worker, Unstructured/Docling and MinIO are required. For embedding worker, `FROSTBYTE_EMBEDDING_ENDPOINT` can point to OpenRouter or a local Nomic endpoint; if unavailable, stub zero vectors are used. Workers must run with the same Python in which the pipeline package is installed (so `pipeline` and deps like `redis` are importable).
 
 **Run (each in its own terminal):**
 
 ```bash
-# From repo root
-cd pipeline && pip install -e .
+# From repo root: install pipeline once so "pipeline" and redis are available
+cd pipeline && pip install -e . && cd ..
 
 # Terminal 1 – parse
 python scripts/run_parse_worker.py
@@ -69,6 +69,6 @@ So for the full pipeline (parse → policy → embedding), use the **batch intak
 
 ## References
 
-- **Policy gates:** `docs/POLICY_ENGINE_PLAN.md`
-- **Embedding and three-store:** `docs/EMBEDDING_INDEXING_PLAN.md`
-- **Parsing:** `docs/PARSING_PIPELINE_PLAN.md`
+- **Policy gates:** `docs/design/POLICY_ENGINE_PLAN.md`
+- **Embedding and three-store:** `docs/design/EMBEDDING_INDEXING_PLAN.md`
+- **Parsing:** `docs/design/PARSING_PIPELINE_PLAN.md`

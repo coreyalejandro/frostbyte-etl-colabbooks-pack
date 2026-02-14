@@ -1,6 +1,8 @@
 # Agent Handoff: Frostbyte ETL Planning Pack
 
-**Date:** 2026-02-12
+**Single source of truth:** `.planning/PROJECT.md` — roadmap, progress, canonical document index. This file is for session continuity only; PROJECT.md is authority.
+
+**Date:** 2026-02-13
 **Status:** Pipeline Standing — 1hr Build + 3 Enhancements
 
 ## What Was Just Completed
@@ -19,35 +21,35 @@
 - **Intake gateway (prior)** — JWT auth (bypass FROSTBYTE_AUTH_BYPASS=1), rate limit (100/min), ClamAV, Redis parse enqueue, PostgreSQL receipt persistence.
 - **Intake gateway implementation** — `pipeline/intake/`: BatchManifest, IntakeReceipt models; MIME sniffing (python-magic), checksum, size validation; POST /api/v1/ingest/{tenant_id}/batch (202 Accepted), GET batch, GET receipt; BATCH_RECEIVED, DOCUMENT_INGESTED, DOCUMENT_REJECTED, DOCUMENT_QUARANTINED audit events; MinIO write to raw/{tenant_id}/{file_id}/{sha256}.
 - **Storage layer implementation** — `pipeline/storage/`: MinIO, PostgreSQL, Qdrant, Redis provisioners; credential generation + SOPS; combined `provision_tenant_storage` with rollback; `get_collection_name`, `verify_tenant_access`. Unit tests in `pipeline/tests/test_storage.py`. Added `redis` dep.
-- **E2E verification** — `scripts/verify_e2e.sh` (runs when Docker is healthy); `docs/DOCKER_TROUBLESHOOTING.md` for 500 error remediation.
+- **E2E verification** — `scripts/verify_e2e.sh` (runs when Docker is healthy); `docs/operations/DOCKER_TROUBLESHOOTING.md` for 500 error remediation.
 - **Foundation layer implementation** — migrations 001, 002; PlatformConfig; load_tenant_config; emit_audit_event; decrypt_tenant_secrets; create_tenant with audit emission; migration runner `scripts/run_migrations.sh`; BUILD_1HR Step 0; .env.example FROSTBYTE_* vars
 - **Planning consistency** — STATE.md and ROADMAP.md Phase 2 checkboxes updated to reflect 100% completion
 - **Phase 8 (Team Readiness Documentation)** — **complete** (3/3 plans)
-  - **Plan 08-01** — `docs/ENGINEER_ONBOARDING.md`: Architecture walkthrough, dev setup, first-task guide
-  - **Plan 08-02** — `docs/VENDOR_OPERATIONS_GUIDE.md`: Batch submission, acceptance reports, troubleshooting (Dana)
-  - **Plan 08-03** — `docs/ROLE_PLAYING_SCENARIOS.md`: CS scenarios (3), deployed engineer scenarios (3)
+  - **Plan 08-01** — `docs/team/ENGINEER_ONBOARDING.md`: Architecture walkthrough, dev setup, first-task guide
+  - **Plan 08-02** — `docs/operations/VENDOR_OPERATIONS_GUIDE.md`: Batch submission, acceptance reports, troubleshooting (Dana)
+  - **Plan 08-03** — `docs/team/ROLE_PLAYING_SCENARIOS.md`: CS scenarios (3), deployed engineer scenarios (3)
   - Phase 8 folder: `.planning/phases/08-team-readiness/` with 08-RESEARCH.md, 08-01/02/03-PLAN.md, summaries
 - **All 8 phases complete.** Zero-Shot Implementation Pack v1.0 delivered.
 
 ## Previous: Phase 7 (Deployment Architecture) — complete (2/2 plans)
-  - **Plan 07-01** — `docs/DEPLOYMENT_ARCHITECTURE.md`: Online Hetzner topology, runbook, offline Docker bundle (compose, images, models, scripts)
-  - **Plan 07-02** — `docs/MODE_PARITY_AND_OFFLINE_UPDATE.md`: Mode parity matrix, six divergences with workarounds, offline update cycle
+  - **Plan 07-01** — `docs/architecture/DEPLOYMENT_ARCHITECTURE.md`: Online Hetzner topology, runbook, offline Docker bundle (compose, images, models, scripts)
+  - **Plan 07-02** — `docs/reference/MODE_PARITY_AND_OFFLINE_UPDATE.md`: Mode parity matrix, six divergences with workarounds, offline update cycle
   - Phase 7 folder: `.planning/phases/07-deployment-architecture/` with 07-RESEARCH.md, 07-01/02-PLAN.md, summaries
 - Phase 1–7 all complete
 
 ## Previous: Phase 6 (Policy, Embedding, and Serving Layer Plans) — complete (3/3 plans)
-  - **Plan 06-01** — `docs/POLICY_ENGINE_PLAN.md`: PII (REDACT/FLAG/BLOCK), classification (rule+ML), injection (DOCUMENT_SAFETY)
-  - **Plan 06-02** — `docs/EMBEDDING_INDEXING_PLAN.md`: OpenRouter/Nomic, 768d, three-store write, rollback
-  - **Plan 06-03** — `docs/SERVING_LAYER_PLAN.md`: RAG retrieval, retrieval proof, cite-only-from-retrieval
+  - **Plan 06-01** — `docs/design/POLICY_ENGINE_PLAN.md`: PII (REDACT/FLAG/BLOCK), classification (rule+ML), injection (DOCUMENT_SAFETY)
+  - **Plan 06-02** — `docs/design/EMBEDDING_INDEXING_PLAN.md`: OpenRouter/Nomic, 768d, three-store write, rollback
+  - **Plan 06-03** — `docs/design/SERVING_LAYER_PLAN.md`: RAG retrieval, retrieval proof, cite-only-from-retrieval
   - Phase 6 folder: `.planning/phases/06-policy-embedding-serving/` with 06-RESEARCH.md, 06-01/02/03-PLAN.md, summaries
 - Phase 1–6 all complete
 
 ## Previous: Phase 5 (Intake and Parsing Pipeline Plans) — complete (2/2 plans)
-  - **Plan 05-01** — `docs/INTAKE_GATEWAY_PLAN.md` created:
+  - **Plan 05-01** — `docs/design/INTAKE_GATEWAY_PLAN.md` created:
     - Full request flow: auth, manifest validation, MIME/size/checksum/malware checks
     - API endpoints (POST batch, GET batch, GET receipt), error response formats
     - Audit events: BATCH_RECEIVED, DOCUMENT_INGESTED, DOCUMENT_REJECTED, DOCUMENT_QUARANTINED
-  - **Plan 05-02** — `docs/PARSING_PIPELINE_PLAN.md` created:
+  - **Plan 05-02** — `docs/design/PARSING_PIPELINE_PLAN.md` created:
     - Docling + Unstructured orchestration (Stage 1 layout, Stage 2 chunking, Stage 3 assembly)
     - Canonical JSON schema (Pydantic-ready models)
     - Lineage, deterministic chunk_id, parse failure reporting
@@ -55,12 +57,12 @@
 - Phase 1, Phase 2, Phase 3, Phase 4, and Phase 5 all complete
 
 ## Previous: Phase 4 (Foundation and Storage Layer) — complete (2/2 plans)
-  - **Plan 04-01** — `docs/FOUNDATION_LAYER_PLAN.md` created:
+  - **Plan 04-01** — `docs/architecture/FOUNDATION_LAYER_PLAN.md` created:
     - Tenant data model (tenants table DDL, migrations/001_tenant_registry.sql)
     - Configuration framework (env vars, tenant config JSONB, SOPS secrets)
     - Docker Compose skeleton (migration order, audit DDL reference)
     - Audit event emission (emit_audit_event, TENANT_CREATED/PROVISION_STARTED/PROVISIONED/CONFIG_UPDATED)
-  - **Plan 04-02** — `docs/STORAGE_LAYER_PLAN.md` created:
+  - **Plan 04-02** — `docs/architecture/STORAGE_LAYER_PLAN.md` created:
     - MinIO, PostgreSQL, Qdrant, Redis per-tenant provisioning
     - Credential generation and SOPS workflow
     - Combined provisioning sequence with rollback
@@ -69,11 +71,11 @@
 - Phase 1, Phase 2, Phase 3, and Phase 4 all complete
 
 ## Previous: Phase 3 (Audit Stream and Document Safety) — complete (2/2 plans)
-  - **Plan 03-01** — `docs/AUDIT_ARCHITECTURE.md` created:
+  - **Plan 03-01** — `docs/architecture/AUDIT_ARCHITECTURE.md` created:
     - Audit event schema (fields, 24+ event types, hash chain design)
     - Immutable storage (PostgreSQL DDL, GRANT/REVOKE, optional trigger)
     - Query patterns (by tenant, by document, by time range) with example SQL and export format (JSON Lines + manifest)
-  - **Plan 03-02** — `docs/DOCUMENT_SAFETY.md` created:
+  - **Plan 03-02** — `docs/security/DOCUMENT_SAFETY.md` created:
     - Injection defense (10+ regex patterns, heuristic scorer, PASS/FLAG/QUARANTINE decision tree)
     - Content boundary enforcement (envelope pattern at Stages A–E, delimiter spec)
     - File-type allowlisting (MIME verification via libmagic, per-tenant config)
@@ -84,25 +86,25 @@
 
 ### What's Working
 
-- `docs/PRD.md` — full pipeline lifecycle, 4 personas, tenant lifecycle (7 states, 13 transitions), 17 API endpoints, 20 metrics
-- `docs/TECH_DECISIONS.md` — 35 component decisions (version-pinned), online/offline manifests, 768d embedding lock
+- `docs/product/PRD.md` — full pipeline lifecycle, 4 personas, tenant lifecycle (7 states, 13 transitions), 17 API endpoints, 20 metrics
+- `docs/reference/TECH_DECISIONS.md` — 35 component decisions (version-pinned), online/offline manifests, 768d embedding lock
 - Phase 2 research — verified patterns for Hetzner provisioning, SOPS+age, MinIO/PostgreSQL/Qdrant isolation, Docker `internal: true`
-- `docs/TENANT_ISOLATION_HETZNER.md` — Hetzner provisioning, firewall rules, Docker offline
-- `docs/TENANT_ISOLATION_STORAGE_ENCRYPTION.md` — storage namespaces, encryption, key rotation
-- `docs/AUDIT_ARCHITECTURE.md` — audit schema, immutable storage, query patterns
-- `docs/DOCUMENT_SAFETY.md` — injection defense, content boundary, file allowlisting
-- `docs/FOUNDATION_LAYER_PLAN.md` — tenant data model, config framework, Docker skeleton, audit emission
-- `docs/STORAGE_LAYER_PLAN.md` — MinIO, PostgreSQL, Qdrant, Redis provisioning, credentials, verification
-- `docs/INTAKE_GATEWAY_PLAN.md` — Intake flow, API endpoints, MIME/checksum/malware, receipts
-- `docs/PARSING_PIPELINE_PLAN.md` — Docling + Unstructured, canonical JSON schema, lineage
-- `docs/POLICY_ENGINE_PLAN.md` — PII, classification, injection (DOCUMENT_SAFETY)
-- `docs/EMBEDDING_INDEXING_PLAN.md` — OpenRouter/Nomic, 768d, three-store write
-- `docs/SERVING_LAYER_PLAN.md` — RAG retrieval, retrieval proof, cite-only-from-retrieval
-- `docs/DEPLOYMENT_ARCHITECTURE.md` — Online Hetzner topology, provisioning runbook, offline bundle
-- `docs/MODE_PARITY_AND_OFFLINE_UPDATE.md` — Mode parity matrix, offline update cycle
-- `docs/ENGINEER_ONBOARDING.md` — Architecture, dev setup, first-task guide
-- `docs/VENDOR_OPERATIONS_GUIDE.md` — Dana: batch submission, acceptance reports, troubleshooting
-- `docs/ROLE_PLAYING_SCENARIOS.md` — CS and deployed engineer role-play scenarios
+- `docs/architecture/TENANT_ISOLATION_HETZNER.md` — Hetzner provisioning, firewall rules, Docker offline
+- `docs/architecture/TENANT_ISOLATION_STORAGE_ENCRYPTION.md` — storage namespaces, encryption, key rotation
+- `docs/architecture/AUDIT_ARCHITECTURE.md` — audit schema, immutable storage, query patterns
+- `docs/security/DOCUMENT_SAFETY.md` — injection defense, content boundary, file allowlisting
+- `docs/architecture/FOUNDATION_LAYER_PLAN.md` — tenant data model, config framework, Docker skeleton, audit emission
+- `docs/architecture/STORAGE_LAYER_PLAN.md` — MinIO, PostgreSQL, Qdrant, Redis provisioning, credentials, verification
+- `docs/design/INTAKE_GATEWAY_PLAN.md` — Intake flow, API endpoints, MIME/checksum/malware, receipts
+- `docs/design/PARSING_PIPELINE_PLAN.md` — Docling + Unstructured, canonical JSON schema, lineage
+- `docs/design/POLICY_ENGINE_PLAN.md` — PII, classification, injection (DOCUMENT_SAFETY)
+- `docs/design/EMBEDDING_INDEXING_PLAN.md` — OpenRouter/Nomic, 768d, three-store write
+- `docs/design/SERVING_LAYER_PLAN.md` — RAG retrieval, retrieval proof, cite-only-from-retrieval
+- `docs/architecture/DEPLOYMENT_ARCHITECTURE.md` — Online Hetzner topology, provisioning runbook, offline bundle
+- `docs/reference/MODE_PARITY_AND_OFFLINE_UPDATE.md` — Mode parity matrix, offline update cycle
+- `docs/team/ENGINEER_ONBOARDING.md` — Architecture, dev setup, first-task guide
+- `docs/operations/VENDOR_OPERATIONS_GUIDE.md` — Dana: batch submission, acceptance reports, troubleshooting
+- `docs/team/ROLE_PLAYING_SCENARIOS.md` — CS and deployed engineer role-play scenarios
 
 ### Project Structure
 
@@ -128,7 +130,7 @@ notebooks/             # 5 variant notebooks (05 = Hetzner multi-tenant)
 ## Recommended Next Steps
 
 1. **Implement enhancement PRDs** — Execute `specs/E02-TERRAFORM-PROVIDER-PRD.md`, `specs/E03-BATCH-API-PRD.md`, `specs/E06-ADMIN-DASHBOARD-PRD.md`, `specs/E05-GRAPH-RAG-PRD.md`, `specs/E07-SSO-SAML-OIDC-PRD.md`, `specs/E08-SIGNED-EXPORT-BUNDLES-PRD.md` per their deterministic implementation plans.
-2. **Policy engine** — Next per implementation order: `docs/POLICY_ENGINE_PLAN.md` (PII detection, classification, injection defense; consume from tenant:{tenant_id}:queue:policy)
+2. **Policy engine** — Next per implementation order: `docs/design/POLICY_ENGINE_PLAN.md` (PII detection, classification, injection defense; consume from tenant:{tenant_id}:queue:policy)
 3. **Build + E2E** — `docker compose up -d`, `./scripts/run_migrations.sh`, `cd pipeline && pip install -e . && uvicorn pipeline.main:app --port 8000`. In another terminal: `python scripts/run_parse_worker.py`. Submit batch via POST /api/v1/ingest/{tenant_id}/batch; worker parses, writes canonical JSON, enqueues policy.
 4. **Phase 1 UAT** (optional) — `01-UAT.md` shows 8 tests pending
 
@@ -156,15 +158,15 @@ Implement [component] per docs/[PLAN].md. Reference HANDOFF.md for project state
 
 ### Key Files to Review
 
-- `docs/PRD.md` Section 3.4 (provisioning), 3.6 (deprovisioning)
-- `docs/AUDIT_ARCHITECTURE.md` — audit schema, immutable storage, query patterns
-- `docs/DOCUMENT_SAFETY.md` — injection defense, content boundary, file allowlisting
+- `docs/product/PRD.md` Section 3.4 (provisioning), 3.6 (deprovisioning)
+- `docs/architecture/AUDIT_ARCHITECTURE.md` — audit schema, immutable storage, query patterns
+- `docs/security/DOCUMENT_SAFETY.md` — injection defense, content boundary, file allowlisting
 - `.planning/phases/02-tenant-isolation-architecture/02-RESEARCH.md` — patterns and pitfalls
-- `docs/TECH_DECISIONS.md` — component choices
+- `docs/reference/TECH_DECISIONS.md` — component choices
 
 ## Known Issues / Considerations
 
-- Docker daemon returned 500 Internal Server Error when pulling images — user must fix Docker (see `docs/DOCKER_TROUBLESHOOTING.md`). Run `./scripts/verify_e2e.sh` once Docker is healthy to verify end-to-end.
+- Docker daemon returned 500 Internal Server Error when pulling images — user must fix Docker (see `docs/operations/DOCKER_TROUBLESHOOTING.md`). Run `./scripts/verify_e2e.sh` once Docker is healthy to verify end-to-end.
 - `openmemory.md` is empty — no stored project memories yet
 - 01-UAT.md has 8 pending tests (manual UAT); 01-VERIFICATION.md shows 13/13 passed (automated verification)
 - Phase 2 plan order: 02-01 (Hetzner) then 02-02 (storage/encryption); research supports both

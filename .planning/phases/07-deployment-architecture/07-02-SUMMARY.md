@@ -2,7 +2,7 @@
 
 **Executed:** 2026-02-11
 **Plan:** 07-02-PLAN.md
-**Output:** docs/MODE_PARITY_AND_OFFLINE_UPDATE.md
+**Output:** docs/reference/MODE_PARITY_AND_OFFLINE_UPDATE.md
 
 ## Delivered
 

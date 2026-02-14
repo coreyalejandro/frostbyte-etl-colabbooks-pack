@@ -94,8 +94,8 @@ Plans:
 
 Plans:
 
-- [x] 04-01: Foundation layer implementation plan (docs/FOUNDATION_LAYER_PLAN.md)
-- [x] 04-02: Storage layer implementation plan (docs/STORAGE_LAYER_PLAN.md)
+- [x] 04-01: Foundation layer implementation plan (docs/architecture/FOUNDATION_LAYER_PLAN.md)
+- [x] 04-02: Storage layer implementation plan (docs/architecture/STORAGE_LAYER_PLAN.md)
 
 ### Phase 5: Intake and Parsing Pipeline Plans
 
@@ -111,8 +111,8 @@ Plans:
 
 Plans:
 
-- [x] 05-01: Intake gateway implementation plan (docs/INTAKE_GATEWAY_PLAN.md)
-- [x] 05-02: Parsing pipeline implementation plan (docs/PARSING_PIPELINE_PLAN.md)
+- [x] 05-01: Intake gateway implementation plan (docs/design/INTAKE_GATEWAY_PLAN.md)
+- [x] 05-02: Parsing pipeline implementation plan (docs/design/PARSING_PIPELINE_PLAN.md)
 
 ### Phase 6: Policy, Embedding, and Serving Layer Plans
 
@@ -129,9 +129,9 @@ Plans:
 
 Plans:
 
-- [x] 06-01: Policy engine implementation plan (docs/POLICY_ENGINE_PLAN.md)
-- [x] 06-02: Embedding and indexing implementation plan (docs/EMBEDDING_INDEXING_PLAN.md)
-- [x] 06-03: Serving layer (RAG API) implementation plan (docs/SERVING_LAYER_PLAN.md)
+- [x] 06-01: Policy engine implementation plan (docs/design/POLICY_ENGINE_PLAN.md)
+- [x] 06-02: Embedding and indexing implementation plan (docs/design/EMBEDDING_INDEXING_PLAN.md)
+- [x] 06-03: Serving layer (RAG API) implementation plan (docs/design/SERVING_LAYER_PLAN.md)
 
 ### Phase 7: Deployment Architecture
 
@@ -148,8 +148,8 @@ Plans:
 
 Plans:
 
-- [x] 07-01: Online deployment architecture and offline Docker bundle specification (docs/DEPLOYMENT_ARCHITECTURE.md)
-- [x] 07-02: Mode parity matrix and offline update cycle (docs/MODE_PARITY_AND_OFFLINE_UPDATE.md)
+- [x] 07-01: Online deployment architecture and offline Docker bundle specification (docs/architecture/DEPLOYMENT_ARCHITECTURE.md)
+- [x] 07-02: Mode parity matrix and offline update cycle (docs/reference/MODE_PARITY_AND_OFFLINE_UPDATE.md)
 
 ### Phase 8: Team Readiness Documentation
 
@@ -167,9 +167,9 @@ Plans:
 
 Plans:
 
-- [x] 08-01: Engineer onboarding tutorials (docs/ENGINEER_ONBOARDING.md)
-- [x] 08-02: User documentation for Dana persona (docs/VENDOR_OPERATIONS_GUIDE.md)
-- [x] 08-03: Role-playing scenarios (docs/ROLE_PLAYING_SCENARIOS.md)
+- [x] 08-01: Engineer onboarding tutorials (docs/team/ENGINEER_ONBOARDING.md)
+- [x] 08-02: User documentation for Dana persona (docs/operations/VENDOR_OPERATIONS_GUIDE.md)
+- [x] 08-03: Role-playing scenarios (docs/team/ROLE_PLAYING_SCENARIOS.md)
 
 ## Progress
 

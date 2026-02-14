@@ -2,7 +2,7 @@
 
 **Executed:** 2026-02-11
 **Plan:** 07-01-PLAN.md
-**Output:** docs/DEPLOYMENT_ARCHITECTURE.md
+**Output:** docs/architecture/DEPLOYMENT_ARCHITECTURE.md
 
 ## Delivered
 

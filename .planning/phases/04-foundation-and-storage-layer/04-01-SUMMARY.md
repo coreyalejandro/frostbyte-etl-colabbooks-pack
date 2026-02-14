@@ -2,7 +2,7 @@
 
 **Executed:** 2026-02-11
 **Plan:** 04-01-PLAN.md
-**Output:** docs/FOUNDATION_LAYER_PLAN.md
+**Output:** docs/architecture/FOUNDATION_LAYER_PLAN.md
 
 ## Delivered
 
@@ -20,4 +20,4 @@
 
 ## Lines
 
-docs/FOUNDATION_LAYER_PLAN.md: ~330 lines (meets min 300)
+docs/architecture/FOUNDATION_LAYER_PLAN.md: ~330 lines (meets min 300)

@@ -5,11 +5,11 @@
 - **Phase:** 01 — Product Definition and Tech Decisions
 - **Plan:** 01-01 — Zero-Shot PRD
 - **Status:** Complete
-- **Artifact:** `docs/PRD.md`
+- **Artifact:** `docs/product/PRD.md`
 
 ## What Was Done
 
-Created the comprehensive Product Requirements Document (PRD) for the Frostbyte multi-tenant ETL pipeline. The document is self-contained: an engineer reading only `docs/PRD.md` can describe the full pipeline lifecycle, identify all personas, explain the tenant lifecycle state machine, reference concrete API contracts, and understand monitoring requirements.
+Created the comprehensive Product Requirements Document (PRD) for the Frostbyte multi-tenant ETL pipeline. The document is self-contained: an engineer reading only `docs/product/PRD.md` can describe the full pipeline lifecycle, identify all personas, explain the tenant lifecycle state machine, reference concrete API contracts, and understand monitoring requirements.
 
 ### Artifact Details
 
@@ -100,9 +100,9 @@ Created the comprehensive Product Requirements Document (PRD) for the Frostbyte 
 
 | Source | What Was Synthesized |
 |--------|---------------------|
-| `docs/ETL_PIPELINE_PROPOSAL.md` | Pipeline phases A-E, executive summary, deployment modes, acceptance criteria |
-| `docs/CUSTOMER_JOURNEY_MAP.md` | Dana persona, pain points P1-P5, journey stages |
-| `docs/THREAT_MODEL_SAFETY.md` | Security controls A-F, injection defense, cite-only-from-retrieval |
+| `docs/product/ETL_PIPELINE_PROPOSAL.md` | Pipeline phases A-E, executive summary, deployment modes, acceptance criteria |
+| `docs/product/CUSTOMER_JOURNEY_MAP.md` | Dana persona, pain points P1-P5, journey stages |
+| `docs/security/THREAT_MODEL_SAFETY.md` | Security controls A-F, injection defense, cite-only-from-retrieval |
 | `.planning/research/ARCHITECTURE.md` | Three-tier architecture, component boundaries, data flow, provisioning sequence, storage patterns |
 | `.planning/research/FEATURES.md` | Table stakes features, anti-features AF-1 through AF-6, feature dependencies |
 | `.planning/research/PITFALLS.md` | Error handling patterns, idempotency requirements, monitoring needs |

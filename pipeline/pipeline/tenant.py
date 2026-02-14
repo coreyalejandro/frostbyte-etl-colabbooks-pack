@@ -1,6 +1,6 @@
 """
 Tenant lifecycle operations.
-Reference: docs/FOUNDATION_LAYER_PLAN.md Section 4, docs/PRD.md Section 3.
+Reference: docs/architecture/FOUNDATION_LAYER_PLAN.md Section 4, docs/product/PRD.md Section 3.
 """
 from __future__ import annotations
 

@@ -23,7 +23,7 @@ tech-stack:
 
 key-files:
   created:
-    - "docs/TECH_DECISIONS.md"
+    - "docs/reference/TECH_DECISIONS.md"
   modified: []
 
 key-decisions:
@@ -60,7 +60,7 @@ completed: 2026-02-08
 
 ## Accomplishments
 
-- Created `docs/TECH_DECISIONS.md` with 5 sections: document conventions, component decision table (35 components), online dependency manifest, offline dependency manifest, cross-mode compatibility matrix, and version pin update procedure
+- Created `docs/reference/TECH_DECISIONS.md` with 5 sections: document conventions, component decision table (35 components), online dependency manifest, offline dependency manifest, cross-mode compatibility matrix, and version pin update procedure
 - Resolved all 4 open questions from 01-RESEARCH.md: MinIO maintenance mode, embedding dimension alignment, Nomic v1.5 vs v2, Qdrant collection-per-tenant vs tiered multitenancy
 - Eliminated all ambiguous language ("choose between", "consider", "evaluate") from technology decisions
 - Documented 4 explicit divergences between online and offline modes with impact assessments
@@ -75,7 +75,7 @@ Each task was committed atomically:
 
 ## Files Created/Modified
 
-- `docs/TECH_DECISIONS.md` - Complete technology decisions document covering TECH-01, TECH-02, and TECH-03 requirements. Contains: document conventions, 35-component decision table (7 locked-in + 28 selected), 4 resolved open questions, online dependency manifest (Python packages in pyproject.toml format + Docker images + ML model), offline dependency manifest (superset with local model weights, ClamAV signatures, Docker tarballs, bundle size estimate), cross-mode compatibility matrix (16 components with transferability notes + 4 explicit divergences), and version pin update procedure.
+- `docs/reference/TECH_DECISIONS.md` - Complete technology decisions document covering TECH-01, TECH-02, and TECH-03 requirements. Contains: document conventions, 35-component decision table (7 locked-in + 28 selected), 4 resolved open questions, online dependency manifest (Python packages in pyproject.toml format + Docker images + ML model), offline dependency manifest (superset with local model weights, ClamAV signatures, Docker tarballs, bundle size estimate), cross-mode compatibility matrix (16 components with transferability notes + 4 explicit divergences), and version pin update procedure.
 
 ## Decisions Made
 
@@ -105,7 +105,7 @@ None - no external service configuration required. This plan produces a planning
 
 ## Next Phase Readiness
 
-- Technology decisions are locked. All subsequent phases (2-8) reference `docs/TECH_DECISIONS.md` for tool selections and version pins.
+- Technology decisions are locked. All subsequent phases (2-8) reference `docs/reference/TECH_DECISIONS.md` for tool selections and version pins.
 - Plan 01-01 (PRD) should be completed to provide the product specification that pairs with these technology decisions.
 - Phase 2 (Tenant Isolation Architecture) can proceed with concrete technology choices for Hetzner provisioning, storage namespaces, and encryption.
 - Phase 4 (Foundation and Storage Layer) can reference the dependency manifest directly for `pyproject.toml` and `docker-compose.yml` assembly.

@@ -2,7 +2,7 @@
 
 **Executed:** 2026-02-11
 **Plan:** 04-02-PLAN.md
-**Output:** docs/STORAGE_LAYER_PLAN.md
+**Output:** docs/architecture/STORAGE_LAYER_PLAN.md
 
 ## Delivered
 
@@ -16,4 +16,4 @@
 
 ## Lines
 
-docs/STORAGE_LAYER_PLAN.md: ~420 lines (meets min 400)
+docs/architecture/STORAGE_LAYER_PLAN.md: ~420 lines (meets min 400)

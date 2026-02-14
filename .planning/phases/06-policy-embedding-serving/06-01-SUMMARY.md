@@ -2,7 +2,7 @@
 
 **Executed:** 2026-02-11
 **Plan:** 06-01-PLAN.md
-**Output:** docs/POLICY_ENGINE_PLAN.md
+**Output:** docs/design/POLICY_ENGINE_PLAN.md
 
 ## Delivered
 

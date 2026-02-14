@@ -1,6 +1,6 @@
 """
 Platform configuration loader.
-Reference: docs/FOUNDATION_LAYER_PLAN.md Section 2.
+Reference: docs/architecture/FOUNDATION_LAYER_PLAN.md Section 2.
 """
 from __future__ import annotations
 

@@ -20,7 +20,7 @@ re_verification: false
 
 | # | Truth | Status | Evidence |
 |---|-------|--------|----------|
-| 1 | An engineer reading only docs/PRD.md can describe the full pipeline lifecycle, identify all personas, and explain monitoring requirements | ✓ VERIFIED | PRD.md exists (3108 lines), contains 5 complete sections covering all pipeline phases (intake → parsing → policy → embedding → serving), defines 4 personas (Dana, Frode, Engineers, Auditors) with roles, and specifies 20 concrete metric names with alert conditions |
+| 1 | An engineer reading only docs/product/PRD.md can describe the full pipeline lifecycle, identify all personas, and explain monitoring requirements | ✓ VERIFIED | PRD.md exists (3108 lines), contains 5 complete sections covering all pipeline phases (intake → parsing → policy → embedding → serving), defines 4 personas (Dana, Frode, Engineers, Auditors) with roles, and specifies 20 concrete metric names with alert conditions |
 | 2 | Every pipeline phase has a Mermaid data flow diagram showing typed inputs, transformations, and typed outputs | ✓ VERIFIED | 7 Mermaid diagrams present: 1 architecture overview + 5 pipeline phase diagrams (Phase A-E) + 1 state machine diagram. Each pipeline phase diagram shows inputs, transformations, outputs, and error paths |
 | 3 | Tenant lifecycle state machine has explicit states, transitions with triggers, pre-conditions, actions, audit events, and rollback | ✓ VERIFIED | Section 3.3 contains complete state transition table with 7 states (PENDING, PROVISIONING, ACTIVE, SUSPENDED, DEPROVISIONING, DEPROVISIONED, FAILED) and 13 transitions. Each row specifies: Trigger, Pre-conditions, Actions, Audit Event, Rollback |
 | 4 | Every API endpoint group has HTTP method, path, request schema, response schema, error responses, auth requirements, and rate limits | ✓ VERIFIED | 17 API endpoints defined across 4 groups (Intake: 3, Query: 3, Admin: 7, Audit: 4). Each endpoint includes: HTTP method, path, auth requirements, rate limits, full request/response schemas, and error response table with codes (400/401/403/404/409/429/500/503) |
@@ -40,8 +40,8 @@ re_verification: false
 
 | Artifact | Expected | Status | Details |
 |----------|----------|--------|---------|
-| `docs/PRD.md` | Complete zero-shot PRD | ✓ EXISTS, SUBSTANTIVE, WIRED | 3108 lines, 5 main sections + conventions + glossary + 8 appendices, 7 Mermaid diagrams, 17 API endpoints, 24 audit event types, 20 metrics, 12 alerts, 7 tenant states with 13 transitions |
-| `docs/TECH_DECISIONS.md` | Complete tech decisions with manifests | ✓ EXISTS, SUBSTANTIVE, WIRED | 410 lines, 5 sections, 35 component decisions, online manifest (Python packages + Docker images + ML model), offline manifest (superset with weights + signatures + bundle size), compatibility matrix with 4 divergences |
+| `docs/product/PRD.md` | Complete zero-shot PRD | ✓ EXISTS, SUBSTANTIVE, WIRED | 3108 lines, 5 main sections + conventions + glossary + 8 appendices, 7 Mermaid diagrams, 17 API endpoints, 24 audit event types, 20 metrics, 12 alerts, 7 tenant states with 13 transitions |
+| `docs/reference/TECH_DECISIONS.md` | Complete tech decisions with manifests | ✓ EXISTS, SUBSTANTIVE, WIRED | 410 lines, 5 sections, 35 component decisions, online manifest (Python packages + Docker images + ML model), offline manifest (superset with weights + signatures + bundle size), compatibility matrix with 4 divergences |
 
 ### Key Link Verification
 
@@ -91,8 +91,8 @@ None. All phase success criteria are programmatically verifiable and have been v
 
 **Artifact existence checks:**
 
-- `docs/PRD.md`: 3108 lines ✓
-- `docs/TECH_DECISIONS.md`: 410 lines ✓
+- `docs/product/PRD.md`: 3108 lines ✓
+- `docs/reference/TECH_DECISIONS.md`: 410 lines ✓
 
 **PRD structure checks:**
 
@@ -127,8 +127,8 @@ None. All phase success criteria are programmatically verifiable and have been v
 
 ### Files Verified
 
-- `/Users/coreyalejandro/Projects/frostbyte_etl_colabbooks_pack_2026-02-07/docs/PRD.md`
-- `/Users/coreyalejandro/Projects/frostbyte_etl_colabbooks_pack_2026-02-07/docs/TECH_DECISIONS.md`
+- `/Users/coreyalejandro/Projects/frostbyte_etl_colabbooks_pack_2026-02-07/docs/product/PRD.md`
+- `/Users/coreyalejandro/Projects/frostbyte_etl_colabbooks_pack_2026-02-07/docs/reference/TECH_DECISIONS.md`
 - `.planning/phases/01-product-definition-and-tech-decisions/01-01-PLAN.md`
 - `.planning/phases/01-product-definition-and-tech-decisions/01-02-PLAN.md`
 - `.planning/phases/01-product-definition-and-tech-decisions/01-01-SUMMARY.md`

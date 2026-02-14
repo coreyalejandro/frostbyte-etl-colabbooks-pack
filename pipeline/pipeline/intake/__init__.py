@@ -1,5 +1,5 @@
 """
-Intake gateway per docs/INTAKE_GATEWAY_PLAN.md.
+Intake gateway per docs/design/INTAKE_GATEWAY_PLAN.md.
 """
 from .models import (
     BatchManifest,

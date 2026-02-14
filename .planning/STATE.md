@@ -2,10 +2,10 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-02-08)
+**Single source of truth:** .planning/PROJECT.md (updated 2026-02-13). Consult only that document for roadmap, progress, and canonical document index. This file is a snapshot for continuity; PROJECT.md is authority.
 
 **Core value:** Every planning artifact must be so specific and deterministic that a person who has never seen the codebase could build, deploy, support, and explain the system by following the documents alone.
-**Current focus:** Implementation — Foundation layer per docs/FOUNDATION_LAYER_PLAN.md
+**Current focus:** Implementation — Policy → Embedding → Serving per PROJECT.md Implementation Status.
 
 ## Current Position
 
@@ -43,7 +43,7 @@ Recent decisions affecting current work:
 - Research completed: STACK, FEATURES, ARCHITECTURE, PITFALLS available in .planning/research/
 - Phase 1: MinIO continue despite maintenance mode (Option A); embedding dimensions locked to 768d both modes
 - Phase 1: Nomic v1.5 for offline, collection-per-tenant for Qdrant confirmed
-- Phase 1: PRD (docs/PRD.md) and Tech Decisions (docs/TECH_DECISIONS.md) delivered and verified
+- Phase 1: PRD (docs/product/PRD.md) and Tech Decisions (docs/reference/TECH_DECISIONS.md) delivered and verified
 
 ### Pending Todos
 

@@ -1065,7 +1065,7 @@ The critical path for a minimum demonstrable pipeline:
 
 ## Sources
 
-- Project artifacts: `docs/ETL_PIPELINE_PROPOSAL.md`, `docs/THREAT_MODEL_SAFETY.md`, `docs/CUSTOMER_JOURNEY_MAP.md`, `diagrams/*.mmd`, `notebooks/05_multi_tenant_isolation_hetzner.ipynb` (primary source, HIGH confidence)
+- Project artifacts: `docs/product/ETL_PIPELINE_PROPOSAL.md`, `docs/security/THREAT_MODEL_SAFETY.md`, `docs/product/CUSTOMER_JOURNEY_MAP.md`, `diagrams/*.mmd`, `notebooks/05_multi_tenant_isolation_hetzner.ipynb` (primary source, HIGH confidence)
 - Hetzner Cloud API documentation: <https://docs.hetzner.cloud/> (referenced but not fetched in this session -- MEDIUM confidence on specific API details)
 - Qdrant multi-tenancy documentation: <https://qdrant.tech/documentation/guides/multiple-partitions/> (referenced but not fetched -- MEDIUM confidence)
 - Docling documentation: <https://docling-project.github.io/docling/> (referenced but not fetched -- MEDIUM confidence)

@@ -1,50 +1,96 @@
-# Frostbyte — AI, Law & Infrastructure ETL Pipeline (Share Pack)
+# Frostbyte ETL Pipeline — Zero-Shot Implementation Pack
 
-This repo packages a **data-sovereign, safety-first ETL pipeline proposal** derived from Frode's pipeline sketch:
-> “document in → structure out → stored in db and vector” with
-> Unstructured + Docling, embeddings via OpenRouter (OpenAI/Qwen/Kimi), tenant isolation via Hetzner,
-> and an offline Docker mode using Nomic embeddings.
+Multi-tenant document ETL: **document in → structure out → stored in DB and vector store.** Dual mode (online/offline). Per-tenant isolation. This repo is the planning pack plus runnable pipeline skeleton for local end-to-end document tests.
 
-## What’s inside
+**Single source of truth:** [`.planning/PROJECT.md`](.planning/PROJECT.md) — roadmap, progress, canonical docs. Consult only that file for what exists and what is complete.
 
-- `docs/ETL_PIPELINE_PROPOSAL.md` — Full proposal (use/do-not-use, phases, tools + alts)
-- `docs/CUSTOMER_JOURNEY_MAP.md` — Persona + journey map with illustrated pain points
-- `docs/THREAT_MODEL_SAFETY.md` — Security posture, injection defenses, auditability
-- `diagrams/*.mmd` — Mermaid diagrams for architecture, tenancy, offline bundle
-- `templates/VENDOR_ACCEPTANCE_REPORT.md` — Acceptance report template vendors can follow
-- `docs/NOTION_EXPORT.md` — Single-page Notion-ready paste (same content, condensed)
+---
 
-## How to view diagrams
+## Run an end-to-end document test
 
-Paste the Mermaid files (`.mmd`) into any Mermaid renderer (GitHub supports Mermaid in Markdown in many contexts; Notion may require a Mermaid embed tool or screenshot export).
+**The only end-to-end document test that counts is the one you run yourself.** The repo and docs are set up so the designated tester (e.g. Mr. Frostbyte) can perform that test; automated scripts are for convenience only and do not replace it.
 
-## Iteration workflow (practice loop)
+**Goal:** Ingest a document and verify it flows through the pipeline (MinIO + Qdrant). Follow one of the two paths below.
 
-1. Edit `docs/ETL_PIPELINE_PROPOSAL.md` with Frode’s feedback.
-2. Update diagrams in `diagrams/`.
-3. Regenerate the Notion page by copying `docs/NOTION_EXPORT.md`.
+### Option A: Step-by-step (recommended for first run)
 
-## Source links used (public)
+1. **Prerequisites:** Docker Desktop running, Python 3.12+, `docker compose` and `curl` available.
 
-- Frostbyte posture on enterprise/offline/audit: <https://frostbyteholding.com/>
-- Frostbyte blog (enterprise constraints): <https://frostbyteholding.com/blog/stop-selling-toys-enterprise-solutions>
-- Frostbyte blog (security/injection framing): <https://frostbyteholding.com/blog/ai-platform-security-nightmare>
-- Docling docs: <https://docling-project.github.io/docling/reference/document_converter/>
-- Unstructured OSS docs: <https://docs.unstructured.io/open-source/introduction/overview>
-- OpenRouter embeddings API: <https://openrouter.ai/docs/api/reference/embeddings>
-- Hetzner Cloud API: <https://docs.hetzner.cloud/reference/cloud>
-- Nomic embed text model info: <https://huggingface.co/nomic-ai/nomic-embed-text-v1>
+2. **Start infrastructure:**
+   ```bash
+   docker compose up -d
+   docker compose ps   # wait until all services show healthy (~30s)
+   ```
 
-## Colab Books (one per verbalized sampling response)
+3. **Run migrations** (Postgres is on port **5433** to avoid conflict with host):
+   ```bash
+   ./scripts/run_migrations.sh
+   ```
 
-These notebooks mirror the five proposal variants:
+4. **Install and start the pipeline API:**
+   ```bash
+   cd pipeline && pip install -e .
+   FROSTBYTE_CONTROL_DB_URL="postgresql://frostbyte:frostbyte@127.0.0.1:5433/frostbyte" \
+   FROSTBYTE_AUTH_BYPASS=1 \
+   uvicorn pipeline.main:app --reload --host 0.0.0.0 --port 8000
+   ```
+   Leave this running; in another terminal continue.
 
-- `notebooks/01_baseline_dual_mode_sovereign_etl.ipynb`
-- `notebooks/02_legal_grade_verifiable_rag.ipynb`
-- `notebooks/03_vendor_rollout_first_acceptance_harness.ipynb`
-- `notebooks/04_offline_first_airgapped_bundle.ipynb`
-- `notebooks/05_multi_tenant_isolation_hetzner.ipynb`
+5. **Ingest a test document:**
+   ```bash
+   echo "Test document for Frostbyte ETL." > /tmp/test.txt
+   curl -X POST http://localhost:8000/api/v1/intake \
+     -F "file=@/tmp/test.txt" \
+     -F "tenant_id=default"
+   ```
+   Expected: `{"document_id":"...", "status":"ingested", ...}`
 
-## Notion-ready variants
+6. **Verify:** Open **http://localhost:8000** in a browser (dashboard). Use the `document_id` from the response with:
+   ```bash
+   curl -s http://localhost:8000/api/v1/documents/<document_id>
+   ```
 
-- `docs/notion_variants/` contains one markdown page per variant for pasting into Notion.
+Full runbook: [**BUILD_1HR.md**](BUILD_1HR.md).
+
+### Option B: Automated E2E script (convenience only)
+
+From repo root, with Docker Desktop running:
+
+```bash
+./scripts/verify_e2e.sh
+```
+
+This starts Docker, runs migrations (port 5433), starts the API, posts a test file to `/api/v1/intake`, and checks the response. **This does not replace the manual end-to-end document test** — the one that counts is the one you run yourself.
+
+---
+
+## What’s in this repo
+
+- **`.planning/PROJECT.md`** — Single source of truth (roadmap, progress, canonical document index).
+- **`BUILD_1HR.md`** — Full 1-hour build and end-to-end document test runbook.
+- **`docs/product/PRD.md`** — Product requirements; **`docs/reference/TECH_DECISIONS.md`** — Technology choices.
+- **`docs/architecture/`** — Foundation, storage, tenant isolation, audit, deployment.
+- **`docs/design/`** — Intake, parsing, policy, embedding, serving implementation plans.
+- **`diagrams/*.mmd`** — Mermaid diagrams (architecture, tenancy, offline bundle).
+- **`pipeline/`** — FastAPI app: intake, MinIO, Qdrant, stub parse/embed; runnable locally.
+- **`migrations/`** — SQL migrations (tenant registry, audit events, intake receipts, etc.).
+- **`scripts/run_migrations.sh`** — Applies migrations (default Postgres port 5433). **`scripts/verify_e2e.sh`** — E2E test.
+
+---
+
+## Docs and diagrams
+
+- **Canonical list of documents:** See [.planning/PROJECT.md — Canonical Document Index](.planning/PROJECT.md). Only documents listed there are considered to exist.
+- **Diagrams:** Use the `.mmd` files in `diagrams/` with any Mermaid-compatible viewer (e.g. GitHub, Mermaid Live).
+
+---
+
+## Quick reference
+
+| Item        | Value |
+|------------|--------|
+| API (local) | http://localhost:8000 |
+| API docs    | http://localhost:8000/docs |
+| Postgres (Docker) | port **5433** (user `frostbyte`, db `frostbyte`) |
+| MinIO       | http://localhost:9000 (9001 console) |
+| Qdrant      | http://localhost:6333 |

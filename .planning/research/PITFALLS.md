@@ -622,9 +622,9 @@ These pitfalls are mapped against Frostbyte's core posture and the "Dana" person
 
 ## Sources
 
-- `/Users/coreyalejandro/Projects/frostbyte_etl_colabbooks_pack_2026-02-07/docs/THREAT_MODEL_SAFETY.md` -- project threat model identifying primary risks
-- `/Users/coreyalejandro/Projects/frostbyte_etl_colabbooks_pack_2026-02-07/docs/ETL_PIPELINE_PROPOSAL.md` -- pipeline phases and acceptance criteria
-- `/Users/coreyalejandro/Projects/frostbyte_etl_colabbooks_pack_2026-02-07/docs/CUSTOMER_JOURNEY_MAP.md` -- Dana persona pain points and journey stages
+- `/Users/coreyalejandro/Projects/frostbyte_etl_colabbooks_pack_2026-02-07/docs/security/THREAT_MODEL_SAFETY.md` -- project threat model identifying primary risks
+- `/Users/coreyalejandro/Projects/frostbyte_etl_colabbooks_pack_2026-02-07/docs/product/ETL_PIPELINE_PROPOSAL.md` -- pipeline phases and acceptance criteria
+- `/Users/coreyalejandro/Projects/frostbyte_etl_colabbooks_pack_2026-02-07/docs/product/CUSTOMER_JOURNEY_MAP.md` -- Dana persona pain points and journey stages
 - `/Users/coreyalejandro/Projects/frostbyte_etl_colabbooks_pack_2026-02-07/templates/VENDOR_ACCEPTANCE_REPORT.md` -- acceptance report template
 - `/Users/coreyalejandro/Projects/frostbyte_etl_colabbooks_pack_2026-02-07/docs/notion_variants/05_multi_tenant_isolation_hetzner.md` -- multi-tenant isolation variant
 - Domain expertise in multi-tenant SaaS architecture, document ETL pipelines, RAG systems, and GDPR compliance (MEDIUM confidence -- based on training data, not verified against current sources due to WebSearch unavailability)

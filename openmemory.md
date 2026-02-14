@@ -42,7 +42,9 @@ Foundation → storage → intake ✅ → parsing → policy → embedding → s
 
 ## Key Docs
 
-- `docs/PRD.md` — Product requirements
-- `docs/TECH_DECISIONS.md` — Component choices
-- `docs/FOUNDATION_LAYER_PLAN.md` — Foundation implementation plan
+- `docs/product/PRD.md` — Product requirements
+- `docs/reference/TECH_DECISIONS.md` — Component choices
+- `docs/architecture/FOUNDATION_LAYER_PLAN.md` — Foundation implementation plan
+- `docs/team/BRIEF_INTRO_ENTERPRISE_DATA_PIPELINES.md` — Brief intro to enterprise data pipelines (onboarding)
+- `docs/team/ENGINEER_ONBOARDING.md` — Engineer onboarding (architecture, dev setup, first task)
 - `BUILD_1HR.md` — Quick start

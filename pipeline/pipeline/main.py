@@ -1,7 +1,7 @@
 """
 Frostbyte ETL Pipeline — 1hr MVP.
 Intake -> parse (stub) -> store metadata + vectors.
-Single-tenant, local Docker. Per docs/PRD.md and docs/TECH_DECISIONS.md.
+Single-tenant, local Docker. Per docs/product/PRD.md and docs/reference/TECH_DECISIONS.md.
 Multi-modal support: images, audio, video (Enhancement #9).
 """
 import base64

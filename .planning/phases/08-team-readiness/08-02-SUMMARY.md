@@ -2,7 +2,7 @@
 
 **Executed:** 2026-02-11
 **Plan:** 08-02-PLAN.md
-**Output:** docs/VENDOR_OPERATIONS_GUIDE.md
+**Output:** docs/operations/VENDOR_OPERATIONS_GUIDE.md
 
 ## Delivered
 

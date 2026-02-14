@@ -1,6 +1,6 @@
 """
 Control-plane database operations.
-Reference: docs/FOUNDATION_LAYER_PLAN.md Sections 2.2, 4.
+Reference: docs/architecture/FOUNDATION_LAYER_PLAN.md Sections 2.2, 4.
 """
 from __future__ import annotations
 

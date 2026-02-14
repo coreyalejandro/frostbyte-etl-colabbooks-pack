@@ -2,7 +2,7 @@
 
 **Executed:** 2026-02-11
 **Plan:** 06-03-PLAN.md
-**Output:** docs/SERVING_LAYER_PLAN.md
+**Output:** docs/design/SERVING_LAYER_PLAN.md
 
 ## Delivered
 

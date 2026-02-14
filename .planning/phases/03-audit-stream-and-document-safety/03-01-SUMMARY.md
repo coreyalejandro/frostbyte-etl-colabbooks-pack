@@ -1,7 +1,7 @@
 # Plan 03-01 Summary: Audit Stream Architecture
 
 **Completed:** 2026-02-11  
-**Output:** `docs/AUDIT_ARCHITECTURE.md`
+**Output:** `docs/architecture/AUDIT_ARCHITECTURE.md`
 
 ## Deliverables
 

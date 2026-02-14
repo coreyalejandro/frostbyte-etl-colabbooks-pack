@@ -1,6 +1,6 @@
 """
 Per-tenant secrets decryption (SOPS + age).
-Reference: docs/FOUNDATION_LAYER_PLAN.md Section 2.3, TENANT_ISOLATION_STORAGE_ENCRYPTION Section 6.
+Reference: docs/architecture/FOUNDATION_LAYER_PLAN.md Section 2.3, docs/architecture/TENANT_ISOLATION_STORAGE_ENCRYPTION.md Section 6.
 """
 from __future__ import annotations
 

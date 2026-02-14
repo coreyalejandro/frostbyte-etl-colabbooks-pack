@@ -2,7 +2,7 @@
 
 **Executed:** 2026-02-11
 **Plan:** 08-03-PLAN.md
-**Output:** docs/ROLE_PLAYING_SCENARIOS.md
+**Output:** docs/team/ROLE_PLAYING_SCENARIOS.md
 
 ## Delivered
 
