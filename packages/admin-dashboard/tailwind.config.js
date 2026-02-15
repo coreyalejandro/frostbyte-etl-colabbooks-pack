@@ -41,6 +41,14 @@ export default {
       ringOffsetColor: {
         base: '#0a0c0e',
       },
+      keyframes: {
+        dash: {
+          to: { strokeDashoffset: '-24' },
+        },
+      },
+      animation: {
+        dash: 'dash 1s linear infinite',
+      },
     },
   },
   plugins: [],
