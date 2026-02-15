@@ -12,6 +12,7 @@ import Dashboard from './pages/Dashboard'
 import Observatory from './pages/Observatory'
 import TenantList from './pages/TenantList'
 import TenantDetail from './pages/TenantDetail'
+import TenantDetailView from './pages/TenantDetailView'
 import DocumentList from './pages/DocumentList'
 import DocumentDetail from './pages/DocumentDetail'
 import JobList from './pages/JobList'
@@ -52,6 +53,7 @@ function App() {
                 <Route path="observatory" element={<Observatory />} />
                 <Route path="tenants" element={<TenantList />} />
                 <Route path="tenants/:id" element={<TenantDetail />} />
+                <Route path="tenants/:id/detail" element={<TenantDetailView />} />
                 <Route path="documents" element={<DocumentList />} />
                 <Route path="documents/:id" element={<DocumentDetail />} />
                 <Route path="jobs" element={<JobList />} />

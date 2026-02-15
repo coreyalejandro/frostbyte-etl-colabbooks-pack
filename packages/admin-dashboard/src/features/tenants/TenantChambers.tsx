@@ -16,7 +16,7 @@ export default function TenantChambers() {
             key={t.id}
             onClick={() => {
               setSelectedTenantId(t.id)
-              navigate(`/tenants/${t.id}`)
+              navigate(`/tenants/${t.id}/detail`)
             }}
             className="text-left border border-border p-3 bg-surface hover:border-inactive min-w-0 overflow-hidden"
           >
