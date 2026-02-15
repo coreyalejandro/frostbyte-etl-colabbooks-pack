@@ -2,6 +2,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { useTenant } from '../contexts/TenantContext'
 import { usePipelineStore } from '../stores/pipelineStore'
 import { useNetworkStore } from '../stores/networkStore'
+import { useWebSocket } from '../hooks/useWebSocket'
 import Sidebar from './Sidebar'
 
 export default function Header() {
@@ -9,6 +10,7 @@ export default function Header() {
   const { selectedTenantId } = useTenant()
   const { online } = usePipelineStore()
   const { isOffline } = useNetworkStore()
+  const { isConnected: wsConnected } = useWebSocket()
 
   return (
     <header className="bg-surface border-b border-border px-6 py-4 flex justify-between items-center">
@@ -32,6 +34,12 @@ export default function Header() {
           role="status"
         >
           {isOffline ? 'OFFLINE' : 'ONLINE'}
+        </span>
+        <span
+          className={`text-xs font-medium uppercase tracking-wider ${wsConnected ? 'text-green-400' : 'text-red-400'}`}
+          role="status"
+        >
+          {wsConnected ? 'WS CONNECTED' : 'WS DISCONNECTED'}
         </span>
         <button
           onClick={logout}
