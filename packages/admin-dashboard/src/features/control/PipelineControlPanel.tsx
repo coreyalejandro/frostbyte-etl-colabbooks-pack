@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react'
+import { useState, useCallback, useRef, useEffect } from 'react'
 import { usePipelineStore } from '../../stores/pipelineStore'
 import type { PipelineMode, EmbeddingModel } from '../../stores/pipelineStore'
 import { api } from '../../api/client'
@@ -48,6 +48,12 @@ export default function PipelineControlPanel() {
   const [batchError, setBatchError] = useState<string | null>(null)
 
   const statusTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  useEffect(() => {
+    return () => {
+      if (statusTimeoutRef.current) clearTimeout(statusTimeoutRef.current)
+    }
+  }, [])
 
   const handleCommit = useCallback(async () => {
     if (statusTimeoutRef.current) {

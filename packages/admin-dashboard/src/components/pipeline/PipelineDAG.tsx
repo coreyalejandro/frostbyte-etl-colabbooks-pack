@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { ReactFlow, Background, type NodeMouseHandler } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
 import { usePipelineStore } from '../../stores/pipelineStore'
+import { api } from '../../api/client'
 import Inspector from '../Inspector'
 import PipelineNodeComponent from './PipelineNode'
 import PipelineEdgeComponent from './PipelineEdge'
@@ -14,37 +15,52 @@ interface PipelineDAGProps {
   tenantId?: string
 }
 
-export default function PipelineDAG({ tenantId: _tenantId }: PipelineDAGProps) {
-  const { nodes: storeNodes } = usePipelineStore()
+export default function PipelineDAG({ tenantId }: PipelineDAGProps) {
+  const { nodes: storeNodes, nodeThroughput } = usePipelineStore()
   const [inspectorNode, setInspectorNode] = useState<string | null>(null)
+  const [chain, setChain] = useState<Array<{ ts: string; op: string; ok: boolean }>>([])
 
   const nodeStatuses = useMemo(() => {
     const statuses: Record<string, { status: string; throughput: number }> = {}
     for (const node of storeNodes) {
       statuses[node.id] = {
         status: node.active ? 'healthy' : 'idle',
-        throughput: node.active ? Math.floor(100 + Math.random() * 50) : 0,
+        throughput: nodeThroughput[node.id] ?? 0,
       }
     }
     return statuses
-  }, [storeNodes])
+  }, [storeNodes, nodeThroughput])
+
+  const filteredNodes = useMemo(() => {
+    if (!tenantId) return storeNodes
+    return storeNodes.map((node) => ({
+      ...node,
+      active: node.active,
+    }))
+  }, [storeNodes, tenantId])
 
   const nodes = useMemo(() => createPipelineNodes(nodeStatuses), [nodeStatuses])
   const activeNodeIds = useMemo(
-    () => new Set(storeNodes.filter((n) => n.active).map((n) => n.id)),
-    [storeNodes],
+    () => new Set(filteredNodes.filter((n) => n.active).map((n) => n.id)),
+    [filteredNodes],
   )
   const edges = useMemo(() => createPipelineEdges(activeNodeIds), [activeNodeIds])
 
-  const onNodeClick: NodeMouseHandler = useCallback((_event, node) => {
+  const onNodeClick: NodeMouseHandler = useCallback(async (_event, node) => {
     setInspectorNode(node.id)
+    try {
+      const chainData = await api.getDocumentChain('0001')
+      setChain(
+        chainData.map((step) => ({
+          ts: step.timestamp,
+          op: step.operation,
+          ok: step.verified,
+        })),
+      )
+    } catch {
+      setChain([])
+    }
   }, [])
-
-  const chain = [
-    { ts: '2026-02-12 14:03:22', op: 'UPLOAD', ok: true },
-    { ts: '2026-02-12 14:03:25', op: 'PARSE', ok: true },
-    { ts: '2026-02-12 14:03:28', op: 'SIGN', ok: true },
-  ]
 
   return (
     <>

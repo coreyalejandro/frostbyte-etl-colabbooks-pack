@@ -55,6 +55,7 @@ interface PipelineState {
   online: boolean
 
   nodes: PipelineNode[]
+  nodeThroughput: Record<string, number>
   tenants: TenantChamber[]
   documents: DocumentRow[]
   gate1: GateResult[]
@@ -66,6 +67,7 @@ interface PipelineState {
   setModel: (m: EmbeddingModel) => void
   setBatchSize: (n: number) => void
   setOnline: (v: boolean) => void
+  setNodeThroughput: (nodeId: string, throughput: number) => void
   moveDocument: (id: string, dir: 'up' | 'down') => void
   commitConfig: () => void
 }
@@ -104,6 +106,7 @@ export const usePipelineStore = create<PipelineState>()((set) => ({
   batchSize: 32,
   online: true,
   nodes: NODES,
+  nodeThroughput: {},
   tenants: MOCK_TENANTS,
   documents: MOCK_DOCS,
   gate1: [{ gate: 'EVIDENCE PACKAGING', result: 'PASS', hash: 'a1b2c3d4' }],
@@ -115,6 +118,10 @@ export const usePipelineStore = create<PipelineState>()((set) => ({
   setModel: (m) => set({ model: m }),
   setBatchSize: (n) => set({ batchSize: Math.max(1, Math.min(256, n)) }),
   setOnline: (v) => set({ online: v }),
+  setNodeThroughput: (nodeId, throughput) =>
+    set((state) => ({
+      nodeThroughput: { ...state.nodeThroughput, [nodeId]: throughput },
+    })),
   moveDocument: (id, dir) =>
     set(
       produce((s) => {

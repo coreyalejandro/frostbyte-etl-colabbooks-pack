@@ -13,7 +13,7 @@ export function useApi<T>(
     queryFn: async () => {
       try {
         const result = await queryFn()
-        if (isOffline) setOffline(false)
+        if (useNetworkStore.getState().isOffline) setOffline(false)
         return result
       } catch (error) {
         if (error instanceof TypeError && error.message.includes('fetch')) {

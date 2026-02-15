@@ -1,44 +1,56 @@
-import { useEffect, useRef, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { MockPipelineSocket } from '../services/mockWebSocket'
 import { usePipelineStore } from '../stores/pipelineStore'
-import type { NodeStatusEvent } from '../services/mockWebSocket'
+import type { ThroughputEvent, NodeStatusEvent } from '../services/mockWebSocket'
+
+const socket = new MockPipelineSocket()
+let listenerCount = 0
 
 export function useWebSocket() {
-  const socketRef = useRef<MockPipelineSocket | null>(null)
-  const [isConnected, setIsConnected] = useState(false)
-  const store = usePipelineStore
+  const [isConnected, setIsConnected] = useState(socket.isConnected)
 
   useEffect(() => {
-    const socket = new MockPipelineSocket()
-    socketRef.current = socket
-
-    socket.on('connection', (data) => {
+    const unsubConnection = socket.on('connection', (data) => {
       setIsConnected((data as { connected: boolean }).connected)
     })
 
-    socket.on('pipeline:node-status', (data) => {
+    const unsubThroughput = socket.on('pipeline:throughput', (data) => {
+      const { nodeId, throughput } = data as ThroughputEvent
+      usePipelineStore.getState().setNodeThroughput(nodeId, throughput)
+    })
+
+    const unsubStatus = socket.on('pipeline:node-status', (data) => {
       const { nodeId, status } = data as NodeStatusEvent
-      store.setState((state) => ({
+      usePipelineStore.setState((state) => ({
         nodes: state.nodes.map((n) =>
           n.id === nodeId ? { ...n, active: status !== 'idle' } : n
         ),
       }))
     })
 
-    socket.connect()
+    listenerCount++
+    if (listenerCount === 1) {
+      socket.connect()
+    }
+    setIsConnected(socket.isConnected)
 
     return () => {
-      socket.disconnect()
-      socketRef.current = null
+      unsubConnection()
+      unsubThroughput()
+      unsubStatus()
+      listenerCount--
+      if (listenerCount === 0) {
+        socket.disconnect()
+      }
     }
   }, [])
 
   const disconnect = useCallback(() => {
-    socketRef.current?.disconnect()
+    socket.disconnect()
   }, [])
 
   const reconnect = useCallback(() => {
-    socketRef.current?.connect()
+    socket.connect()
   }, [])
 
   return { isConnected, disconnect, reconnect }
