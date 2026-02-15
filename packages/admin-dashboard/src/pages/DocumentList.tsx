@@ -8,7 +8,7 @@ export default function DocumentList() {
   const [docId, setDocId] = useState('')
   const navigate = useNavigate()
 
-  const handleUploadComplete = (documentId: string) => {
+  const handleUploadComplete = (_documentId: string) => {
     // Optionally navigate to the new document
     // navigate(`/documents/${documentId}`)
   }

@@ -81,8 +81,8 @@ export const ARIA_LABELS = {
 // Helper function to get nested values with type safety
 export function getAriaLabel<T extends keyof typeof ARIA_LABELS>(
   category: T,
-  key: keyof typeof ARIA_LABELS[T]
+  key: keyof (typeof ARIA_LABELS)[T]
 ): string {
-  const value = ARIA_LABELS[category][key]
+  const value = ARIA_LABELS[category][key] as string | ((...args: unknown[]) => string)
   return typeof value === 'function' ? value('') : value
 }

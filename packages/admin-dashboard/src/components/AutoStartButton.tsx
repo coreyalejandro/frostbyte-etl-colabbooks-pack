@@ -27,7 +27,7 @@ export function AutoStartButton({ onStarted }: AutoStartButtonProps) {
         setMessage(`Checking ${check.name}...`)
         try {
           if (check.type === 'http') {
-            const response = await fetch(check.url, { method: 'GET', mode: 'no-cors' })
+            await fetch(check.url, { method: 'GET', mode: 'no-cors' })
             // With no-cors, we can't read response, but if it doesn't throw, it's probably ok
           }
           // For TCP checks, we'll just proceed and let the pipeline manager handle it

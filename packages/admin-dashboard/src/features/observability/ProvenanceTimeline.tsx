@@ -135,7 +135,7 @@ export default function ProvenanceTimeline({ modelName }: ProvenanceTimelineProp
         {/* Timeline line */}
         <div className="absolute left-3 top-2 bottom-2 w-0.5 bg-border" />
 
-        {filteredVersions.map((version, index) => (
+        {filteredVersions.map((version) => (
           <div
             key={version.id}
             className="relative pl-8 cursor-pointer group"

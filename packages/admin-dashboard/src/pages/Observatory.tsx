@@ -33,13 +33,26 @@ export default function Observatory() {
         />
         
         <DecisionTracer 
-          event={selectedEvent}
+          trace={selectedEvent ? {
+            id: selectedEvent.id,
+            eventId: selectedEvent.id,
+            timestamp: selectedEvent.timestamp,
+            modelName: selectedEvent.modelName,
+            modelVersion: selectedEvent.modelVersion,
+            stage: selectedEvent.stage,
+            documentId: selectedEvent.documentId,
+            input: selectedEvent.metadata ?? {},
+            output: null,
+            rationale: selectedEvent.errorMessage,
+            latencyMs: selectedEvent.durationMs ?? 0,
+            costUsd: selectedEvent.costUsd,
+          } : undefined}
           onClose={() => setSelectedEvent(null)}
         />
       </div>
 
       {/* Bottom Row: Provenance Timeline */}
-      <ProvenanceTimeline allowRollback={true} />
+      <ProvenanceTimeline />
     </div>
   )
 }
