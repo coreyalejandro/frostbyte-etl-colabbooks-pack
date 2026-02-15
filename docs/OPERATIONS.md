@@ -224,6 +224,7 @@ curl -N http://localhost:8000/api/v1/pipeline/stream
 For production:
 
 1. **Set strong secrets**:
+
    ```bash
    FROSTBYTE_ADMIN_API_KEY=<random-64-char-string>
    JWT_SECRET=<random-64-char-string>
@@ -231,6 +232,7 @@ For production:
    ```
 
 2. **Use production build**:
+
    ```bash
    make prod
    ```

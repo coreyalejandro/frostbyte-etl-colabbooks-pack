@@ -27,7 +27,7 @@ interface DecisionTracerProps {
 
 export default function DecisionTracer({ trace, onClose }: DecisionTracerProps) {
   const [activeTab, setActiveTab] = useState<'input' | 'output' | 'comparison'>('comparison')
-  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set()))
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set())
 
   if (!trace) {
     return (

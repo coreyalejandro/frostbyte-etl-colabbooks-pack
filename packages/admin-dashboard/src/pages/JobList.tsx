@@ -142,7 +142,8 @@ export default function JobList() {
               <p>No jobs found</p>
             </div>
           ) : (
-            filteredJobs.map((job) => (
+            <>
+              {filteredJobs.map((job) => (
               <div
                 key={job.id}
                 className="p-4 border border-border bg-surface hover:bg-interactive transition-colors cursor-pointer"
@@ -228,7 +229,8 @@ export default function JobList() {
                   </div>
                 </div>
               </div>
-            ))}
+              ))}
+            </>
           )}
         </div>
 
