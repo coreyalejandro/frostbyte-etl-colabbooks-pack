@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import { TenantProvider } from './contexts/TenantContext'
+import ErrorBoundary from './components/ErrorBoundary'
 import Layout from './components/Layout'
 import Dashboard from './pages/Dashboard'
 import Observatory from './pages/Observatory'
@@ -32,6 +33,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
 function App() {
   return (
+    <ErrorBoundary>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter basename="/admin">
         <AuthProvider>
@@ -65,6 +67,7 @@ function App() {
         </AuthProvider>
       </BrowserRouter>
     </QueryClientProvider>
+    </ErrorBoundary>
   )
 }
 
