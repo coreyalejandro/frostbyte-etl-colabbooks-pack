@@ -1,5 +1,7 @@
 # Frostbyte ETL Dashboard  
+
 ## Verification & Completion Plan (Addendum to E06)  
+
 **Runtime Behavior, API Integration & Implementation Reconciliation**  
 **Version:** 2.0  
 **Date:** 2026-02-12  
@@ -82,6 +84,7 @@ It reconciles the **original specification (E06)** with the **current state of t
 | **API‑12** | `GET /api/v1/intake`, `POST /api/v1/intake` | ✅ Implemented | ❌ Not integrated | Optional for MVP. |
 
 **Decision required (Frode):**  
+
 - **Option A:** Backend implements all missing endpoints (API‑01–08).  
 - **Option B:** Dashboard removes features that depend on missing endpoints (e.g., remove tenant list, remove chain of custody, remove verification tests).  
 - **Option C:** Dashboard mocks these endpoints for demo, with clear `[MOCK]` indicator.  
