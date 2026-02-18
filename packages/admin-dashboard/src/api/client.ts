@@ -11,6 +11,7 @@ import {
   type ChainOfCustodyStep,
   type VerificationResult,
 } from './mockData'
+import { sanitizeRecord } from '../utils/sanitize'
 
 const API_BASE = import.meta.env.VITE_API_URL || ''
 const IS_MOCK = import.meta.env.VITE_MOCK_API === 'true'
@@ -44,7 +45,8 @@ async function fetchApi<T>(path: string, options?: RequestInit): Promise<T> {
     error.status = res.status
     throw error
   }
-  return res.json() as Promise<T>
+  const data = await res.json() as T
+  return sanitizeRecord(data)
 }
 
 export interface Health {
