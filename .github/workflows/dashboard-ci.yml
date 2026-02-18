@@ -1,0 +1,86 @@
+name: Dashboard CI
+
+on:
+  pull_request:
+    paths:
+      - 'packages/admin-dashboard/**'
+  push:
+    branches: [master]
+    paths:
+      - 'packages/admin-dashboard/**'
+
+defaults:
+  run:
+    working-directory: packages/admin-dashboard
+
+jobs:
+  typecheck:
+    name: TypeScript Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: packages/admin-dashboard/package-lock.json
+      - run: npm ci
+      - run: npx tsc --noEmit
+
+  build:
+    name: Production Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: packages/admin-dashboard/package-lock.json
+      - run: npm ci
+      - run: npm run build
+      - name: Verify bundle size under 200KB gzipped
+        run: |
+          TOTAL=$(find dist/assets -name '*.js' -exec gzip -c {} + | wc -c)
+          echo "Total JS gzipped: $TOTAL bytes"
+          if [ "$TOTAL" -gt 204800 ]; then
+            echo "::error::Bundle size $TOTAL exceeds 200KB (204800 bytes) budget"
+            exit 1
+          fi
+      - name: Verify CSP meta tag in production build
+        run: grep -q "Content-Security-Policy" dist/index.html
+
+  e2e:
+    name: Playwright E2E
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: packages/admin-dashboard/package-lock.json
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: mkdir -p e2e/.auth
+      - run: VITE_MOCK_API=true npx playwright test --reporter=list
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: packages/admin-dashboard/playwright-report/
+          retention-days: 7
+
+  visual-audit:
+    name: No Forbidden Colors
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check for forbidden design tokens
+        run: |
+          FORBIDDEN_PATTERNS="rounded-lg|rounded-md|rounded-xl|rounded-full|bg-gradient|from-blue|from-green|from-purple|text-blue-[^4]|text-purple|text-pink"
+          if grep -rE "$FORBIDDEN_PATTERNS" src/ --include='*.tsx' --include='*.ts'; then
+            echo "::error::Forbidden design tokens found (rounded corners, gradients, or pastel colors)"
+            exit 1
+          fi
+          echo "Visual audit passed: no forbidden design tokens found"
