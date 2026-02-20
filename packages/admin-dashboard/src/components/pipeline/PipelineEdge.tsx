@@ -1,6 +1,12 @@
 import { memo } from 'react'
 import { getSmoothStepPath, type EdgeProps } from '@xyflow/react'
 
+/**
+ * Manhattan-routed pipeline edge.
+ * getSmoothStepPath with borderRadius: 0 produces strict orthogonal
+ * (horizontal + vertical only) segments — Manhattan routing.
+ * offset controls the midpoint step distance for non-collinear nodes.
+ */
 function PipelineEdgeComponent({
   id,
   sourceX,
@@ -21,6 +27,7 @@ function PipelineEdgeComponent({
     sourcePosition,
     targetPosition,
     borderRadius: 0,
+    offset: 20,
   })
 
   return (

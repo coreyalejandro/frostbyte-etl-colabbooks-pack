@@ -71,7 +71,12 @@ check_infrastructure() {
     
     if [ "$all_good" = false ]; then
         log_error "Infrastructure not ready. Cannot start Pipeline API."
-        log_info "Run: docker-compose up -d"
+        if ! docker info > /dev/null 2>&1; then
+            log_info "Docker daemon is not running. Start Docker Desktop (or the Docker service), then run:"
+        else
+            log_info "From project root run:"
+        fi
+        log_info "  cd $PROJECT_ROOT && docker-compose up -d"
         exit 1
     fi
     
@@ -135,7 +140,7 @@ start_pipeline() {
         export FROSTBYTE_AUTH_BYPASS=true
         export REDIS_URL=redis://localhost:6379/0
         export FROSTBYTE_REDIS_URL=redis://localhost:6379/0
-        export POSTGRES_URL=postgresql+asyncpg://frostbyte:frostbyte@localhost:5432/frostbyte
+        export POSTGRES_URL=postgresql+asyncpg://frostbyte:frostbyte@localhost:5433/frostbyte
         export MINIO_ENDPOINT=http://localhost:9000
         export MINIO_ACCESS_KEY=minioadmin
         export MINIO_SECRET_KEY=minioadmin

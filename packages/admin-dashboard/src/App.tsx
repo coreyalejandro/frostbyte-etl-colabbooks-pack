@@ -36,7 +36,7 @@ function App() {
   return (
     <ErrorBoundary>
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter basename="/admin">
+      <BrowserRouter basename="/">
         <AuthProvider>
           <TenantProvider>
             <Routes>

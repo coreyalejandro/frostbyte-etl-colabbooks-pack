@@ -1,0 +1,14 @@
+{
+  "cookies": [],
+  "origins": [
+    {
+      "origin": "http://localhost:5174",
+      "localStorage": [
+        {
+          "name": "frostbyte_admin_token",
+          "value": "mock-token-1771397379984"
+        }
+      ]
+    }
+  ]
+}

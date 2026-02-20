@@ -2,11 +2,12 @@
 
 **Single source of truth:** `.planning/PROJECT.md` — roadmap, progress, canonical document index. This file is for session continuity only; PROJECT.md is authority.
 
-**Date:** 2026-02-13
+**Date:** 2026-02-17
 **Status:** Pipeline Standing — 1hr Build + 3 Enhancements
 
 ## What Was Just Completed
 
+- **Pipeline startup investigation and script fixes** — Root cause: `./scripts/pipeline-manager.sh auto` fails when Docker Compose infra (PostgreSQL:5433, MinIO:9000, Qdrant:6333) is not running. Redis was OK (local or single service). Changes in `scripts/pipeline-manager.sh`: (1) `POSTGRES_URL` for local API start corrected from port 5432 to 5433 to match `docker-compose.yml` host mapping; (2) on infrastructure failure, script now prints project root path and checks Docker daemon — if Docker is not running, suggests starting Docker Desktop first, then `cd $PROJECT_ROOT && docker-compose up -d`. **User fix:** Start Docker, then from repo root run: `docker-compose up -d` (or `docker-compose up -d postgres minio qdrant` if Redis is already up).
 - **Zero-shot Admin Dashboard (Monochrome Machine + PRD)** — Full implementation at `packages/admin-dashboard`: Pipeline Schematic (ASCII DAG, [INTAKE]→[PARSE]→…→[VERIFY]); Tenant Chambers grid; Document Queue (ID, NAME, SIZE, STATUS, VERIFICATION, [↑][↓] reorder, [VERIFY][INSPECT]); Verification Control Room (Gate 1 Evidence, Gate 2 Retrieval, Gate 3 Red-Team); Pipeline Control Panel ([ONLINE][OFFLINE][HYBRID], model radio, batch size, [COMMIT]); Audit Gallery (timestamp, tenant, operation, fingerprint, [VERIFY][EXP]); Inspector modal (chain of custody); top-bar nav [DASH][TENANTS][DOCS][VERIFY][CONTROL][AUDIT]; Zustand+Immer store; metal palette, IBM Plex Mono, zero radius, no shadows. Run: `cd packages/admin-dashboard && npm run dev` → http://localhost:5174/admin.
 - **Enhancement #6 — Admin Dashboard** — React + TypeScript + Vite dashboard at `packages/admin-dashboard`: Dashboard (health), Tenants (list/detail + schema), Documents (lookup by ID), Jobs, Settings, Login (mocked). Run: `cd packages/admin-dashboard && npm run dev`, then http://localhost:5174/admin.
 - **Enhancement #9 — Multi-Modal Document Support** — Implemented full multimodal pipeline: modality detection (`pipeline/multimodal/detector.py`), image processor (OCR + CLIP), audio (Whisper), video (ffmpeg + frames + OCR + CLIP); migration `007_add_multimodal_support.sql` (documents, chunks, image_embeddings, video_frames with pgvector); `embedding.py`, `vector_store.py`; `scripts/run_multimodal_worker.py` consumes Redis `multimodal:jobs`; intake extended (POST /api/v1/intake dispatches image/audio/video to worker); POST /api/v1/collections/{name}/query accepts `query_file` for image/audio/video; `.env.example` multimodal vars; `Dockerfile` with tesseract-ocr, ffmpeg. Run worker: `python scripts/run_multimodal_worker.py` (from project root, pipeline installed). **Note:** Migration 007 requires pgvector extension in PostgreSQL; use `ankane/pgvector` or equivalent.
@@ -166,6 +167,7 @@ Implement [component] per docs/[PLAN].md. Reference HANDOFF.md for project state
 
 ## Known Issues / Considerations
 
+- **Pipeline auto-start:** `./scripts/pipeline-manager.sh auto` (and `make pipeline-auto`) require Docker to be running and infra up. If you see "PostgreSQL/MinIO/Qdrant not running", start Docker Desktop then run `docker-compose up -d` from the project root. Script now prints project root and suggests starting Docker when the daemon is not running.
 - Docker daemon returned 500 Internal Server Error when pulling images — user must fix Docker (see `docs/operations/DOCKER_TROUBLESHOOTING.md`). Run `./scripts/verify_e2e.sh` once Docker is healthy to verify end-to-end.
 - `openmemory.md` is empty — no stored project memories yet
 - 01-UAT.md has 8 pending tests (manual UAT); 01-VERIFICATION.md shows 13/13 passed (automated verification)

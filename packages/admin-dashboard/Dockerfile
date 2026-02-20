@@ -10,18 +10,18 @@ RUN npm ci
 # Copy source
 COPY . .
 
-# Build for production
+# Build for production (base: / so app is served at root)
 RUN npm run build
 
-# Install serve for production
-RUN npm install -g serve
+# Copy custom server (redirects /admin -> /, serves dist, no-cache for index.html)
+COPY server.js ./
 
 # Expose port
 EXPOSE 5174
 
 # Health check
 HEALTHCHECK --interval=10s --timeout=5s --start-period=10s --retries=3 \
-    CMD wget --no-verbose --tries=1 --spider http://localhost:5174/admin/ || exit 1
+    CMD wget --no-verbose --tries=1 --spider http://localhost:5174/ || exit 1
 
-# Serve built app
-CMD ["serve", "-s", "dist", "-l", "5174"]
+# Custom server: /admin -> / redirect, SPA at root
+CMD ["node", "server.js"]
