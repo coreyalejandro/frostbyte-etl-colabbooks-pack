@@ -34,6 +34,7 @@ from .routes.documents import router as documents_router
 from .routes.pipeline import router as pipeline_router
 from .routes.tenants import router as tenants_router
 from .routes.tenant_schemas import router as tenant_schemas_router
+from .routes.verification import router as verification_router
 
 # Config from env
 MINIO_ENDPOINT = os.getenv("MINIO_ENDPOINT", "http://localhost:9000")
@@ -124,6 +125,7 @@ app.include_router(documents_router)
 app.include_router(pipeline_router)
 app.include_router(tenants_router)
 app.include_router(tenant_schemas_router)
+app.include_router(verification_router)
 
 
 def _check_service(name: str, url: str) -> bool:
