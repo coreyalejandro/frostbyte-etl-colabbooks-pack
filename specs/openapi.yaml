@@ -107,6 +107,133 @@ paths:
                 $ref: '#/components/schemas/QueryResponse'
         '404':
           $ref: '#/components/responses/NotFound'
+  /api/v1/pipeline/status:
+    get:
+      summary: Get pipeline status
+      operationId: getPipelineStatus
+      tags: [pipeline]
+      security: [{bearerAuth: []}]
+      responses:
+        '200':
+          description: Pipeline status
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/PipelineStatus'}
+        '401':
+          description: Unauthorized
+
+  /api/v1/config:
+    patch:
+      summary: Update pipeline configuration
+      operationId: patchConfig
+      tags: [pipeline]
+      security: [{bearerAuth: []}]
+      requestBody:
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/ConfigPatchRequest'}
+      responses:
+        '200':
+          description: Updated config
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/PipelineStatus'}
+        '400':
+          description: Validation error
+
+  /api/v1/tenants:
+    get:
+      summary: List tenants
+      operationId: listTenants
+      tags: [tenants]
+      security: [{bearerAuth: []}]
+      parameters:
+        - {name: page, in: query, schema: {type: integer, default: 1}}
+        - {name: limit, in: query, schema: {type: integer, default: 20, maximum: 100}}
+      responses:
+        '200':
+          description: Tenant list
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/TenantsList'}
+
+  /api/v1/tenants/{id}:
+    get:
+      summary: Get tenant by ID
+      operationId: getTenant
+      tags: [tenants]
+      security: [{bearerAuth: []}]
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string}}
+      responses:
+        '200':
+          description: Tenant detail
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Tenant'}
+        '404':
+          description: Not found
+
+  /api/v1/documents:
+    get:
+      summary: List documents
+      operationId: listDocuments
+      tags: [documents]
+      security: [{bearerAuth: []}]
+      parameters:
+        - {name: page, in: query, schema: {type: integer, default: 1}}
+        - {name: limit, in: query, schema: {type: integer, default: 20, maximum: 100}}
+        - {name: tenantId, in: query, schema: {type: string}}
+      responses:
+        '200':
+          description: Document list
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/DocumentsList'}
+
+  /api/v1/documents/{id}/chain:
+    get:
+      summary: Get document chain of custody
+      operationId: getDocumentChain
+      tags: [documents]
+      security: [{bearerAuth: []}]
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+      responses:
+        '200':
+          description: Chain of custody
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ChainResponse'}
+        '404':
+          description: Not found
+
+  /api/v1/verification/test:
+    post:
+      summary: Run verification test suite
+      operationId: runVerificationTest
+      tags: [verification]
+      security: [{bearerAuth: []}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [testType]
+              properties:
+                testType:
+                  type: string
+                  enum: [red-team, compliance, penetration]
+      responses:
+        '200':
+          description: Verification results
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/VerificationResult'}
+        '400':
+          description: Invalid test type
+
   /health:
     get:
       summary: Health check
@@ -168,12 +295,101 @@ components:
               score:       {type: number}
               document_id: {type: string}
               content:     {type: string}
+    PipelineStatus:
+      type: object
+      properties:
+        mode: {type: string, enum: [online, offline, dual]}
+        batch_size: {type: integer}
+        model: {type: string}
+        throughput: {type: number, format: float}
+        nodes:
+          type: array
+          items:
+            type: object
+            properties:
+              id: {type: string}
+              status: {type: string}
+              metrics:
+                type: object
+                properties:
+                  rate: {type: number, nullable: true}
+                  latency: {type: number, nullable: true}
+    ConfigPatchRequest:
+      type: object
+      properties:
+        mode: {type: string, enum: [online, offline, dual]}
+        batch_size: {type: integer, minimum: 1, maximum: 256}
+        model: {type: string}
+    TenantsList:
+      type: object
+      properties:
+        items:
+          type: array
+          items: {$ref: '#/components/schemas/Tenant'}
+        total: {type: integer}
+    Tenant:
+      type: object
+      properties:
+        id: {type: string}
+        name: {type: string}
+        state: {type: string}
+        config: {type: object}
+        config_version: {type: integer}
+        created_at: {type: string, format: date-time}
+    DocumentsList:
+      type: object
+      properties:
+        items:
+          type: array
+          items: {$ref: '#/components/schemas/DocumentListItem'}
+        total: {type: integer}
+    DocumentListItem:
+      type: object
+      properties:
+        id: {type: string, format: uuid}
+        tenant_id: {type: string}
+        filename: {type: string}
+        status: {type: string}
+        modality: {type: string}
+        metadata: {type: object}
+        created_at: {type: string, format: date-time}
+        updated_at: {type: string, format: date-time}
+    ChainResponse:
+      type: object
+      properties:
+        document_id: {type: string, format: uuid}
+        events:
+          type: array
+          items:
+            type: object
+            properties:
+              action: {type: string}
+              timestamp: {type: string, format: date-time}
+              performed_by: {type: string, nullable: true}
+              metadata: {type: object}
+    VerificationResult:
+      type: object
+      properties:
+        score: {type: integer}
+        details:
+          type: array
+          items:
+            type: object
+            properties:
+              test: {type: string}
+              passed: {type: boolean}
+              message: {type: string}
     Error:
       type: object
       required: [error_code, message]
       properties:
         error_code: {type: string}
         message:    {type: string}
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   responses:
     BadRequest:
       description: Bad Request

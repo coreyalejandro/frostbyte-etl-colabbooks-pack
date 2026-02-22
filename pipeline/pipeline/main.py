@@ -30,7 +30,11 @@ from .intake.routes import router as intake_router
 from .multimodal import detect_modality
 from .routes.auth_routes import router as auth_router
 from .routes.collections import router as collections_router
+from .routes.documents import router as documents_router
+from .routes.pipeline import router as pipeline_router
+from .routes.tenants import router as tenants_router
 from .routes.tenant_schemas import router as tenant_schemas_router
+from .routes.verification import router as verification_router
 
 # Config from env
 MINIO_ENDPOINT = os.getenv("MINIO_ENDPOINT", "http://localhost:9000")
@@ -117,7 +121,11 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(intake_router)
 app.include_router(collections_router)
+app.include_router(documents_router)
+app.include_router(pipeline_router)
+app.include_router(tenants_router)
 app.include_router(tenant_schemas_router)
+app.include_router(verification_router)
 
 
 def _check_service(name: str, url: str) -> bool:
